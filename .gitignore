@@ -1,0 +1,2 @@
+*.sw[nop]
+__pycache__

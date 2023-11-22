@@ -1,3 +1,5 @@
+from sangfroid.value import Value
+
 class Layer:
 
     SYMBOL = '?' # fallback
@@ -7,9 +9,56 @@ class Layer:
     def __init__(self, tag):
         self.tag = tag
 
+        # 'group' field?
+        self.active = tag.get('active', True)
+        self.synfig_version = tag.get('version', None)
+        self.exclude_from_rendering = tag.get(
+                'exclude_from_rendering', False)
+
+        def name_and_value_of(tag):
+            name = tag.get('name', None)
+
+            if name is None:
+                raise ValueError(f"param has no name: {tag}")
+
+            use = tag.get("use", None)
+
+            first_tag_child = None
+            for c in tag.children:
+                if hasattr(c, 'contents'):
+                    first_tag_child = c
+                    break
+
+            if first_tag_child is None:
+                if use is None:
+                    raise ValueError(f"param has no value: {tag}")
+                else:
+                    print("(warning: 'use' is not yet implemented)")
+                    value = 0
+
+            else:
+                if use is not None:
+                    raise ValueError("param has both use and value: {tag}")
+                value = Value(tag=first_tag_child)
+
+            return name, value
+
+        self.params = dict([
+            name_and_value_of(param)
+            for param in tag.find_all('param')
+            ])
+
     @property
-    def description(self):
-        return self.tag.get('desc', None)
+    def desc(self):
+        result = self.tag.get('desc', None)
+        if result is not None:
+            return result
+
+        node = self.tag.find('desc')
+        if node is not None:
+            return node.string
+
+        return None
 
     @property
     def parent(self):
@@ -27,7 +76,7 @@ class Layer:
         result += self.SYMBOL
         result += self.__class__.__name__.lower()
         result += ' '
-        result += repr(self.description)
+        result += repr(self.desc)
         result += ']'
         return result
 
@@ -57,12 +106,17 @@ class Layer:
 
     @classmethod
     def from_tag(cls, tag):
-        if tag['type'] not in cls.type_handlers:
+        tag_type = tag.get('type', None)
+        if tag_type is None:
             raise ValueError(
-                    f"This tag is a <{tag['type']}>, which I don't know how "
+                    "layer has no 'type' field.")
+
+        if tag_type not in cls.type_handlers:
+            raise ValueError(
+                    f"This layer is a {tag_type}, which I don't know how "
                     "to handle."
                     )
-        result = cls.type_handlers[tag['type']]._from_tag_inner(tag)
+        result = cls.type_handlers[tag_type]._from_tag_inner(tag)
 
         return result
 

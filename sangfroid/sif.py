@@ -12,77 +12,77 @@ class Sif(sangfroid.layer.Group):
                           )
 
         assert len(self.soup.contents)==1
-        self.main = self.soup.contents[0]
+        tag = self.soup.contents[0]
         super().__init__(
-                tag = self.main,
+                tag = tag,
                 )
 
     @property
     def name(self):
-        return self.main.find('name').string
+        return self.tag.find('name').string
 
     @property
     def description(self):
-        return self.main.find('desc').string
+        return self.tag.find('desc').string
 
     @property
     def width(self):
-        return int(self.main.attrs['width'])
+        return int(self.tag.attrs['width'])
 
     @property
     def height(self):
-        return int(self.main.attrs['height'])
+        return int(self.tag.attrs['height'])
 
     @property
     def xres(self):
-        return float(self.main.attrs['xres'])
+        return float(self.tag.attrs['xres'])
 
     @property
     def yres(self):
-        return float(self.main.attrs['yres'])
+        return float(self.tag.attrs['yres'])
 
     @property
     def gamma(self):
         return (
-                float(self.main.attrs['gamma-r']),
-                float(self.main.attrs['gamma-g']),
-                float(self.main.attrs['gamma-b']),
+                float(self.tag.attrs['gamma-r']),
+                float(self.tag.attrs['gamma-g']),
+                float(self.tag.attrs['gamma-b']),
                 )
 
     @property
     def viewbox(self):
         return tuple([
             float(n) for n in
-            self.main.attrs['view-box'].split(' ')
+            self.tag.attrs['view-box'].split(' ')
             ])
 
     @property
     def antialias(self):
         # XXX what is the type?
-        return float(self.main.attrs['antialias'])
+        return float(self.tag.attrs['antialias'])
  
     @property
     def fps(self):
-        return float(self.main.attrs['fps'])
+        return float(self.tag.attrs['fps'])
  
     @property
     def begin_time(self):
-        return self.time_to_frames(self.main.attrs['begin-time'])
+        return self.time_to_frames(self.tag.attrs['begin-time'])
 
     @property
     def end_time(self):
-        return self.time_to_frames(self.main.attrs['end-time'])
+        return self.time_to_frames(self.tag.attrs['end-time'])
 
     @property
     def background(self):
         return tuple([
             float(n) for n in
-            self.main.attrs['bgcolor'].split(' ')
+            self.tag.attrs['bgcolor'].split(' ')
             ])
 
     @property
     def keyframes(self):
-        for kf in self.sif.main.find_all('keyframe'):
+        for kf in self.sif.tag.find_all('keyframe'):
             yield Keyframe.from_tag(kf)
  
     @property
