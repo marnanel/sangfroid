@@ -371,7 +371,7 @@ class Conical_Gradient(Layer):
 
 @Layer.handles_type()
 class Mandelbrot(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🎨'
     PARAMS = {
         "iterations": v.Integer,
         "bailout": v.Real,
@@ -395,7 +395,7 @@ class Mandelbrot(Layer):
 
 @Layer.handles_type()
 class Julia(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🎨'
     PARAMS = {
         "icolor": v.Color,
         "ocolor": v.Color,
@@ -420,14 +420,14 @@ class Julia(Layer):
 
 @Layer.handles_type()
 class Lumakey(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🗝️'
     PARAMS = {
         "z_depth": v.Real,
     }
 
 @Layer.handles_type()
 class Halftone3(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '▓'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -448,7 +448,7 @@ class Halftone3(Layer):
 
 @Layer.handles_type()
 class Halftone2(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '▒'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -463,7 +463,7 @@ class Halftone2(Layer):
 
 @Layer.handles_type()
 class Colorcorrect(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '👍'
     PARAMS = {
         "hue_adjust": v.Angle,
         "brightness": v.Real,
@@ -474,7 +474,7 @@ class Colorcorrect(Layer):
 
 @Layer.handles_type()
 class Clamp(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🗜️'
     PARAMS = {
         "invert_negative": v.Bool,
         "clamp_ceiling": v.Bool,
@@ -484,7 +484,7 @@ class Clamp(Layer):
 
 @Layer.handles_type()
 class Chromakey(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🔑'
     PARAMS = {
         "z_depth": v.Real,
         "key_color": v.Color,
