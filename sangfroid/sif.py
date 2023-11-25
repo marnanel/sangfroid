@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
 from sangfroid.keyframe import Keyframe
-import sangfroid.layer
+from sangfroid.layer import Group
 
-class Sif(sangfroid.layer.Group):
+class Sif(Group):
     def __init__(self, source):
         self.source = source
         with open(self.source, 'r') as f:
