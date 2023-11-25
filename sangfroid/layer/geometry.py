@@ -3,7 +3,7 @@ import sangfroid.value as v
 
 @Layer.handles_type()
 class Star(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '⭐'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -24,7 +24,7 @@ class Star(Layer):
 
 @Layer.handles_type()
 class Solid_Color(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '▊'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -34,7 +34,7 @@ class Solid_Color(Layer):
 
 @Layer.handles_type()
 class Region(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🟤'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -51,7 +51,7 @@ class Region(Layer):
 
 @Layer.handles_type()
 class Rectangle(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🟦'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -69,7 +69,7 @@ class Rectangle(Layer):
 
 @Layer.handles_type()
 class Polygon(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '⭓'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -86,7 +86,7 @@ class Polygon(Layer):
 
 @Layer.handles_type()
 class Outline(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '⭔'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -140,7 +140,7 @@ class Circle(Layer):
 
 @Layer.handles_type()
 class Checker_Board(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🙾'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -153,7 +153,7 @@ class Checker_Board(Layer):
 
 @Layer.handles_type()
 class Advanced_Outline(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '⬡'
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -178,4 +178,3 @@ class Advanced_Outline(Layer):
         "dilist": v.Dilist,
         "dash_offset": v.Real,
     }
-

@@ -13,11 +13,9 @@ class Timeloop(Layer):
         "symmetrical": v.Bool,
     }
 
-# to be merged in
-
 @Layer.handles_type()
 class Stroboscope(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🔦'
     PARAMS = {
         "z_depth": v.Real,
         "frequency": v.Real,
@@ -25,7 +23,7 @@ class Stroboscope(Layer):
 
 @Layer.handles_type()
 class Freetime(Layer):
-    SYMBOL = 'X'
+    SYMBOL = '🍦'
     PARAMS = {
         "z_depth": v.Real,
         "time": v.Time,
