@@ -1,3 +1,4 @@
+import bs4
 from sangfroid.value.value import Value
 
 @Value.handles_type()

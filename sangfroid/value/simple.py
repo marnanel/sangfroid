@@ -10,7 +10,7 @@ class Simple(Value):
             raise NotImplementedError()
 
         super().__init__(tag)
-        self._value = self.our_type(self._value)
+        self._value = self.our_type(self.value)
 
     @property
     def value(self):

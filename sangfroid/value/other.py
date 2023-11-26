@@ -8,16 +8,16 @@ class Color(Value):
 
         for field in 'rgba':
             setattr(self, field,
-                    float(tag(field).string),
+                    float(tag(field)[0].string),
                     )
 
     @property
     def value(self):
         result = '%02x%02x%02x%02x' % (
-                self.r*256,
-                self.g*256,
-                self.b*256,
-                self.a*256,
+                int(self.r*256),
+                int(self.g*256),
+                int(self.b*256),
+                int(self.a*256),
                 )
         return result
 

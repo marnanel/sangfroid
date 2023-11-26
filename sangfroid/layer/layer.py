@@ -1,3 +1,4 @@
+import bs4
 from sangfroid.value import Value
 from sangfroid.registry import Registry
 
@@ -16,11 +17,9 @@ class Layer:
         self.exclude_from_rendering = tag.get(
                 'exclude_from_rendering', False)
 
+        """
         def name_and_value_of(tag):
             name = tag.get('name', None)
-
-            if name is None:
-                raise ValueError(f"param has no name: {tag}")
 
             use = tag.get("use", None)
 
@@ -43,11 +42,7 @@ class Layer:
                 value = Value.from_tag(tag=first_tag_child)
 
             return name, value
-
-        self.params = dict([
-            name_and_value_of(param)
-            for param in tag.find_all('param')
-            ])
+            """
 
     @property
     def desc(self):
@@ -102,23 +97,47 @@ class Layer:
         tag_type = tag.get('type', None)
         if tag_type is None:
             raise ValueError(
-                    "layer has no 'type' field.")
+                    f"tag has no 'type' field: {tag}")
+        return cls.handles_type.from_tag(name=tag_type)(tag)
 
-        if tag_type not in cls.handles_type.handlers:
-            raise ValueError(
-                    f"This layer is a {tag_type}, which I don't know how "
-                    "to handle."
-                    )
-        result = cls.handles_type.handlers[tag_type]._from_tag_inner(tag)
+    def _as_dict(self):
+        def name_and_value_of(tag):
+            if tag.name!='param':
+                raise ValueError(f"param is not a <param>: {tag}")
 
-        return result
+            name = tag.get('name', None)
+            if name is None:
+                raise ValueError(f"param has no 'name' field: {tag}")
 
-    @classmethod
-    def _from_tag_inner(cls, tag):
-        if cls==Layer:
-            raise NotImplementedError()
+            value_tags = [tag for tag in tag.children
+                          if isinstance(tag, bs4.element.Tag)
+                          ]
 
-        return cls(tag)
+            if len(value_tags)!=1:
+                raise ValueError(f"param should have one value: {tag}")
+
+            value_tag = value_tags[0]
+
+            value_type = Value.from_tag(value_tag)
+            value = value_type(value_tag)
+            return name, value
+
+        return dict([
+            name_and_value_of(param)
+            for param in self.tag.find_all('param')
+            ])
+
+    def items(self):
+        return self._as_dict().items()
+
+    def keys(self):
+        return self._as_dict().keys()
+
+    def values(self):
+        return self._as_dict().values()
+
+    def __iter__(self):
+        return self._as_dict().__iter__()
 
 #####################
 # Specific layer types.

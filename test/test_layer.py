@@ -66,3 +66,12 @@ def test_layer_children():
             "motion",
             "blur",
             ]
+
+def test_layer_items():
+    sif = get_sif('circles.sif')
+
+    for layer in sif.descendants:
+        for k, v in layer.items():
+            print(layer, k,': ',str(v), type(v))
+
+    assert False

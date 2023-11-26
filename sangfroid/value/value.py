@@ -1,15 +1,10 @@
+from sangfroid.registry import Registry
+
 class Value:
 
     def __init__(self, tag):
         self.tag = tag
 
-    @classmethod
-    def from_tag(cls, tag):
-        return None
-        result = cls.type_handlers[tag.name]._from_tag_inner(tag)
-        return result
-
-    @property
     def __str__(self):
         return str(self.value)
 
@@ -17,15 +12,8 @@ class Value:
 
     # Factories, and setup for factories
 
-    type_handlers = {}
+    handles_type = Registry()
 
-    # Decorator
     @classmethod
-    def handles_type(cls):
-        def _inner(c, name=None):
-            if name is None:
-                name = c.__name__.lower()
-
-            c.type_handlers[name] = c
-            return c
-        return _inner
+    def from_tag(cls, tag):
+        return cls.handles_type.from_tag(name=tag.name)
