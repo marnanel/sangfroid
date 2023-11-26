@@ -14,10 +14,10 @@ class Color(Value):
     @property
     def value(self):
         result = '%02x%02x%02x%02x' % (
-                int(self.r*256),
-                int(self.g*256),
-                int(self.b*256),
-                int(self.a*256),
+        int(self.r*255),
+        int(self.g*255),
+        int(self.b*255),
+        int(self.a*255),
                 )
         return result
 
@@ -85,9 +85,3 @@ class Gradient(Value):
 class Bline(Value):
     def __init__(self, tag):
         raise ValueError("do this later")
-
-@Value.handles_type()
-class Canvas(Value):
-    def __init__(self, tag):
-        raise ValueError("do this later")
-
