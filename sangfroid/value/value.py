@@ -17,3 +17,7 @@ class Value:
     @classmethod
     def from_tag(cls, tag):
         return cls.handles_type.from_tag(name=tag.name)
+
+    @property
+    def value(self):
+        return self._value
