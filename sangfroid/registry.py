@@ -15,7 +15,7 @@ class Registry:
 
         if name not in self.handlers:
             raise ValueError(
-                    f"This tag is a {tag_type}, which I don't know how "
+                    f"This tag is a {name}, which I don't know how "
                     "to handle."
                     )
         result = self.handlers[name]
