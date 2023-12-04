@@ -127,6 +127,19 @@ def test_layer_find():
     assert isinstance(orange_circle, sangfroid.layer.Layer)
     assert orange_circle.desc == 'Orange circle'
 
+def test_layer_subscript():
+    sif = get_sif('circles.sif')
+    green_circle = sif.find(desc='Green circle')
+    assert green_circle['radius'] == 0.5055338531
+
+    try:
+        green_circle['wombat']
+        ok = False
+    except KeyError:
+        ok = True
+
+    assert ok, 'subscript of unreal string should raise KeyError'
+
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0

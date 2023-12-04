@@ -51,6 +51,12 @@ class Layer:
         result += ']'
         return result
 
+    def __getitem__(self, f):
+        found = self.tag.find('param', attrs={'name': f})
+        if found is None:
+            raise KeyError(f)
+        return _name_and_value_of(found)[1]
+
     @property
     def depth(self):
         cursor = self.tag.parent
@@ -122,28 +128,8 @@ class Layer:
         return cls.handles_type.from_name(name=tag_type)(tag)
 
     def _as_dict(self):
-        def name_and_value_of(tag):
-            if tag.name!='param':
-                raise ValueError(f"param is not a <param>: {tag}")
-
-            name = tag.get('name', None)
-            if name is None:
-                raise ValueError(f"param has no 'name' field: {tag}")
-
-            value_tags = [tag for tag in tag.children
-                          if isinstance(tag, bs4.element.Tag)
-                          ]
-
-            if len(value_tags)!=1:
-                raise ValueError(f"param should have one value: {tag}")
-
-            value_tag = value_tags[0]
-
-            value = Value.from_tag(value_tag)
-            return name, value
-
         return dict([
-            name_and_value_of(param)
+            _name_and_value_of(param)
             for param in self.tag.find_all('param')
             ])
 
@@ -656,4 +642,22 @@ class Curve_Warp(Layer):
         "fast": v.Bool,
     }
 
+def _name_and_value_of(tag):
+    if tag.name!='param':
+        raise ValueError(f"param is not a <param>: {tag}")
 
+    name = tag.get('name', None)
+    if name is None:
+        raise ValueError(f"param has no 'name' field: {tag}")
+
+    value_tags = [tag for tag in tag.children
+                  if isinstance(tag, bs4.element.Tag)
+                  ]
+
+    if len(value_tags)!=1:
+        raise ValueError(f"param should have one value: {tag}")
+
+    value_tag = value_tags[0]
+
+    value = Value.from_tag(value_tag)
+    return name, value
