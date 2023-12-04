@@ -3,13 +3,11 @@ from sangfroid.value.value import Value
 
 @Value.handles_type()
 class Vector(Value):
-    def __init__(self, tag):
-        super().__init__(tag)
-
+    def _set_value(self):
         self._value = dict(
                 [(field.name,
                   field.string)
-                 for field in tag.children
+                 for field in self.tag.children
                  if isinstance(field, bs4.element.Tag)
                  ])
 
@@ -19,33 +17,31 @@ class Vector(Value):
 
 @Value.handles_type()
 class Dynamic_List(Value):
-    def __init__(self, tag):
+    def _set_value(self):
         raise ValueError("do this later")
 
 @Value.handles_type()
 class Static_List(Value):
-    def __init__(self, tag):
+    def _set_value(self):
         raise ValueError("do this later")
 
 @Value.handles_type()
 class Wplist(Value):
-    def __init__(self, tag):
+    def _set_value(self):
         raise ValueError("do this later")
 
 @Value.handles_type()
 class Dilist(Value):
-    def __init__(self, tag):
+    def _set_value(self):
         raise ValueError("do this later")
 
 @Value.handles_type()
 class Composite(Value):
-    def __init__(self, tag):
-        super().__init__(tag)
+    def _set_value(self):
 
         def name_and_value(n):
 
             name = n.name
-            print("9100", tag.name, name)
 
             assert name!='layer'
 
@@ -64,15 +60,24 @@ class Composite(Value):
 
         self._value = dict(
                 [name_and_value(field)
-                 for field in tag.children
+                 for field in self.tag.children
                  if isinstance(field, bs4.element.Tag)
                  ])
 
+        for name in ['items', 'values', 'keys', 'get', '__getitem__']:
+            setattr(self, name, getattr(self._value, name))
+
 @Value.handles_type()
 class Canvas(Value):
-    def __init__(self, tag):
-        super().__init__(tag)
-        self._value = [field
-                 for field in tag.children
+    def _set_value(self):
+        from sangfroid.layer.layer import Layer
+        layers = [field
+                 for field in self.tag.children
                  if isinstance(field, bs4.element.Tag)
                  ]
+        if len([n for n in layers if n.name!='layer'])!=0:
+            raise ValueError(
+                    f"Only layers can be the children of a canvas: {self.tag}"
+                    )
+
+        self._value = [Layer.from_tag(layer) for layer in layers]

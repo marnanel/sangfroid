@@ -11,7 +11,7 @@ class Registry:
             return c
         return _inner
 
-    def from_tag(self, name):
+    def from_name(self, name):
 
         if name not in self.handlers:
             raise ValueError(

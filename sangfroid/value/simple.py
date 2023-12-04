@@ -5,11 +5,10 @@ class Simple(Value):
 
     our_type = None
 
-    def __init__(self, tag):
+    def _set_value(self):
         if self.our_type is None:
             raise NotImplementedError()
 
-        super().__init__(tag)
         self._value = self.our_type(self.value)
 
     @property

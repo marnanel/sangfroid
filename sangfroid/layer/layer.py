@@ -17,33 +17,6 @@ class Layer:
         self.exclude_from_rendering = tag.get(
                 'exclude_from_rendering', False)
 
-        """
-        def name_and_value_of(tag):
-            name = tag.get('name', None)
-
-            use = tag.get("use", None)
-
-            first_tag_child = None
-            for c in tag.children:
-                if hasattr(c, 'contents'):
-                    first_tag_child = c
-                    break
-
-            if first_tag_child is None:
-                if use is None:
-                    raise ValueError(f"param has no value: {tag}")
-                else:
-                    print("(warning: 'use' is not yet implemented)")
-                    value = 0
-
-            else:
-                if use is not None:
-                    raise ValueError("param has both use and value: {tag}")
-                value = Value.from_tag(tag=first_tag_child)
-
-            return name, value
-            """
-
     @property
     def desc(self):
         result = self.tag.get('desc', None)
@@ -88,6 +61,54 @@ class Layer:
             cursor = cursor.parent
         return result
 
+    def _find_or_find_all(self,
+                          *args, **kwargs):
+        if len(args)>1:
+            raise ValueError(
+                    "You can only give one positional argument.")
+        elif len(args)==1:
+            if 'type' in kwargs:
+                raise ValueError(
+                        "You can't give a type in both the positional "
+                        "and keyword arguments.")
+            kwargs['type'] = args[0]
+
+        for k,v in kwargs.items():
+            if isinstance(v, str):
+                v = v.lower()
+                def _case_insensitive_match(s):
+                    if s is None:
+                        return False
+                    return s.lower()==v
+                kwargs[k] = _case_insensitive_match
+
+        find_all = kwargs.get('find_all', False)
+        if 'find_all' in kwargs:
+            del kwargs['find_all']
+
+        if find_all:
+            result = [
+                    Layer(tag=t)
+                    for t in self.tag.find_all('layer', attrs=kwargs)
+                    ]
+
+        else:
+            layer = self.tag.find('layer', attrs=kwargs)
+            if layer is None:
+                result = None
+            else:
+                result = Layer(layer)
+
+        return result
+
+    def find(self, *args, **kwargs):
+        return self._find_or_find_all(*args, find_all = False, **kwargs)
+
+    def find_all(self, *args, **kwargs):
+        return self._find_or_find_all(*args, find_all = True, **kwargs)
+
+    __call__ = find
+
     ########################
 
     handles_type = Registry()
@@ -98,7 +119,7 @@ class Layer:
         if tag_type is None:
             raise ValueError(
                     f"tag has no 'type' field: {tag}")
-        return cls.handles_type.from_tag(name=tag_type)(tag)
+        return cls.handles_type.from_name(name=tag_type)(tag)
 
     def _as_dict(self):
         def name_and_value_of(tag):
@@ -118,8 +139,7 @@ class Layer:
 
             value_tag = value_tags[0]
 
-            value_type = Value.from_tag(value_tag)
-            value = value_type(value_tag)
+            value = Value.from_tag(value_tag)
             return name, value
 
         return dict([

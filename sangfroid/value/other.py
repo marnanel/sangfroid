@@ -3,12 +3,10 @@ from sangfroid.value.value import Value
 
 @Value.handles_type()
 class Color(Value):
-    def __init__(self, tag):
-        super().__init__(tag)
-
+    def _set_value(self):
         for field in 'rgba':
             setattr(self, field,
-                    float(tag(field)[0].string),
+                    float(self.tag(field)[0].string),
                     )
 
     @property
@@ -55,10 +53,8 @@ class Color(Value):
 
 @Value.handles_type()
 class Gradient(Value):
-    def __init__(self, tag):
-        super().__init__(tag)
-
-        colours = tag.find_all('color')
+    def _set_value(self):
+        colours = self.tag.find_all('color')
         if len(colours)!=2:
             raise ValueError("there should be two colours in a gradient")
 
@@ -66,7 +62,7 @@ class Gradient(Value):
         self.second = Color(colours[1])
         for field in 'rgba':
             setattr(self, field,
-                    float(tag(field).string),
+                    float(self.tag(field).string),
                     )
 
     @property
@@ -83,5 +79,5 @@ class Gradient(Value):
 
 @Value.handles_type()
 class Bline(Value):
-    def __init__(self, tag):
+    def _set_value(self):
         raise ValueError("do this later")
