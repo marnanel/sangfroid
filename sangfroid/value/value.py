@@ -13,6 +13,8 @@ class Value:
         if timeline is None:
             self._set_value()
 
+        assert hasattr(self, '_value')
+
     @property
     def is_animated(self):
         return self._timeline is not None
@@ -23,11 +25,21 @@ class Value:
         else:
             return '(animated)'
 
+    def __repr__(self):
+        return '['+self.__class__.__name__+' '+str(self)+']'
+
     @property
     def value(self):
         if self._timeline is not None:
             raise ValueError("This value is animated.")
         return self._value
+
+    def __eq__(self, other):
+        if isinstance(other, Value):
+            return self.value == other.value
+
+
+        return other == self._value
 
     ########################
 
