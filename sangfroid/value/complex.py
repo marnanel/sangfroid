@@ -101,10 +101,25 @@ class Composite(Value):
                  if isinstance(field, bs4.element.Tag)
                  ])
 
-        for name in ['items', 'values', 'keys', 'get', '__getitem__']:
-            setattr(self, name, getattr(self._value, name))
+    def __getitem__(self, *args, **kwargs):
+        return self._value.__getitem__(*args, **kwargs)
 
-@Value.handles_type()
+    def get(self, value, default=None):
+        result = self._value.get(value, None)
+        if result is None:
+            return default
+        else:
+            return self.our_type(result)
+
+    def keys(self):
+        return self._value.keys()
+
+    def values(self):
+        return self._value.values()
+
+    def items(self):
+        return self._value.items()@Value.handles_type()
+
 class Canvas(Value):
     def _set_value(self):
         from sangfroid.layer.layer import Layer

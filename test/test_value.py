@@ -18,15 +18,6 @@ def test_value_real():
 def test_value_vector():
     sif = get_sif('circles.sif')
     green_circle = sif.find(desc='Green circle')
-    assert green_circle['radius'] == 0.5055338531
-
-    try:
-        green_circle['wombat']
-        ok = False
-    except KeyError:
-        ok = True
-
-    assert ok, 'subscript of unreal string should raise KeyError'
 
     origin = green_circle['origin']
     assert origin['x'] == -2.7426433563
@@ -60,3 +51,44 @@ def test_value_vector():
         -2.7426433563,
         -1.7542968988,
         ]
+
+def test_value_composite():
+    sif = get_sif('circles.sif')
+    layer = sif.find(desc="Well, it's round")
+    transformation = layer['transformation']
+
+    assert transformation['offset'] == (3.3333332539, -0.8333333135)
+    assert transformation['angle'] == 45.0
+    assert transformation['skew_angle'] == 50.0
+    assert transformation['scale'] == (2, 0.5)
+
+    try:
+        transformation['wombat']
+        ok = False
+    except KeyError:
+        ok = True
+
+    assert ok, "subscript with unreal string raises KeyError"
+
+    assert transformation.get('offset') == (3.3333332539, -0.8333333135)
+    assert transformation.get('angle') == 45.0
+    assert transformation.get('skew_angle') == 50.0
+    assert transformation.get('scale') == (2, 0.5)
+    assert transformation.get('wombat') == None
+
+    assert transformation.get('offset', 'no') == (3.3333332539, -0.8333333135)
+    assert transformation.get('angle', 'no') == 45.0
+    assert transformation.get('skew_angle', 'no') == 50.0
+    assert transformation.get('scale', 'no') == (2, 0.5)
+    assert transformation.get('wombat', 'no') == 'no'
+
+    assert sorted(transformation.items()) == [
+        ('x', -2.7426433563),
+        ('y', -1.7542968988),
+        ]
+    assert sorted(transformation.keys()) == ['x', 'y']
+    assert sorted(transformation.values()) == [
+        -2.7426433563,
+        -1.7542968988,
+        ]
+
