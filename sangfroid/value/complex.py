@@ -3,6 +3,12 @@ from sangfroid.value.value import Value
 
 @Value.handles_type()
 class Vector(Value):
+
+    # it may happen that other types occur, though I don't
+    # know of any at present, or how we could know if they
+    # applied to us
+    our_type = float
+
     def _set_value(self):
         self._value = dict(
                 [(field.name,
@@ -14,6 +20,25 @@ class Vector(Value):
     @property
     def value(self):
         return self._value
+
+    def __getitem__(self, *args, **kwargs):
+        return self.our_type(self._value.__getitem__(*args, **kwargs))
+
+    def get(self, value, default=None):
+        result = self._value.get(value, None)
+        if result is None:
+            return default
+        else:
+            return self.our_type(result)
+
+    def keys(self):
+        return self._value.keys()
+
+    def values(self):
+        return [self.our_type(v) for v in self._value.values()]
+
+    def items(self):
+        return [(k, self.our_type(v)) for k,v in self._value.items()]
 
 @Value.handles_type()
 class Dynamic_List(Value):

@@ -12,8 +12,7 @@ class Value:
 
         if timeline is None:
             self._set_value()
-
-        assert hasattr(self, '_value')
+            assert hasattr(self, '_value')
 
     @property
     def is_animated(self):

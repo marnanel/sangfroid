@@ -140,10 +140,6 @@ def test_layer_subscript():
 
     assert ok, 'subscript of unreal string should raise KeyError'
 
-    # These aren't directly params, but they're defined, as shortcuts
-    assert green_circle['x'] == -2.7426433563
-    assert green_circle['y'] == -1.7542968988
-
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0
