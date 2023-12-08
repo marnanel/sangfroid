@@ -32,6 +32,9 @@ def test_value_vector():
     assert origin['x'] == -2.7426433563
     assert origin['y'] == -1.7542968988
 
+    assert origin == (-2.7426433563, -1.7542968988)
+    assert origin.as_tuple() == (-2.7426433563, -1.7542968988)
+
     try:
         origin['wombat']
         ok = False

@@ -40,6 +40,18 @@ class Vector(Value):
     def items(self):
         return [(k, self.our_type(v)) for k,v in self._value.items()]
 
+    def as_tuple(self):
+        return tuple(
+                [self.our_type(self._value[k])
+                 for k in sorted(self._value.keys())]
+                )
+
+    def __eq__(self, another):
+        if isinstance(another, tuple):
+            return self.as_tuple()==another
+        else:
+            return super().__eq__(another)
+
 @Value.handles_type()
 class Dynamic_List(Value):
     def _set_value(self):
