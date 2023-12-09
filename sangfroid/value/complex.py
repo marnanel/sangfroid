@@ -109,7 +109,7 @@ class Composite(Value):
         if result is None:
             return default
         else:
-            return self.our_type(result)
+            return result
 
     def keys(self):
         return self._value.keys()
@@ -118,8 +118,9 @@ class Composite(Value):
         return self._value.values()
 
     def items(self):
-        return self._value.items()@Value.handles_type()
+        return self._value.items()
 
+@Value.handles_type()
 class Canvas(Value):
     def _set_value(self):
         from sangfroid.layer.layer import Layer

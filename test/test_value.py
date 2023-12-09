@@ -83,12 +83,20 @@ def test_value_composite():
     assert transformation.get('wombat', 'no') == 'no'
 
     assert sorted(transformation.items()) == [
-        ('x', -2.7426433563),
-        ('y', -1.7542968988),
-        ]
-    assert sorted(transformation.keys()) == ['x', 'y']
+            ('offset', (3.3333332539, -0.8333333135)),
+            ('angle', 45.0),
+            ('skew_angle', 50.0),
+            ('scale',2, 0.5)
+            ]
+    assert sorted(transformation.keys()) == [
+            'offset',
+            'angle',
+            'skew_angle',
+            'scale',
+            ]
     assert sorted(transformation.values()) == [
-        -2.7426433563,
-        -1.7542968988,
+            (3.3333332539, -0.8333333135),
+            45.0,
+            50.0,
+            (2.0, 0.5),
         ]
-
