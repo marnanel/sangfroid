@@ -21,18 +21,22 @@ class Vector(Value):
     def value(self):
         return self._value
 
-    def __getitem__(self, *args, **kwargs):
-        return self.our_type(self._value.__getitem__(*args, **kwargs))
+    def __getitem__(self, item):
+        if isinstance(item, int):
+            item = self.keys()[item]
+
+        return self.our_type(self._value[item])
 
     def get(self, value, default=None):
-        result = self._value.get(value, None)
-        if result is None:
+        try:
+            result = self._value[value]
+        except KeyError:
             return default
-        else:
-            return self.our_type(result)
+
+        return self.our_type(result)
 
     def keys(self):
-        return self._value.keys()
+        return sorted(self._value.keys())
 
     def values(self):
         return [self.our_type(v) for v in self._value.values()]
@@ -40,17 +44,26 @@ class Vector(Value):
     def items(self):
         return [(k, self.our_type(v)) for k,v in self._value.items()]
 
+    def __len__(self):
+        return len(self._value)
+
     def as_tuple(self):
         return tuple(
                 [self.our_type(self._value[k])
                  for k in sorted(self._value.keys())]
                 )
 
-    def __eq__(self, another):
-        if isinstance(another, tuple):
-            return self.as_tuple()==another
-        else:
-            return super().__eq__(another)
+    def __str__(self):
+        return str(self.as_tuple())
+
+    def __eq__(self, other):
+        try:
+            if len(other)!=len(self):
+                return False
+        except TypeError:
+            return False
+
+        return all([left==right for left,right in zip(self, other)])
 
 @Value.handles_type()
 class Dynamic_List(Value):

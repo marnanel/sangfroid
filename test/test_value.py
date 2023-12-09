@@ -23,8 +23,14 @@ def test_value_vector():
     assert origin['x'] == -2.7426433563
     assert origin['y'] == -1.7542968988
 
+    assert list(zip(origin, origin))==[
+        (-2.7426433563, -2.7426433563),
+        (-1.7542968988, -1.7542968988),
+        ]
+
     assert origin == (-2.7426433563, -1.7542968988)
     assert origin.as_tuple() == (-2.7426433563, -1.7542968988)
+    assert len(origin) == 2
 
     try:
         origin['wombat']
