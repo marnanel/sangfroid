@@ -86,7 +86,7 @@ def test_value_composite():
             ('offset', (3.3333332539, -0.8333333135)),
             ('angle', 45.0),
             ('skew_angle', 50.0),
-            ('scale',2, 0.5)
+            ('scale', (2, 0.5)),
             ]
     assert sorted(transformation.keys()) == [
             'offset',
