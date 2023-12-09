@@ -1,3 +1,4 @@
+import bs4
 from sangfroid.value.value import Value
 from sangfroid.time import Time as TimeType
 
@@ -17,6 +18,13 @@ class Simple(Value):
         if result is None:
             raise ValueError(f"value tag had no value: {self.tag}")
         return self.our_type(result)
+
+    def _make_tag_from_args(self, args):
+        if len(args)!=1:
+            raise ValueError(f"{__class__.__name__} takes a single argument")
+
+        result = bs4.element.Tag(name=__class__.__name__.lower())
+        result.string = str(args[0])
 
 @Value.handles_type()
 class Real(Simple):

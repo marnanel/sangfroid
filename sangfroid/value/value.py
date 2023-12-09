@@ -3,20 +3,38 @@ from sangfroid.registry import Registry
 
 class Value:
 
-    def __init__(self, tag,
+    def __init__(self, *args,
                  timeline = None,
                  ):
 
-        self.tag = tag
+        if len(args)==1 and isinstance(args[0], bs4.element.Tag):
+            self.tag = args[0]
+        else:
+            self.tag = self._make_tag_from_args(args)
+
+        assert self.tag is not None
+
         self._timeline = timeline
 
         if timeline is None:
             self._set_value()
-            assert hasattr(self, '_value')
+        else:
+            raise NotImplementedError(
+                    "Construction of values with timelines is not "
+                    "supported just yet."
+                    )
+
+        assert hasattr(self, '_value')
 
     @property
     def is_animated(self):
         return self._timeline is not None
+
+    def _make_tag_from_value(self, value):
+        raise NotImplementedError(
+                f"{self.__class__.__name__} can't yet be initialised "
+                "with a literal value."
+                )
 
     def __str__(self):
         if self._timeline is None:

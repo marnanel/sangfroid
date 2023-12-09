@@ -1,4 +1,5 @@
 import sangfroid
+from sangfroid.value import Vector, Angle
 from test import *
 
 def test_value_real():
@@ -77,6 +78,8 @@ def test_value_composite():
 
     assert ok, "subscript with unreal string raises KeyError"
 
+    assert len(transformation)==4
+
     assert transformation.get('offset') == (3.3333332539, -0.8333333135)
     assert transformation.get('angle') == 45.0
     assert transformation.get('skew_angle') == 50.5
@@ -89,12 +92,20 @@ def test_value_composite():
     assert transformation.get('scale', 'no') == (2, 0.5)
     assert transformation.get('wombat', 'no') == 'no'
 
+    assert transformation == {
+            'offset': (3.3333332539, -0.8333333135),
+            'angle': 45.0,
+            'skew_angle': 50.5,
+            'scale': (2, 0.5),
+            }
+
     assert sorted(transformation.items()) == [
-            ('offset', (3.3333332539, -0.8333333135)),
-            ('angle', 45.0),
-            ('skew_angle', 50.5),
-            ('scale', (2, 0.5)),
+            ('offset', Vector(3.3333332539, -0.8333333135)),
+            ('angle', Angle(45.0)),
+            ('skew_angle', Angle(50.5)),
+            ('scale', Vector(2, 0.5)),
             ]
+
     assert sorted(transformation.keys()) == [
             'offset',
             'angle',
