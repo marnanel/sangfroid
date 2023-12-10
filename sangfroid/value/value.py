@@ -14,21 +14,22 @@ class Value:
 
         assert self.tag is not None
 
-        self._timeline = timeline
-
         if timeline is None:
             self._set_value()
         else:
-            raise NotImplementedError(
-                    "Construction of values with timelines is not "
-                    "supported just yet."
-                    )
+            self._value = Timeline(parent=self)
 
         assert hasattr(self, '_value')
 
     @property
     def is_animated(self):
-        return self._timeline is not None
+        return isinstance(self._value, Timeline)
+
+    @property
+    def timeline(self):
+        if isinstance(self._value, Timeline):
+            return self._value
+        return None
 
     def _make_tag_from_value(self, value):
         raise NotImplementedError(
@@ -37,7 +38,7 @@ class Value:
                 )
 
     def __str__(self):
-        if self._timeline is None:
+        if self.is_animated is None:
             return str(self.value)
         else:
             return '(animated)'
@@ -47,8 +48,8 @@ class Value:
 
     @property
     def value(self):
-        if self._timeline is not None:
-            raise ValueError("This value is animated.")
+        if isinstance(self._value, Timeline):
+            return None
         return self._value
 
     def __eq__(self, other):
@@ -102,9 +103,51 @@ class Value:
                 raise ValueError(
                         f"Waypoints are not all of the same type! {tag}")
 
-            assert waypoint_value._timeline is None
+            assert not waypoint_value.is_animated
             timeline.append([waypoint, waypoint_value])
 
         result = result_type(tag, timeline=timeline)
 
         return result
+
+class Timeline:
+    def __init__(self, parent):
+        self.parent = parent
+        self.waypoints = []
+        waypoint_tags = [w for w in self.parent.tag
+                      if isinstance(w, bs4.element.Tag)]
+
+        if any([w.name!='waypoint' for w in waypoint_tags]):
+            raise ValueError("Waypoints must all be called <waypoint>: "
+                                f"{self.parent.tag}")
+
+        parent_type = self.parent.tag['type']
+
+        for waypoint_tag in waypoint_tags:
+            v = [t for t in waypoint_tag.children
+                 if isinstance(t, bs4.element.Tag)]
+
+            if len(v)==0:
+                raise ValueError(f"Waypoint without a value: {waypoint_tag}")
+            elif len(v)!=1:
+                raise ValueError(
+                        f"Waypoint with multiple values: {v}")
+            elif v[0].name!=parent_type:
+                raise ValueError(
+                        "Waypoint type must match parent: "
+                        f"parent={parent_type}, child={v[0].name}")
+
+            value = self.parent.from_tag(v[0])
+            self.waypoints.append(
+                    Waypoint(
+                        value = value,
+                        before = waypoint_tag['before'],
+                        after = waypoint_tag['before'],
+                        ))
+
+class Waypoint:
+    def __init__(self, value, before, after):
+        # XXX stub
+        self.value = value
+        self.before = before
+        self.after = after
