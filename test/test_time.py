@@ -58,3 +58,31 @@ def test_time_frames_as_int():
     assert t.frames==80
     assert t.seconds==2.0
     assert str(t)=='80f'
+
+def test_time_ordering():
+    assert Time('0f') < Time('1f')
+    assert Time('1f') > Time('0f')
+    assert Time('1f') == Time('1f')
+
+    assert Time('23f') < Time('1s')
+    assert Time('24f') == Time('1s')
+    assert Time('25f') > Time('1s')
+
+    assert Time('23f') <= Time('1s')
+    assert Time('24f') <= Time('1s')
+    assert Time('24f') >= Time('1s')
+    assert Time('25f') >= Time('1s')
+
+    slow = Time('1s', fps=10)
+    normal = Time('1s')
+    try:
+        slow==normal
+        assert False, "comparison should fail"
+    except ValueError:
+        pass
+
+    try:
+        slow<normal
+        assert False, "comparison should fail"
+    except ValueError:
+        pass

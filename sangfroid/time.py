@@ -1,7 +1,9 @@
 import math
+import functools
 
 DEFAULT_FPS = 24
 
+@functools.total_ordering
 class Time:
     def __init__(
             self,
@@ -71,8 +73,21 @@ class Time:
     def __float__(self):
         return self._seconds
 
-    def _raise_constructor_type_error(self):
-        raise ValueError(self.__init__.__doc__)
+    def _compare(self, other, operator):
+        result1 = operator(self._frames, other._frames)
+        result2 = operator(self._seconds, other._seconds)
+
+        if result1!=result2:
+            raise ValueError(
+                    "Comparison between two Times with different FPS")
+
+        return result1
+
+    def __lt__(self, other):
+        return self._compare(other, lambda a,b:a<b)
+
+    def __eq__(self, other):
+        return self._compare(other, lambda a,b:a==b)
 
     def __str__(self):
         return f"{self._frames}f"
