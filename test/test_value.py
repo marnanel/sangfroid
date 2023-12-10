@@ -119,6 +119,9 @@ def test_value_composite():
             '(2.0, 0.5)',
             }
 
+    assert str(Vector({'x': 1.0, 'y': 2.0}))=='(1.0, 2.0)'
+    assert str(Vector({'a': 1.0, 'b': 2.0}))=="{'a': '1.0', 'b': '2.0'}"
+
 def test_value_angle():
     sif = get_sif('circles.sif')
     layer = sif.find(desc="Well, it's round")

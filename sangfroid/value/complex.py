@@ -22,15 +22,34 @@ class Vector(Value):
     def _make_tag_from_args(self, args):
         result = bs4.element.Tag(name=__class__.__name__.lower())
 
-        if isinstance(args, (list, tuple)) and len(args)==2:
-            args = dict(zip('xy', args))
+        members = {}
 
-        for k, v in args.items():
+        if len(args)==1:
+            members = args[0]
+            if not hasattr(members, 'items'):
+                self._raise_constructor_type_error()
+        elif len(args)==2:
+            if not (
+                    isinstance(args[0], (float, int)) and
+                    isinstance(args[1], (float, int))
+                    ):
+                self._raise_constructor_type_error()
+
+            members = dict(zip('xy', args))
+        else:
+            self._raise_constructor_type_error()
+
+        for k, v in members.items():
             addendum = bs4.element.Tag(name=k)
             addendum.string = str(v)
             result.append(addendum)
 
         return result
+
+    def _raise_constructor_type_error():
+        raise TypeError(
+                "Vectors may be constructed as Vector(x,y), or "
+                "Vector(dict_of_members).")
 
     @property
     def value(self):
@@ -69,7 +88,10 @@ class Vector(Value):
                 )
 
     def _str_inner(self):
-        return str(self.as_tuple())
+        if sorted(self._value.keys())==['x', 'y']:
+            return str(self.as_tuple())
+        else:
+            return str(self._value)
 
     def __eq__(self, other):
         try:
