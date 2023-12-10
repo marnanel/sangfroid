@@ -22,6 +22,31 @@ def test_waypoint_simple():
         assert found.before==expected[1]
         assert found.after==expected[2]
 
+def test_waypoint_interpolation_types():
+
+    value = sangfroid.value.Bool(True)
+
+    for source_type, expected_type, expected_emoji in [
+            ('auto',     'tcb',      '🟢'),
+            ('tcb',      'tcb',      '🟢'),
+            ('clamped',  'clamped',  '🔶'),
+            ('constant', 'constant', '🟥'),
+            ('linear',   'linear',   '🌽'),
+            ('ease',     'ease',     '🫐'),
+            ('halt',     'ease',     '🫐'),
+            ]:
+        waypoint = Waypoint('0f', source_type, source_type, value)
+
+        assert waypoint.before == expected_type, source_type
+        assert waypoint.after  == expected_type, source_type
+
+        print("9890", str(waypoint))
+        found_emoji = str(waypoint).split(' ')[2]
+        assert found_emoji == f'{expected_emoji}-{expected_emoji}'
+
+    with pytest.raises(ValueError):
+        Waypoint('0f', 'undefined', 'auto', value)
+
 def test_waypoint_silly():
 
     value = sangfroid.value.Bool(True)

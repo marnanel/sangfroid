@@ -224,8 +224,8 @@ class Waypoint:
 
     def __str__(self):
         return '[%3s ' % (self.time,) + (
-                f'{INTERPOLATION_TYPES[self.before]}-' 
-                f'{INTERPOLATION_TYPES[self.after]} - ' 
+                f'{INTERPOLATION_TYPES[self.before][1]}-'
+                f'{INTERPOLATION_TYPES[self.after][1]} - '
                 f'{self.value}]'
                 )
 
