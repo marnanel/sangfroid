@@ -21,7 +21,7 @@ class Vector(Value):
         result = bs4.element.Tag(name=__class__.__name__.lower())
 
         if isinstance(args, (list, tuple)) and len(args)==2:
-            args = dict(zip(args, 'xy'))
+            args = dict(zip('xy', args))
 
         for k, v in args.items():
             addendum = bs4.element.Tag(name=k)
@@ -151,18 +151,14 @@ class Composite(Value):
 
     def __eq__(self, other):
 
-        print("9000")
 
         if len(other)!=len(self):
-            print("9001")
             return False
 
         for key, value in self.items():
-            print("9010", key, value)
             if other[key]!=value:
                 return False
 
-        print("9099")
         return True
 
 @Value.handles_type()
