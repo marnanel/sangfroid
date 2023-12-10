@@ -57,3 +57,19 @@ def test_waypoint_silly():
     with pytest.raises(TypeError):
         # values must be sangfroid.value.Values
         Waypoint('0f', 'ease', 'ease', True)
+
+def test_waypoint_time_spec():
+    value = sangfroid.value.Bool(True)
+    w1 = Waypoint('20f', 'ease', 'ease', value)
+    w2 = Waypoint(20, 'ease', 'ease', value)
+    w3 = Waypoint(Time('20f'), 'ease', 'ease', value)
+
+    assert w1==w2
+    assert w1==w3
+    assert w2==w3
+
+    with pytest.raises(ValueError):
+        Waypoint('bananas', 'ease', 'ease', value)
+
+    with pytest.raises(TypeError):
+        Waypoint(None, 'ease', 'ease', value)

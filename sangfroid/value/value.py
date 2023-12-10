@@ -175,7 +175,13 @@ class Waypoint:
         if value.is_animated:
             raise ValueError("Waypoints can't have animated values")
 
-        self.time = time
+        if isinstance(time, (str, int)):
+            self.time = Time(time)
+        elif isinstance(time, Time):
+            self.time = time
+        else:
+            raise TypeError("time parameter should be str, int, or Time.")
+
         self._before = self._check_interpolation_type(before, True)
         self._after = self._check_interpolation_type(after, True)
         self.value = value
