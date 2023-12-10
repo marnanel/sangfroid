@@ -40,7 +40,6 @@ def test_waypoint_interpolation_types():
         assert waypoint.before == expected_type, source_type
         assert waypoint.after  == expected_type, source_type
 
-        print("9890", str(waypoint))
         found_emoji = str(waypoint).split(' ')[2]
         assert found_emoji == f'{expected_emoji}-{expected_emoji}'
 
