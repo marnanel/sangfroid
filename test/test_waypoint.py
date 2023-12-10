@@ -1,4 +1,6 @@
 import sangfroid
+from sangfroid.value.value import Waypoint
+from sangfroid.time import Time
 from test import *
 import pytest
 
@@ -11,8 +13,23 @@ def test_waypoint_simple():
     assert scale.is_animated
 
     for found, expected in zip(scale.timeline, [
-        sangfroid.value.Waypoint( '0f', 'constant', 'constant'),
-        sangfroid.value.Waypoint('24f', 'linear',   'linear'),
-        sangfroid.value.Waypoint('48f', 'constant', 'constant'),
+        ( '0f', 'ease', 'ease'),
+        ('24f', 'linear', 'linear'),
+        ('48f', 'ease', 'ease'),
         ]):
-        assert found==expected
+
+        assert found.time==Time(expected[0])
+        assert found.before==expected[1]
+        assert found.after==expected[2]
+
+def test_waypoint_silly():
+
+    value = sangfroid.value.Bool(True)
+
+    with pytest.raises(ValueError):
+        # silly interpolation type
+        Waypoint('0f', 'wombat', 'ease', value)
+
+    with pytest.raises(TypeError):
+        # values must be sangfroid.value.Values
+        Waypoint('0f', 'ease', 'ease', True)
