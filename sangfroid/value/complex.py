@@ -66,7 +66,7 @@ class Vector(Value):
                  for k in sorted(self._value.keys())]
                 )
 
-    def __str__(self):
+    def _str_inner(self):
         return str(self.as_tuple())
 
     def __eq__(self, other):

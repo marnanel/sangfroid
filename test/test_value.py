@@ -129,3 +129,12 @@ def test_value_angle():
 
     assert str(transformation['angle']) == '45°'
     assert str(transformation['skew_angle']) == '50.5°'
+
+def test_value_str_animated():
+    sif = get_sif('bouncing.sif')
+
+    background = sif.find(desc='Background')
+    assert str(background['transformation']['scale'])=='(1.0, 1.0)'
+
+    shadow = sif.find(desc='Shadow')
+    assert str(shadow['transformation']['scale'])=='(animated)'

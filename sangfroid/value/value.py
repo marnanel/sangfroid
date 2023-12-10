@@ -43,10 +43,12 @@ class Value:
                 )
 
     def __str__(self):
-        if self.is_animated is None:
-            return str(self.value)
-        else:
+        if self.is_animated:
             return '(animated)'
+        return self._str_inner()
+
+    def _str_inner(self):
+        return str(self.value)
 
     def __repr__(self):
         return '['+self.__class__.__name__+' '+str(self)+']'

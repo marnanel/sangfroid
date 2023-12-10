@@ -45,7 +45,7 @@ class Bool(Simple):
 class Angle(Simple):
     our_type = float
 
-    def __str__(self):
+    def _str_inner(self):
         return '%g°' % (self._value,)
 
 @Value.handles_type()
