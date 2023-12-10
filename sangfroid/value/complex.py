@@ -29,13 +29,14 @@ class Vector(Value):
             if not hasattr(members, 'items'):
                 self._raise_constructor_type_error()
         elif len(args)==2:
+            members = dict(zip('xy', args))
+
             if not (
-                    isinstance(args[0], (float, int)) and
-                    isinstance(args[1], (float, int))
+                    isinstance(members['x'], (float, int)) and
+                    isinstance(members['y'], (float, int))
                     ):
                 self._raise_constructor_type_error()
 
-            members = dict(zip('xy', args))
         else:
             self._raise_constructor_type_error()
 
