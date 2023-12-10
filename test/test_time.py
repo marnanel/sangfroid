@@ -86,3 +86,6 @@ def test_time_ordering():
         assert False, "comparison should fail"
     except ValueError:
         pass
+
+def test_time_compare_silly():
+    assert Time(1) != 'bananas'

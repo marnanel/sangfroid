@@ -84,9 +84,17 @@ class Time:
         return result1
 
     def __lt__(self, other):
+        if not isinstance(other, type(self)):
+            raise TypeError(
+                    "No comparison is possible between "
+                    f"Time and {type(other)}")
+
         return self._compare(other, lambda a,b:a<b)
 
     def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return False
+
         return self._compare(other, lambda a,b:a==b)
 
     def __str__(self):
