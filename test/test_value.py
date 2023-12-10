@@ -100,24 +100,24 @@ def test_value_composite():
             }
 
     assert sorted(transformation.items()) == [
-            ('offset', Vector(3.3333332539, -0.8333333135)),
             ('angle', Angle(45.0)),
-            ('skew_angle', Angle(50.5)),
+            ('offset', Vector(3.3333332539, -0.8333333135)),
             ('scale', Vector(2, 0.5)),
+            ('skew_angle', Angle(50.5)),
             ]
 
     assert sorted(transformation.keys()) == [
-            'offset',
             'angle',
-            'skew_angle',
+            'offset',
             'scale',
+            'skew_angle',
             ]
-    assert sorted(transformation.values()) == [
-            (3.3333332539, -0.8333333135),
-            45.0,
-            50.5,
-            (2.0, 0.5),
-        ]
+    assert set([str(x) for x in transformation.values()]) == {
+            '(3.3333332539, -0.8333333135)',
+            '45°',
+            '50.5°',
+            '(2.0, 0.5)',
+            }
 
 def test_value_angle():
     sif = get_sif('circles.sif')
