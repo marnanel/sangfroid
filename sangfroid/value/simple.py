@@ -21,10 +21,13 @@ class Simple(Value):
 
     def _make_tag_from_args(self, args):
         if len(args)!=1:
-            raise ValueError(f"{__class__.__name__} takes a single argument")
+            raise ValueError(
+                    f"{self.__class__.__name__} takes a single argument")
 
-        result = bs4.element.Tag(name=__class__.__name__.lower())
-        result.string = str(args[0])
+        result = bs4.element.Tag(name=self.__class__.__name__.lower())
+        result['value'] = str(args[0])
+
+        return result
 
 @Value.handles_type()
 class Real(Simple):
