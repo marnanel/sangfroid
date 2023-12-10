@@ -7,6 +7,7 @@ def test_canvas_children():
     EXPECTED = [
             "[🔵circle 'Red circle']",
             "[📂group 'More circles']",
+            "[📂group \"Well, it's round\"]",
             "[📂group 'Blurry circle']",
             ]
 
@@ -23,6 +24,8 @@ def test_canvas_descendants():
             "[-🔵circle 'Yellow circle']",
             "[-📂group 'All right, one more circle']",
             "[-🔵circle 'Orange circle']",
+            "[📂group \"Well, it's round\"]",
+            "[-🔵circle 'Purple circle']",
             "[📂group 'Blurry circle']",
             "[-🟠blur 'Blur']",
             "[-🔵circle 'Blue circle']",
