@@ -1,6 +1,8 @@
 import bs4
 from sangfroid.value.value import Value
 
+RGBA = 'rgba'
+
 @Value.handles_type()
 class Vector(Value):
 
@@ -175,3 +177,54 @@ class Canvas(Value):
                     )
 
         self._value = [Layer.from_tag(layer) for layer in layers]
+
+@Value.handles_type()
+class Color(Value):
+    def _set_value(self):
+
+        self._value = dict([
+            (dimension, float(self.tag(dimension)[0].string))
+            for dimension in RGBA
+            ])
+
+    @property
+    def value(self):
+        result = ''.join([
+                '%02x' % (int(self._value[n]*255),)
+                for n in RGBA
+                ])
+
+        return result
+
+    @value.setter
+    def value(self, v):
+
+        def _raise_format_error():
+            raise ValueError(
+                    "Express a colour value as (r,g,b), or (r,g,b,a), or "
+                    "as a string of six or eight hex digits."
+                    )
+
+        if isinstance(v, tuple):
+            if len(v) not in (3,4):
+                _raise_format_error()
+
+            if len(v)==3:
+                v = (v[0], v[1], v[2], 1.0)
+
+            self._value = dict([
+                (n, float(v[i]))
+                for i,n in enumerate(RGBA)])
+
+        elif isinstance(v, str):
+            if len(v) not in (6,8):
+                _raise_format_error()
+
+            if len(v)==6:
+                v += 'FF'
+
+            self._value = dict([
+                (n, float(int(v[i*2:i*2+1], 16)))
+                for i,n in enumerate(RGBA)])
+        else:
+            _raise_format_error()
