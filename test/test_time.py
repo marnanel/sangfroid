@@ -2,90 +2,97 @@ import sangfroid
 from sangfroid.time import Time
 from test import *
 
-def test_time_seconds():
-    t = Time('0s')
-    assert int(t)==0
-    assert t.frames==0
-    assert t.seconds==0.0
-    assert str(t)=='0f'
+TESTS = [
+        # "None" in secs means not to look it up.
 
-    t = Time('2s')
-    assert int(t)==48
-    assert t.frames==48
-    assert t.seconds==2.0
-    assert str(t)=='48f'
+        # Init param; fps;  frames; secs;  str or exception
+        (None,        None,      0,    0,  ValueError), # silly time spec
+        ('Banana',    None,      0,    0,  ValueError),
+        (2+4j,        None,      0,    0,  ValueError),
 
-    t = Time('2s', fps=40)
-    assert int(t)==80
-    assert t.frames==80
-    assert t.seconds==2.0
-    assert str(t)=='80f'
+        ('0s',        None,      0,    0,  ValueError), # seconds, no fps
+        ('2s',        None,      0,    0,  ValueError),
 
-def test_time_frames():
-    t = Time('0f')
-    assert int(t)==0
-    assert t.frames==0
-    assert t.seconds==0.0
-    assert str(t)=='0f'
+        ('0s',          -1,      0,    0,  ValueError), # silly FPS specs
+        ('0s',        24.1,      0,    0,  ValueError),
+        ('0s',    'wombat',      0,    0,  ValueError),
 
-    t = Time('48f')
-    assert int(t)==48
-    assert t.frames==48
-    assert t.seconds==2.0
-    assert str(t)=='48f'
+        ('0s',          24,      0,    0,  '0f'),       # seconds
+        ('2s',          24,     48,    2,  '2s'),
+        ('4s',          24,     96,    4,  '4s'),
+        ('-2s',         24,    -48,   -2,  '-2s'),
+        ('2.5s',        24,     60,  2.5,  '2s 12f'),
+        ('-2.5s',       24,    -60, -2.5,  '-2s 12f'),
 
-    t = Time('80f', fps=40)
-    assert int(t)==80
-    assert t.frames==80
-    assert t.seconds==2.0
-    assert str(t)=='80f'
+        ('0s',        None,      0,    0,  ValueError), # s+frames, no fps
+        ('0s 2f',     None,      0,    0,  ValueError), # s+frames, no fps
+        ('2s 2f',     None,      0,    0,  ValueError),
 
-def test_time_frames_as_int():
-    t = Time(0)
-    assert int(t)==0
-    assert t.frames==0
-    assert t.seconds==0.0
-    assert str(t)=='0f'
+        ('0s 0f',       24,      0,    0,  '0f'),       # seconds + frames
+        ('0s 2f',       24,      2, 0.08,  '2f'),
+        ('0s 2.5f',     24,    2.5,  0.1,  '2.5f'),
+        ('0s 100f',     24,    100, 4.17,  '4s 4f'),
+        ('2s 2f',       24,     50, 2.08,  '2s 2f'),
+        ('2s -2f',      24,      0,    0,  ValueError),
+        ('4s 0f',       24,     96,    4,  '4s'),
+        ('-2s -2f',     24,      0,    0,  ValueError),
+        ('-2s 2f',      24,    -50,-2.08,  '-2s 2f'),
+        ('2.5s 0f',     24,     60,  2.5,  '2s 12f'),
+        ('2.5s 2f',     24,     62, 2.58,  '2s 14f'),
+        ('2.5s 2.5f',   24,   62.5,  2.6,  '2s 14.5f'),
 
-    t = Time(48)
-    assert int(t)==48
-    assert t.frames==48
-    assert t.seconds==2.0
-    assert str(t)=='48f'
+        ('0f',        None,      0, None,  '0f'),       # frames, no fps
+        ('2f',        None,      2, None,  '2f'),
+        ('24f',       None,     24, None,  '24f'),
+        ('48f',       None,     48, None,  '48f'),
+        ('48.5f',     None,   48.5, None,  '48.5f'),
+        ('-48.5f',    None,  -48.5, None,  '-48.5f'),
 
-    t = Time(80, fps=40)
-    assert int(t)==80
-    assert t.frames==80
-    assert t.seconds==2.0
-    assert str(t)=='80f'
+        ('0f',          24,      0,    0,  '0f'),
+        ('2f',          24,      2, 0.08,  '2f'),
+        ('24f',         24,     24,    1,  '1s'),
+        ('48f',         24,     48,    2,  '2s'),
+        ('48.5f',       24,   48.5, 2.02,  '2s 0.5f'),
+        ('-48.5f',      24,  -48.5,-2.02,  '-2s 0.5f'),
 
-def test_time_ordering():
-    assert Time('0f') < Time('1f')
-    assert Time('1f') > Time('0f')
-    assert Time('1f') == Time('1f')
+          ]
 
-    assert Time('23f') < Time('1s')
-    assert Time('24f') == Time('1s')
-    assert Time('25f') > Time('1s')
+def test_time_examples():
+    for example in TESTS:
+        try:
+            time = Time(example[0], fps=example[1])
 
-    assert Time('23f') <= Time('1s')
-    assert Time('24f') <= Time('1s')
-    assert Time('24f') >= Time('1s')
-    assert Time('25f') >= Time('1s')
+            assert round(time.frames, 2)==example[2], (
+                    f"frames property: {example}"
+                    )
+            
+            if example[3] is not None:
+                assert round(time.seconds, 2)==example[3], (
+                    f"seconds property: {example}"
+                    )
 
-    slow = Time('1s', fps=10)
-    normal = Time('1s')
-    try:
-        slow==normal
-        assert False, "comparison should fail"
-    except ValueError:
-        pass
+            assert time == Time(example[2],   fps=example[1]), (
+                    f"__eq__(): {example}"
+                    )
+            assert time != Time(example[2]+1, fps=example[1]), (
+                    f"__ne__(): {example}"
+                    )
 
-    try:
-        slow<normal
-        assert False, "comparison should fail"
-    except ValueError:
-        pass
+            if isinstance(example[4], str):
+                assert str(time)==example[4], (
+                        f"str(): {example}"
+                        )
 
-def test_time_compare_silly():
-    assert Time(1) != 'bananas'
+            assert not isinstance(example[4], Exception), (
+                    f"We expected an exception: {example}"
+                    )
+        except Exception as e:
+            if isinstance(e, AssertionError):
+                raise
+
+            assert not isinstance(example[4], str), (
+                    f"Didn't expect an exception: {example}\n{e}"
+                    )
+            assert isinstance(e, example[4]), (
+                    f"Wrong kind of exception: {example}\n{e}"
+                    )
