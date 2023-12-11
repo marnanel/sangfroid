@@ -23,8 +23,15 @@ class Time:
     It's almost always 24. The reason we don't default to 24 is that
     it risks introducing subtle bugs which are only discovered when
     the actual frame rate isn't 24.
-    You must specify FPS if you give the number of seconds, even if
-    the number of seconds is zero.
+
+    However, if the time is zero (that is, the start of the film), you may
+    write it as "0s" or "0s 0f" even if you don't supply the FPS.
+    This doesn't allow you to write "0s 2f" without supplying the FPS,
+    even though the FPS wouldn't make a difference, because edge cases
+    give rise to bugs.
+
+    Times compare numerically to other Times, but unless the frame
+    count is zero, they must have the same FPS.
 
     Times may be negative. However, in time specifications giving
     both the seconds and the frames, the frame count may not be negative.
@@ -33,7 +40,7 @@ class Time:
     of frames may be equal to or higher than the FPS. (So, for example,
     "2s 48f" is a valid time even if fps=24, when it's equivalent to "4s".)
 
-    This type is constant and hashable.
+    This type is immutable and hashable.
     """
     def __init__(
             self,
@@ -78,18 +85,19 @@ class Time:
         if found is None:
             complain()
 
-        result = 0
+        result = 0.0
 
         if found.group(2) is None and found.group(3) is None:
             complain()
 
         if found.group(2) is not None:
-            if self._fps is None:
+            seconds = float(found.group(2))
+            if self._fps is not None:
+                result += seconds * self._fps
+            elif seconds!=0:
                 raise ValueError(
                         "If you specify a number of seconds, you "
                         f"must also specify the FPS: {s}")
-
-            result += float(found.group(2)) * self._fps
 
         if found.group(3) is not None:
             result += float(found.group(3))
@@ -129,17 +137,26 @@ class Time:
             ValueError: if we don't know the FPS.
         """
         if self.fps is None:
-            raise ValueError(
-                    "If you want to measure time in seconds, "
-                    "you will need to specify the FPS.")
+            if self._frames==0.0:
+                return 0.0
+            else:
+                raise ValueError(
+                        "If you want to measure time in seconds, "
+                        "you will need to specify the FPS.")
         return self._frames / self.fps
 
     def _compare(self, other, operator):
 
         if isinstance(other, self.__class__):
-            if other.fps!=self.fps:
+            if (
+                    other.fps is not None and
+                    self.fps is not None and
+                    other.fps!=self.fps):
                 raise ValueError(
-                        "Comparison between two Times with different FPS")
+                        "Comparison between two Times with different FPS: "
+                        f"{self}, {other}"
+                        )
+
             other_f = other.frames
         elif isinstance(other, (float, int)):
             other_f = other
@@ -171,6 +188,13 @@ class Time:
         return result
 
     __repr__ = __str__
+
+    def __hash__(self):
+        if self._frames == 0:
+            return 0
+
+        s = f'{self._frames} {self._fps}'
+        return hash(s)
 
 # It doesn't matter that you can produce invalid decimals with this regex:
 # that will be discovered when we do the float conversion.

@@ -1,3 +1,4 @@
+import pytest
 import sangfroid
 from sangfroid.time import Time
 from test import *
@@ -24,8 +25,8 @@ TESTS = [
         ('2.5s',        24,     60,  2.5,  '2s 12f'),
         ('-2.5s',       24,    -60, -2.5,  '-2s 12f'),
 
-        ('0s',        None,      0,    0,  ValueError), # s+frames, no fps
-        ('0s 2f',     None,      0,    0,  ValueError), # s+frames, no fps
+        ('0s',        None,      0,    0, '0f'),        # s+frames, no fps
+        ('0s 2f',     None,      2, 0.08,  ValueError),
         ('2s 2f',     None,      0,    0,  ValueError),
 
         ('0s 0f',       24,      0,    0,  '0f'),       # seconds + frames
@@ -71,17 +72,37 @@ def test_time_examples():
                     f"seconds property: {example}"
                     )
 
-            assert time == Time(example[2],   fps=example[1]), (
-                    f"__eq__(): {example}"
-                    )
-            assert time != Time(example[2]+1, fps=example[1]), (
-                    f"__ne__(): {example}"
-                    )
+            assert time == example[2],   f"equal to constant: {example}"
+            assert time  < example[2]+1, f"less than constant: {example}"
+            assert time  > example[2]-1, f"more than constant: {example}"
+
+            t_same   = Time(example[2],   fps=example[1])
+            t_before = Time(example[2]-1, fps=example[1])
+            t_after  = Time(example[2]+1, fps=example[1])
+
+            assert time == t_same,   f"equal to another Time: {example}"
+            assert time != t_before, f"not equal to another Time: {example}"
+            assert time != t_after,  f"not equal to another Time: {example}"
+            assert time < t_after,   f"less than another Time: {example}"
+            assert time > t_before,  f"more than another Time: {example}"
+
+            assert hash(time)==hash(t_same),   f"hash equal: {example}"
+            assert hash(time)!=hash(t_before), f"hash not equal: {example}"
+            assert hash(time)!=hash(t_after),  f"hash not equal: {example}"
 
             if isinstance(example[4], str):
-                assert str(time)==example[4], (
-                        f"str(): {example}"
-                        )
+                assert str(time)==example[4], f"str(): {example}"
+
+            with pytest.raises(AttributeError):
+                time.frames = 0
+
+            with pytest.raises(AttributeError):
+                time.seconds = 0
+
+            with pytest.raises(AttributeError):
+                time.fps = 0
+
+            # (end of the unit tests here)
 
             assert not isinstance(example[4], Exception), (
                     f"We expected an exception: {example}"
