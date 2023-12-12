@@ -35,7 +35,7 @@ def test_waypoint_interpolation_types():
             ('ease',     'ease',     '🫐'),
             ('halt',     'ease',     '🫐'),
             ]:
-        waypoint = Waypoint('0f', source_type, source_type, value)
+        waypoint = Waypoint(Time('0f'), source_type, source_type, value)
 
         assert waypoint.before == expected_type, source_type
         assert waypoint.after  == expected_type, source_type
@@ -44,7 +44,7 @@ def test_waypoint_interpolation_types():
         assert found_emoji == f'{expected_emoji}-{expected_emoji}'
 
     with pytest.raises(ValueError):
-        Waypoint('0f', 'undefined', 'auto', value)
+        Waypoint(Time('0f'), 'undefined', 'auto', value)
 
 def test_waypoint_silly():
 
@@ -52,23 +52,18 @@ def test_waypoint_silly():
 
     with pytest.raises(ValueError):
         # silly interpolation type
-        Waypoint('0f', 'wombat', 'ease', value)
+        Waypoint(Time('0f'), 'wombat', 'ease', value)
 
     with pytest.raises(TypeError):
         # values must be sangfroid.value.Values
-        Waypoint('0f', 'ease', 'ease', True)
+        Waypoint(Time('0f'), 'ease', 'ease', True)
 
 def test_waypoint_time_spec():
     value = sangfroid.value.Bool(True)
-    w1 = Waypoint('20f', 'ease', 'ease', value)
-    w2 = Waypoint(20, 'ease', 'ease', value)
-    w3 = Waypoint(Time('20f'), 'ease', 'ease', value)
+    w1 = Waypoint(Time('20f'), 'ease', 'ease', value)
+    assert int(w1.time)==20
 
-    assert w1==w2
-    assert w1==w3
-    assert w2==w3
-
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         Waypoint('bananas', 'ease', 'ease', value)
 
     with pytest.raises(TypeError):
