@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from sangfroid.keyframe import Keyframe
 from sangfroid.layer import Group
 
-class Sif(Group):
+class Animation(Group):
     def __init__(self, source):
         self.source = source
         with open(self.source, 'r') as f:

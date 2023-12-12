@@ -19,7 +19,7 @@ class Time:
         - "Fs Ff", in which case the values are added together.
 
     For types involving seconds, the FPS must be supplied to the constructor.
-    You can find this using the "fps" property of the Sif.
+    You can find this using the "fps" property of the Animation.
     It's almost always 24. The reason we don't default to 24 is that
     it risks introducing subtle bugs which are only discovered when
     the actual frame rate isn't 24.

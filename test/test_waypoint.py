@@ -5,7 +5,7 @@ from test import *
 import pytest
 
 def test_waypoint_simple():
-    sif = get_sif('bouncing.sif')
+    sif = get_animation('bouncing.sif')
 
     ball = sif.find(desc='Ball')
     scale = ball['transformation']['scale']

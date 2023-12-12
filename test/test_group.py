@@ -2,7 +2,7 @@ import sangfroid
 from test import *
 
 def test_canvas_children():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
 
     EXPECTED = [
             "[🔵circle 'Red circle']",
@@ -16,7 +16,7 @@ def test_canvas_children():
     assert found==EXPECTED
 
 def test_canvas_descendants():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
 
     EXPECTED = [
             "[🔵circle 'Red circle']",

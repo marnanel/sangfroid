@@ -4,7 +4,7 @@ from sangfroid.value import Vector, Angle
 from test import *
 
 def test_value_real():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
     orange_circle = sif.find(desc='Orange circle')
     amount = orange_circle['amount']
 
@@ -18,7 +18,7 @@ def test_value_real():
     assert not amount=='bananas'
 
 def test_value_vector():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
 
     origin = green_circle['origin']
@@ -61,7 +61,7 @@ def test_value_vector():
         ]
 
 def test_value_composite():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
     layer = sif.find(desc="Well, it's round")
     transformation = layer['transformation']
 
@@ -132,7 +132,7 @@ def test_value_vector_constructor():
         Vector(1,2,3)
 
 def test_value_angle():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
     layer = sif.find(desc="Well, it's round")
     transformation = layer['transformation']
 
@@ -143,7 +143,7 @@ def test_value_angle():
     assert str(transformation['skew_angle']) == '50.5°'
 
 def test_value_str_animated():
-    sif = get_sif('bouncing.sif')
+    sif = get_animation('bouncing.sif')
 
     background = sif.find(desc='Background')
     assert str(background['transformation']['scale'])=='(1.0, 1.0)'

@@ -2,7 +2,7 @@ import sangfroid
 from test import *
 
 def test_sif_fields():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
 
     assert sif.name == 'circles'
     assert sif.description == 'I like circles. They are round.'

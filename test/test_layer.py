@@ -3,7 +3,7 @@ import sangfroid
 from test import *
 
 def test_layer_children():
-    sif = get_sif('pick-and-mix.sif')
+    sif = get_animation('pick-and-mix.sif')
 
     found = [re.search(r'([a-z]+)', str(layer))[0]
              for layer in sif.descendants]
@@ -68,7 +68,7 @@ def test_layer_children():
             ]
 
 def test_layer_items(dump = False):
-    sif = get_sif('bouncing.sif')
+    sif = get_animation('bouncing.sif')
 
     def format_value(v):
         result = f'{v.__class__.__name__}, {v}'
@@ -113,7 +113,7 @@ def _find_type_names_of_children_of_layer(layer):
     return result
 
 def test_layer_find_all():
-    sif = get_sif('bouncing.sif')
+    sif = get_animation('bouncing.sif')
     shadows = sif.find_all(desc='Shadow')
     assert [x.desc for x in shadows] == ['Shadow', 'Shadow']
 
@@ -125,13 +125,13 @@ def test_layer_find_all():
     assert wombats == []
 
 def test_layer_find():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
     orange_circle = sif.find(desc='Orange circle')
     assert isinstance(orange_circle, sangfroid.layer.Layer)
     assert orange_circle.desc == 'Orange circle'
 
 def test_layer_subscript():
-    sif = get_sif('circles.sif')
+    sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
     assert green_circle['radius'] == 0.5055338531
 
