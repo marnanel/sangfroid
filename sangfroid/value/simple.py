@@ -1,6 +1,7 @@
 import bs4
 from sangfroid.value.value import Value
 from sangfroid.time import Time as TimeType
+from sangfroid.utils import tag_to_fps
 
 class Simple(Value):
 
@@ -10,14 +11,14 @@ class Simple(Value):
         if self.our_type is None:
             raise NotImplementedError()
 
-        self._value = self.our_type(self.value)
-
-    @property
-    def value(self):
         result = self.tag.get('value', None)
         if result is None:
             raise ValueError(f"value tag had no value: {self.tag}")
-        return self.our_type(result)
+
+        self._value = self._construct_value(result)
+
+    def _construct_value(self, v):
+        return self.our_type(v)
 
     def _make_tag_from_args(self, args):
         if len(args)!=1:
@@ -55,3 +56,9 @@ class String(Simple):
 @Value.handles_type()
 class Time(Simple):
     our_type = TimeType
+
+    def _construct_value(self, v):
+        return self.our_type(
+                v,
+                fps = tag_to_fps(self.tag),
+                )
