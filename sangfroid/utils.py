@@ -17,3 +17,19 @@ class Boolean:
             return 'false'
 
     __repr__ = __str__
+
+def tag_to_fps(tag):
+    """
+    Given any tag from a Synfig document, finds that document's film speed
+    in frames per second (fps).
+
+    Args:
+        tag (Tag): any tag from a Synfig document
+
+    Returns:
+        float, the speed in frames per second.
+    """
+    root = tag.find_parents()[-2] # -1 is "document", the anon root tag
+    assert root.name=='canvas'
+    result = float(root['fps'])
+    return result
