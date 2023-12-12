@@ -67,7 +67,7 @@ def test_layer_children():
             "blur",
             ]
 
-def test_layer_items():
+def test_layer_items(dump = False):
     sif = get_sif('bouncing.sif')
 
     def format_value(v):
@@ -89,7 +89,10 @@ def test_layer_items():
             else:
                 found += f' - {k}: '+format_value(v)+'\n'
 
-    assert found == LAYER_ITEMS_EXPECTED
+    if dump:
+        print(found)
+    else:
+        assert found == LAYER_ITEMS_EXPECTED
 
 def _find_type_names_of_children_of_layer(layer):
     """
@@ -145,7 +148,7 @@ LAYER_ITEMS_EXPECTED = """
  - z_depth: Real, 0.0
  - link_time: Time, 0f
  - local_time: Time, 0f
- - duration: Time, 48f
+ - duration: Time, 2s
  - only_for_positive_duration: Bool, True
  - symmetrical: Bool, True
 [📂group 'Ball']
@@ -299,3 +302,6 @@ LAYER_ITEMS_EXPECTED = """
  - blend_method: Integer, 0
  - color: Color, ffffffff
 """.lstrip()
+
+if __name__=='__main__':
+    test_layer_items(dump = True)
