@@ -45,7 +45,6 @@ class Format:
         """
         with open(filename, 'rb') as f:
             magic = f.read(2)
-        print("9000", magic)
         if magic not in MAGIC_SIGNATURES:
             raise ValueError(
                     f"The file {filename} isn't in a format I know how "
