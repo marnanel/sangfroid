@@ -28,20 +28,18 @@ class Animation(Group):
         return self.tag.find('desc').string
 
     @property
-    def width(self):
-        return int(self.tag.attrs['width'])
+    def size(self):
+        return (
+                int(self.tag.attrs['width']),
+                int(self.tag.attrs['height']),
+                )
 
     @property
-    def height(self):
-        return int(self.tag.attrs['height'])
-
-    @property
-    def xres(self):
-        return float(self.tag.attrs['xres'])
-
-    @property
-    def yres(self):
-        return float(self.tag.attrs['yres'])
+    def resolution(self):
+        return (
+                float(self.tag.attrs['xres']),
+                float(self.tag.attrs['yres']),
+                )
 
     @property
     def gamma(self):
