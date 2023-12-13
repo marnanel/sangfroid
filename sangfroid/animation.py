@@ -1,15 +1,17 @@
 from bs4 import BeautifulSoup
 from sangfroid.keyframe import Keyframe
 from sangfroid.layer import Group
+from sangfroid.format import Format
 
 class Animation(Group):
-    def __init__(self, source):
-        self.source = source
-        with open(self.source, 'r') as f:
+    def __init__(self, filename):
+        self.format = Format.from_filename(filename)
+
+        with self.format.main_file() as f:
             self.soup = BeautifulSoup(
                     f,
-                          features = 'xml',
-                          )
+                    features = 'xml',
+                    )
 
         assert len(self.soup.contents)==1
         tag = self.soup.contents[0]
