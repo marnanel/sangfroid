@@ -104,7 +104,7 @@ class Animation(Group):
 
 def open(filename):
     """
-    Creates an Animation from the file with the given filename.
+    Loads the Synfig file with the given filename.
 
     Args:
         filename (str): the name of the source file. Can be .sfg, .sif,
