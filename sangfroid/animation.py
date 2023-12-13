@@ -101,3 +101,17 @@ class Animation(Group):
             return int(t[:-1])
         else:
             raise ValueError(f"I don't understand the time specification: {t}")
+
+def open(filename):
+    """
+    Creates an Animation from the file with the given filename.
+
+    Args:
+        filename (str): the name of the source file. Can be .sfg, .sif,
+            or .sifz.
+
+    Returns:
+        Animation
+    """
+    result = Animation(filename)
+    return result

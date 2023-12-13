@@ -9,4 +9,6 @@ __all__ = [
         'Keyframe',
         'Animation',
         'Time',
+
+        'open',
         ]

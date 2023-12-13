@@ -7,4 +7,4 @@ def get_animation(name):
             name,
             )
 
-    return sangfroid.Animation(filename)
+    return sangfroid.open(filename)
