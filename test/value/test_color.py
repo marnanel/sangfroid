@@ -93,6 +93,8 @@ def test_color_assign():
 </color>""", asserting='with 8 hex digits with no hash')
 
 def test_vector_constructor_str():
+    # Regression test
     for i in range(256):
-        print(Color('%02x%02x%02x' % (i, i, i)))
-    assert False
+        expected = '#%02x%02x%02x' % (i, i, i)
+        found = str(Color(expected))
+        assert expected==found, i
