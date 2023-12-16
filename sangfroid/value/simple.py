@@ -25,25 +25,21 @@ class Simple(Value):
 
     @value.setter
     def value(self, v):
+        if self.our_type is None:
+            raise NotImplementedError()
 
         if v==():
-
-            if self.neutral_value is None:
-                raise NotImplementedError()
-
             result = self.our_type()
 
-        elif isinstance(v, self.our_type):
-
-            # Cast, in case it's a subclass which might confuse us.
-            result = self.our_type(v)
-
         else:
-            raise TypeError("I need a value of type "
-                            f"{self.our_type.__name__}, "
-                            "not "
-                            f"{v.__class__.__name__}."
-                            )
+            try:
+                result = self.our_type(v)
+            except TypeError:
+                raise TypeError("I need a value of type "
+                                f"{self.our_type.__name__}, "
+                                "not "
+                                f"{v.__class__.__name__}."
+                                )
 
         self.tag.name = __class__.__name__.lower()
         self.tag.attrs = {
