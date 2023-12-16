@@ -11,50 +11,48 @@ class Vector(Value):
     # applied to us
     our_type = float
 
-    def _set_value(self):
-        self._value = dict(
+    @property
+    def value(self):
+        return dict(
                 [(field.name,
                   field.string)
                  for field in self.tag.children
                  if isinstance(field, bs4.element.Tag)
                  ])
 
-    def _make_tag_from_args(self, args):
-        result = bs4.element.Tag(name=__class__.__name__.lower())
+    @value.setter
+    def value(self, v):
 
-        members = {}
+        def _raise_type_error():
+            raise TypeError(
+                    "Vectors may be constructed as Vector(x,y), or "
+                    "Vector(dict_of_members).")
 
-        if len(args)==1:
-            members = args[0]
+        if len(v)==0:
+            members = {}
+        elif len(v)==1:
+            members = v[0]
             if not hasattr(members, 'items'):
-                self._raise_constructor_type_error()
-        elif len(args)==2:
-            members = dict(zip('xy', args))
+                self._raise_type_error()
+        elif len(v)==2:
+            members = dict(zip('xy', v))
 
             if not (
                     isinstance(members['x'], (float, int)) and
                     isinstance(members['y'], (float, int))
                     ):
-                self._raise_constructor_type_error()
+                self._raise_type_error()
 
         else:
-            self._raise_constructor_type_error()
+            self._raise_type_error()
+
+        self.tag.name = self.__class__.__name__.lower()
+        self.tag.attrs = {}
 
         for k, v in members.items():
             addendum = bs4.element.Tag(name=k)
             addendum.string = str(v)
-            result.append(addendum)
-
-        return result
-
-    def _raise_constructor_type_error():
-        raise TypeError(
-                "Vectors may be constructed as Vector(x,y), or "
-                "Vector(dict_of_members).")
-
-    @property
-    def value(self):
-        return self._value
+            self.tag.append(addendum)
 
     def __getitem__(self, item):
         if isinstance(item, int):
@@ -70,29 +68,33 @@ class Vector(Value):
 
         return self.our_type(result)
 
+    # FIXME: All these methods are written in terms of self.value,
+    # which is inefficient because all the values must be created
+    # every time. They should be fixed to read self.tag themselves.
+
     def keys(self):
-        return sorted(self._value.keys())
+        return sorted(self.value.keys())
 
     def values(self):
-        return [self.our_type(v) for v in self._value.values()]
+        return [self.our_type(v) for v in self.value.values()]
 
     def items(self):
-        return [(k, self.our_type(v)) for k,v in self._value.items()]
+        return [(k, self.our_type(v)) for k,v in self_value.items()]
 
     def __len__(self):
-        return len(self._value)
+        return len(self.value)
 
     def as_tuple(self):
         return tuple(
-                [self.our_type(self._value[k])
-                 for k in sorted(self._value.keys())]
+                [self.our_type(self.value[k])
+                 for k in sorted(self.value.keys())]
                 )
 
     def _str_inner(self):
-        if sorted(self._value.keys())==['x', 'y']:
+        if sorted(self.value.keys())==['x', 'y']:
             return str(self.as_tuple())
         else:
-            return str(self._value)
+            return str(self.value)
 
     def __eq__(self, other):
         try:
@@ -125,8 +127,8 @@ class Dilist(Value):
 
 @Value.handles_type()
 class Composite(Value):
-    def _set_value(self):
-
+    @property
+    def value(self):
         def name_and_value(n):
 
             name = n.name
@@ -146,36 +148,64 @@ class Composite(Value):
 
             return name, value
 
-        self._value = dict(
+        return dict(
                 [name_and_value(field)
                  for field in self.tag.children
                  if isinstance(field, bs4.element.Tag)
                  ])
 
-    def __getitem__(self, *args, **kwargs):
-        return self._value.__getitem__(*args, **kwargs)
-
-    def get(self, value, default=None):
-        result = self._value.get(value, None)
+    def __getitem__(self, key):
+        result = self.get(key=key, default=None)
         if result is None:
+            raise KeyError(key)
+        return result
+
+    def get(self, key, default=None):
+        found = [v
+                 for v in self.tag.children
+                 if isinstance(v, bs4.element.Tag)
+                 and v.name==key
+                 ]
+
+        if len(found)==0:
+            return default
+        elif len(found)>1:
+            raise ValueError(f"multiple values for {key}!")
+
+        values = [v
+                 for v in found[0].children
+                 if isinstance(v, bs4.element.Tag)
+                 ]
+
+        if len(values)==0:
+            return default
+        elif len(values)>1:
+            raise ValueError(f"multiple values for {key}!")
+        elif values[0]==None:
             return default
         else:
-            return result
+            return Value.from_tag(values[0])
 
     def keys(self):
-        return self._value.keys()
+        # No point constructing all the values
+        return [v.name
+                 for v in self.tag.children
+                 if isinstance(v, bs4.element.Tag)
+                 ]
 
     def values(self):
-        return self._value.values()
+        return self.value.values()
 
     def items(self):
-        return self._value.items()
+        return self.value.items()
 
     def __len__(self):
-        return len(self._value)
+        return len([v
+                 for v in self.tag.children
+                 if isinstance(v, bs4.element.Tag)
+                 ])
 
     def __eq__(self, other):
-
 
         if len(other)!=len(self):
             return False

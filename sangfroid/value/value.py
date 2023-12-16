@@ -115,7 +115,10 @@ class Value:
         return self.value == other
 
     def __iter__(self):
-        for waypoint in sorted(self.waypoints):
+        timeline = self.timeline
+        if not timeline:
+            return
+        for waypoint in sorted(timeline):
 
             # Check the value isn't animated, just in case
             # someone's managed to change it on the fly
