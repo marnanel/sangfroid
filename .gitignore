@@ -1,2 +1,5 @@
 *.sw[nop]
 __pycache__
+/build/
+/dist/
+/sangfroid.egg-info/
