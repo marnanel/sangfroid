@@ -7,7 +7,8 @@ class Simple(Value):
 
     our_type = None
 
-    def _set_value(self):
+    @property
+    def value(self):
         if self.our_type is None:
             raise NotImplementedError()
 
@@ -15,20 +16,46 @@ class Simple(Value):
         if result is None:
             raise ValueError(f"value tag had no value: {self.tag}")
 
-        self._value = self._construct_value(result)
+        result = self._construct_value(result)
+
+        return result
 
     def _construct_value(self, v):
         return self.our_type(v)
 
-    def _make_tag_from_args(self, args):
-        if len(args)!=1:
-            raise ValueError(
-                    f"{self.__class__.__name__} takes a single argument")
+    @value.setter
+    def value(self, v):
 
-        result = bs4.element.Tag(name=self.__class__.__name__.lower())
-        result['value'] = str(args[0])
+        if v==():
 
-        return result
+            if self.neutral_value is None:
+                raise NotImplementedError()
+
+            result = self.our_type()
+
+        elif isinstance(v, self.our_type):
+
+            # Cast, in case it's a subclass which might confuse us.
+            result = self.our_type(v)
+
+        else:
+            raise TypeError("I need a value of type "
+                            f"{self.our_type.__class__.__name__}, "
+                            "not "
+                            f"{v.__class__.__name__}."
+                            )
+
+        self.tag.name = __class__.__name__.lower()
+        self.tag.attrs = {
+                'value': result,
+                }
+        self.tag.clear()
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.value == other.value
+        else:
+            return self.value == other
 
 @Value.handles_type()
 class Real(Simple):
@@ -47,7 +74,7 @@ class Angle(Simple):
     our_type = float
 
     def _str_inner(self):
-        return '%g°' % (self._value,)
+        return '%g°' % (self.value,)
 
 @Value.handles_type()
 class String(Simple):
