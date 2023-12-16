@@ -6,49 +6,98 @@ from sangfroid.utils import tag_to_fps
 
 class Value:
 
-    def __init__(self, *args,
-                 timeline = None,
-                 ):
+    def __init__(self, *args):
 
         if len(args)==1 and isinstance(args[0], bs4.element.Tag):
             self.tag = args[0]
         else:
-            self.tag = self._make_tag_from_args(args)
+            self.tag = bs4.element.Tag(name=__class__.__name__.lower())
+
+            if len(args)==1:
+                self.value = args[0]
+            else:
+                self.value = args
 
         assert self.tag is not None
 
-        if timeline is None and self.tag.name!='animated':
-            self._set_value()
-        else:
-            self._value = Timeline(parent=self,
-                                   literal = timeline,
-                                   )
-
-        assert hasattr(self, '_value')
-
     @property
     def is_animated(self):
-        return isinstance(self._value, Timeline)
+        """
+        Whether the value is animated.
+
+        Returns:
+            bool
+        """
+        return self.tag.name=='animated'
+
+    @is_animated.setter
+    def is_animated(self, v):
+        v = bool(v)
+        if v==self.is_animated:
+            pass
+        elif v:
+            self.timeline = []
+        else:
+            self.timeline = None
 
     @property
     def timeline(self):
-        if isinstance(self._value, Timeline):
-            return self._value
-        return None
+        if self.tag.name!='animated':
+            return None
+        else:
+            result = Timeline.__new__()
+            result.parent = self
+            return result
 
-    def _make_tag_from_value(self, value):
-        raise NotImplementedError(
-                f"{self.__class__.__name__} can't yet be initialised "
-                "with a literal value."
-                )
+    @timeline.setter
+    def timeline(self, v):
+        if v is None:
+            self.tag = bs4.element.Tag(name=__class__.__name__.lower())
+            self.set_to_neutral_value()
+        elif isinstance(v, list):
+            # Run this check before we do anything. Timeline.extend()
+            # will check too, but we'll have destroyed the current tag
+            # by that time.
+            if any([not isinstance(w, Waypoint) for w in v]):
+                raise ValueError("Only Waypoints may live in a timeline")
+
+            if self.tag.name!='animated':
+                our_type = self.tag.name
+                self.tag.attrs = {}
+                self.tag.name = 'animated'
+                self.tag['type'] = our_type
+
+                self.timeline.extend(v)
+        elif isinstance(v, Timeline):
+            raise ValueError("What goes here?") # FIXME
+        else:
+            raise TypeError("This can only be set to None or "
+                            "a list of Waypoints.")
+
+    @property
+    def our_type(self):
+        """
+        The name of the Synfig layer type.
+
+        For example, 'circle' or 'group'.
+
+        Returns:
+            str
+        """
+        result = self.tag.name
+        if result=='animated':
+            result = self.tag['type']
+
+        return result
+
+    def _str_inner(self):
+        return str(self.value)
 
     def __str__(self):
         if self.is_animated:
             return '(animated)'
-        return self._str_inner()
-
-    def _str_inner(self):
-        return str(self.value)
+        else:
+            return self._str_inner()
 
     def __repr__(self):
         return '['+self.__class__.__name__+' '+str(self)+']'
@@ -63,8 +112,16 @@ class Value:
         if isinstance(other, Value):
             return self.value == other.value
 
+        return self.value == other
 
-        return other == self._value
+    def __iter__(self):
+        for waypoint in sorted(self.waypoints):
+
+            # Check the value isn't animated, just in case
+            # someone's managed to change it on the fly
+            assert not waypoint.value.is_animated
+
+            yield waypoint
 
     ########################
 
@@ -87,37 +144,50 @@ class Value:
         result_type = cls.handles_type.from_name(name=type_name)
         result = result_type(tag)
 
-
         return result
 
-class Timeline:
-    def __init__(self,
-                 parent,
-                 literal = None,
-                 ):
-        self.parent = parent
-        self.waypoints = []
-        waypoint_tags = [w for w in self.parent.tag
-                      if isinstance(w, bs4.element.Tag)]
-        fps = tag_to_fps(self.parent.tag)
+#######################
 
-        if literal is not None:
-            if waypoint_tags:
-                raise ValueError(
-                        f"You can't create a timeline on {parent.tag}, "
-                        "because it already has a timeline in the file.")
-            if any([not isinstance(w, Waypoint) for w in literal]):
-                raise TypeError(
-                        "Everything in a timeline must be a Waypoint: "
-                        f"{literal}")
-            self.waypoints = list(literal)
-            return
+class Timeline(list):
+    """
+    A wrapper for a Value, giving access to its Waypoints.
+
+    This can't be created directly; it should only be created by
+    a Value. It holds no state of its own, other than the reference
+    to the Value which created it.
+
+    Fields:
+        parent (Value): the value which created it.
+    """
+    def __init__(self):
+        raise NotImplementedError(
+                "Don't construct timelines directly."
+                )
+
+    def _waypoints(self):
+        """
+        A list of waypoints on the parent value's timeline.
+
+        Private, because __iter__() is a perfectly good interface
+        for the caller, and everything can go through it.
+        """
+
+        assert self.parent is not None
+
+        tag = self.parent.tag
+        assert tag.name=='animated'
+
+        fps = tag_to_fps(tag)
+
+        waypoint_tags = [w for w in tag
+                      if isinstance(w, bs4.element.Tag)]
 
         if any([w.name!='waypoint' for w in waypoint_tags]):
             raise ValueError("Waypoints must all be called <waypoint>: "
-                                f"{self.parent.tag}")
+                                f"{tag}")
 
-        parent_type = self.parent.tag['type']
+        result = []
+        parent_type = tag['type']
 
         for waypoint_tag in waypoint_tags:
             v = [t for t in waypoint_tag.children
@@ -133,8 +203,8 @@ class Timeline:
                         "Waypoint type must match parent: "
                         f"parent={parent_type}, child={v[0].name}")
 
-            value = self.parent.from_tag(v[0])
-            self.waypoints.append(
+            value = self.from_tag(v[0])
+            result.append(
                     Waypoint(
                         time = Time(waypoint_tag['time'], fps),
                         value = value,
@@ -142,14 +212,53 @@ class Timeline:
                         after = waypoint_tag['after'],
                         ))
 
+        return result
+
+    def __len__(self):
+        return len(self.waypoints)
+
     def __iter__(self):
-        for waypoint in sorted(self.waypoints):
-
-            # Check the value isn't animated, just in case
-            # someone's managed to change it on the fly
-            assert not waypoint.value.is_animated
-
+        for waypoint in self.waypoints:
             yield waypoint
+
+    def append(self, waypoint):
+        if isinstance(waypoint, Value):
+            raise ValueError("Bare Values can't be appended to timelines; "
+                             "you need to wrap them in a Waypoint.")
+        elif not isinstance(waypoint, Waypoint):
+            raise ValueError("Only Waypoints can live in timelines; "
+                             f"you provided {waypoint}.")
+
+        self.extend([waypoint])
+
+    def extend(self, waypoints):
+        existing = self.waypoints
+        clashes = [
+            (old.time, new.time)
+                for old in existing
+                for new in waypoints
+                if old.time==new.time
+                ]
+        if clashes:
+            raise ValueError("There are already Waypoints with those "
+                             f"times in this timeline: {clashes}")
+
+        existing.extend(waypoints)
+
+        tag = self.parent.tag
+
+        tag.clear()
+
+        for w in sorted(existing):
+            tag.append(
+                    waypoint.as_tag(),
+                    )
+            tag.append("\n")
+
+    def __getitem__(self, index):
+        return self.waypoints.__getitem__(index)
+
+#######################
 
 INTERPOLATION_TYPES = {
         # UI name    SVG name   emoji
@@ -238,3 +347,8 @@ class Waypoint:
                 )
 
     __repr__ = __str__
+
+__all__ = [
+    'Value',
+    'Waypoint',
+    ]

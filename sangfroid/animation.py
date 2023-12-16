@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from sangfroid.keyframe import Keyframe
 from sangfroid.layer import Group
 from sangfroid.format import Format
+from sangfroid.value.complex import Color
 
 class Animation(Group):
     def __init__(self, filename):
@@ -75,10 +76,12 @@ class Animation(Group):
 
     @property
     def background(self):
-        return tuple([
+        triplet = tuple([
             float(n) for n in
             self.tag.attrs['bgcolor'].split(' ')
             ])
+        result = Color(*triplet)
+        return result
 
     @property
     def keyframes(self):
