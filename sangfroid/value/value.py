@@ -45,7 +45,7 @@ class Value:
         if self.tag.name!='animated':
             return None
         else:
-            result = Timeline.__new__()
+            result = Timeline.__new__(Timeline)
             result.parent = self
             return result
 
@@ -151,7 +151,7 @@ class Value:
 
 #######################
 
-class Timeline(list):
+class Timeline:
     """
     A wrapper for a Value, giving access to its Waypoints.
 
@@ -206,7 +206,7 @@ class Timeline(list):
                         "Waypoint type must match parent: "
                         f"parent={parent_type}, child={v[0].name}")
 
-            value = self.from_tag(v[0])
+            value = self.parent.from_tag(v[0])
             result.append(
                     Waypoint(
                         time = Time(waypoint_tag['time'], fps),
@@ -218,10 +218,10 @@ class Timeline(list):
         return result
 
     def __len__(self):
-        return len(self.waypoints)
+        return len(self._waypoints())
 
     def __iter__(self):
-        for waypoint in self.waypoints:
+        for waypoint in self._waypoints():
             yield waypoint
 
     def append(self, waypoint):
@@ -259,7 +259,7 @@ class Timeline(list):
             tag.append("\n")
 
     def __getitem__(self, index):
-        return self.waypoints.__getitem__(index)
+        return self._waypoints().__getitem__(index)
 
 #######################
 

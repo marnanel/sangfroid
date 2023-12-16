@@ -3,7 +3,7 @@ import sangfroid
 from sangfroid.value import *
 from test import *
 
-def test_value_vector_simple():
+def test_vector_simple():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
     origin = green_circle['origin']
@@ -20,7 +20,7 @@ def test_value_vector_simple():
     assert origin.as_tuple() == (-2.7426433563, -1.7542968988)
     assert len(origin) == 2
 
-def test_value_vector_as_dict():
+def test_vector_as_dict():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
     origin = green_circle['origin']
@@ -51,7 +51,7 @@ def test_value_vector_as_dict():
         -1.7542968988,
         ]
 
-def test_value_vector_constructor():
+def test_vector_constructor():
     assert str(Vector(1.0, 2.0))=='(1.0, 2.0)'
     assert str(Vector({'x': 1.0, 'y': 2.0}))=='(1.0, 2.0)'
     assert str(Vector({'a': 1.0, 'b': 2.0}))=="{'a': '1.0', 'b': '2.0'}"

@@ -3,7 +3,7 @@ import sangfroid
 from sangfroid.value import *
 from test import *
 
-def test_value_color_compare():
+def test_color_compare():
     sif = get_animation('circles.sif')
 
     blue_circle = sif.find(desc='Blue circle')
@@ -28,7 +28,7 @@ def test_value_color_compare():
         for second_name, second in OBJECTS:
             assert first==second, f"{first_name} vs {second_name}"
 
-def test_value_color_assign():
+def test_color_assign():
     c = Color()
     xml_compare(c.tag, """
 <color>
@@ -91,3 +91,8 @@ def test_value_color_assign():
   <b>0.188235</b>
   <a>0.250980</a>
 </color>""", asserting='with 8 hex digits with no hash')
+
+def test_vector_constructor_str():
+    for i in range(256):
+        print(Color('%02x%02x%02x' % (i, i, i)))
+    assert False
