@@ -167,22 +167,23 @@ def test_value_color_compare():
     found = blue_circle['color']
 
     LITERALS = [
-            (0.0, 0.15804, 1.0, 1.0),
-            (0.0, 0.15804, 1.0),
-            '#0028FFFF',
-            '#0028FF',
+            ('tuple, with alpha',    (0.0, 0.2, 1.0, 1.0)),
+            ('tuple, no alpha',      (0.0, 0.2, 1.0)),
+            ('string, with alpha',   '#0033FFFF'),
+            ('string, no alpha',     '#0033FF'),
             ]
 
-    OBJECTS = [found]
-    OBJECTS.extend([Color(o) for o in LITERALS])
+    OBJECTS = [('retrieved from sif', found)]
+    OBJECTS.extend([
+        (f'colour from {name}', Color(o))
+        for name, o in LITERALS])
 
-    for first in OBJECTS:
-        for literal in LITERALS:
-            assert first==literal
+    for first_name, first in OBJECTS:
+        for literal_name, literal in LITERALS:
+            assert first==literal, f"{first_name} vs {literal_name}"
 
-        for second in OBJECTS:
-
-            assert first==second
+        for second_name, second in OBJECTS:
+            assert first==second, f"{first_name} vs {second_name}"
 
 def test_value_color_assign():
     c = Color()

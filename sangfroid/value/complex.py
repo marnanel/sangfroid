@@ -34,7 +34,6 @@ class Vector(Value):
             elif len(v)==2:
                 members = dict(zip('xy', v))
 
-                print("9030", members)
                 if not (
                         isinstance(members['x'], (float, int)) and
                         isinstance(members['y'], (float, int))
@@ -333,3 +332,4 @@ class Color(Value):
             dimension_tag = bs4.element.Tag(name=dimension)
             dimension_tag.string = '%.06f' % (result[i],)
             self.tag.append(dimension_tag)
+
