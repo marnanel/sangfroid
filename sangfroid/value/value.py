@@ -53,7 +53,7 @@ class Value:
     def timeline(self, v):
         if v is None:
             self.tag = bs4.element.Tag(name=__class__.__name__.lower())
-            self.set_to_neutral_value()
+            self.value = None
         elif isinstance(v, list):
             # Run this check before we do anything. Timeline.extend()
             # will check too, but we'll have destroyed the current tag
@@ -69,7 +69,7 @@ class Value:
 
                 self.timeline.extend(v)
         elif isinstance(v, Timeline):
-            raise ValueError("What goes here?") # FIXME
+            self.timeline = list(v)
         else:
             raise TypeError("This can only be set to None or "
                             "a list of Waypoints.")
@@ -235,7 +235,7 @@ class Timeline:
         self.extend([waypoint])
 
     def extend(self, waypoints):
-        existing = self.waypoints
+        existing = self._waypoints()
         clashes = [
             (old.time, new.time)
                 for old in existing
@@ -261,6 +261,9 @@ class Timeline:
     def __getitem__(self, index):
         return self._waypoints().__getitem__(index)
 
+    def __eq__(self, other):
+        return list(self)==list(other)
+
 #######################
 
 INTERPOLATION_TYPES = {
@@ -280,7 +283,7 @@ INTERPOLATION_TYPE_SYNONYMS = dict(
 
 @functools.total_ordering
 class Waypoint:
-    def __init__(self, time, before, after, value):
+    def __init__(self, time, value, before='clamped', after='clamped'):
 
         if not isinstance(value, Value):
             raise TypeError(value)

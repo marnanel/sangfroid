@@ -100,3 +100,34 @@ def test_value_str_animated():
 
     shadow = sif.find(desc='Shadow')
     assert str(shadow['transformation']['scale'])=='(animated)'
+
+def test_value_timeline_on_and_off():
+    sif = get_animation('circles.sif')
+    orange_circle = sif.find(desc='Orange circle')
+    amount = orange_circle['amount']
+
+    assert str(amount)=='1.0'
+    assert amount.timeline is None
+    assert amount.our_type==float
+
+    amount.timeline = []
+    assert amount.timeline==[]
+    assert amount.our_type==float
+
+    amount.timeline = None
+    assert amount.timeline is None
+    assert amount.our_type==float
+
+def test_value_timeline_assign():
+    r = Real(1.77)
+    assert str(r)=='1.77'
+
+    r.timeline = [
+            Waypoint(time=Time('0s', fps=24), value=Real(1.0)),
+            Waypoint(time=Time('1s', fps=24), value=Real(2.0)),
+            ]
+
+    s = Real(1.77)
+    s.timeline = r.timeline
+    assert False
+

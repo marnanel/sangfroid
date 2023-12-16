@@ -28,7 +28,7 @@ class Simple(Value):
         if self.our_type is None:
             raise NotImplementedError()
 
-        if v==():
+        if v==() or v is None:
             result = self.our_type()
 
         else:
