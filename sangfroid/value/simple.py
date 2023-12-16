@@ -40,7 +40,7 @@ class Simple(Value):
 
         else:
             raise TypeError("I need a value of type "
-                            f"{self.our_type.__class__.__name__}, "
+                            f"{self.our_type.__name__}, "
                             "not "
                             f"{v.__class__.__name__}."
                             )
