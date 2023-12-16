@@ -61,5 +61,3 @@ def test_vector_constructor():
 
     with pytest.raises(TypeError):
         Vector(1,2,3)
-
-
