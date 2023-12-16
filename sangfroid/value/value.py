@@ -1,7 +1,7 @@
 import bs4
 import functools
 from sangfroid.registry import Registry
-from sangfroid.time import Time
+from sangfroid.t import T
 from sangfroid.utils import tag_to_fps
 
 class Value:
@@ -209,7 +209,7 @@ class Timeline:
             value = self.parent.from_tag(v[0])
             result.append(
                     Waypoint(
-                        time = Time(waypoint_tag['time'], fps),
+                        time = T(waypoint_tag['time'], fps),
                         value = value,
                         before = waypoint_tag['before'],
                         after = waypoint_tag['after'],
@@ -291,11 +291,11 @@ class Waypoint:
         if value.is_animated:
             raise ValueError("Waypoints can't have animated values")
 
-        if isinstance(time, Time):
+        if isinstance(time, T):
             self.time = time
         else:
             raise TypeError(
-                    f"time parameter should be Time: {time}")
+                    f"time parameter should be T: {time}")
 
         self._before = self._check_interpolation_type(before, True)
         self._after = self._check_interpolation_type(after, True)

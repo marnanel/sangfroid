@@ -1,6 +1,6 @@
 import pytest
 import sangfroid
-from sangfroid.time import Time
+from sangfroid import T
 from test import *
 
 TESTS = [
@@ -58,10 +58,10 @@ TESTS = [
 
           ]
 
-def test_time_examples():
+def test_t_examples():
     for example in TESTS:
         try:
-            time = Time(example[0], fps=example[1])
+            time = T(example[0], fps=example[1])
 
             assert round(time.frames, 2)==example[2], (
                     f"frames property: {example}"
@@ -76,15 +76,15 @@ def test_time_examples():
             assert time  < example[2]+1, f"less than constant: {example}"
             assert time  > example[2]-1, f"more than constant: {example}"
 
-            t_same   = Time(example[2],   fps=example[1])
-            t_before = Time(example[2]-1, fps=example[1])
-            t_after  = Time(example[2]+1, fps=example[1])
+            t_same   = T(example[2],   fps=example[1])
+            t_before = T(example[2]-1, fps=example[1])
+            t_after  = T(example[2]+1, fps=example[1])
 
-            assert time == t_same,   f"equal to another Time: {example}"
-            assert time != t_before, f"not equal to another Time: {example}"
-            assert time != t_after,  f"not equal to another Time: {example}"
-            assert time < t_after,   f"less than another Time: {example}"
-            assert time > t_before,  f"more than another Time: {example}"
+            assert time == t_same,   f"equal to another T: {example}"
+            assert time != t_before, f"not equal to another T: {example}"
+            assert time != t_after,  f"not equal to another T: {example}"
+            assert time < t_after,   f"less than another T: {example}"
+            assert time > t_before,  f"more than another T: {example}"
 
             assert hash(time)==hash(t_same),   f"hash equal: {example}"
             assert hash(time)!=hash(t_before), f"hash not equal: {example}"

@@ -1,10 +1,10 @@
 import sangfroid
 from sangfroid.value.value import Waypoint
-from sangfroid.time import Time
+from sangfroid.t import T
 from test import *
 import pytest
 
-def test_waypoint_simple():
+def test_waypoint_loaded():
     sif = get_animation('bouncing.sif')
 
     ball = sif.find(desc='Ball')
@@ -18,7 +18,7 @@ def test_waypoint_simple():
         ('48f', 'ease', 'ease'),
         ]):
 
-        assert found.time==Time(expected[0])
+        assert found.time==T(expected[0])
         assert found.before==expected[1]
         assert found.after==expected[2]
 
@@ -35,7 +35,8 @@ def test_waypoint_interpolation_types():
             ('ease',     'ease',     '🫐'),
             ('halt',     'ease',     '🫐'),
             ]:
-        waypoint = Waypoint(Time('0f'), source_type, source_type, value)
+        waypoint = Waypoint(T('0f'), value=value,
+                            before=source_type, after=source_type)
 
         assert waypoint.before == expected_type, source_type
         assert waypoint.after  == expected_type, source_type
@@ -44,7 +45,7 @@ def test_waypoint_interpolation_types():
         assert found_emoji == f'{expected_emoji}-{expected_emoji}'
 
     with pytest.raises(ValueError):
-        Waypoint(Time('0f'), 'undefined', 'auto', value)
+        Waypoint(time=T('0f'), value=value, before='undefined', after='auto')
 
 def test_waypoint_silly():
 
@@ -52,19 +53,19 @@ def test_waypoint_silly():
 
     with pytest.raises(ValueError):
         # silly interpolation type
-        Waypoint(Time('0f'), 'wombat', 'ease', value)
+        Waypoint(time=T('0f'), value=value, before='wombat', after='ease')
 
     with pytest.raises(TypeError):
         # values must be sangfroid.value.Values
-        Waypoint(Time('0f'), 'ease', 'ease', True)
+        Waypoint(time=T('0f'), value=True)
 
 def test_waypoint_time_spec():
     value = sangfroid.value.Bool(True)
-    w1 = Waypoint(Time('20f'), 'ease', 'ease', value)
+    w1 = Waypoint(time=T('20f'), value=value)
     assert int(w1.time)==20
 
     with pytest.raises(TypeError):
-        Waypoint('bananas', 'ease', 'ease', value)
+        Waypoint(time='bananas', value=value)
 
     with pytest.raises(TypeError):
-        Waypoint(None, 'ease', 'ease', value)
+        Waypoint(time=None, value=value)

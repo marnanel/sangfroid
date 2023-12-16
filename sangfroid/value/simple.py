@@ -1,6 +1,6 @@
 import bs4
 from sangfroid.value.value import Value
-from sangfroid.time import Time as TimeType
+from sangfroid.t import T
 from sangfroid.utils import tag_to_fps
 
 class Simple(Value):
@@ -78,7 +78,7 @@ class String(Simple):
 
 @Value.handles_type()
 class Time(Simple):
-    our_type = TimeType
+    our_type = T
 
     def _construct_value(self, v):
         return self.our_type(

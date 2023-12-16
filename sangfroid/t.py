@@ -3,7 +3,7 @@ import functools
 import re
 
 @functools.total_ordering
-class Time:
+class T:
     """
     An instant during an animation.
 
@@ -30,10 +30,10 @@ class Time:
     even though the FPS wouldn't make a difference, because edge cases
     give rise to bugs.
 
-    Times compare numerically to other Times, but unless the frame
+    Ts compare numerically to other Ts, but unless the frame
     count is zero, they must have the same FPS.
 
-    Times may be negative. However, in time specifications giving
+    Ts may be negative. However, in time specifications giving
     both the seconds and the frames, the frame count may not be negative.
 
     In time specifications giving both seconds and frames, the number
@@ -153,7 +153,7 @@ class Time:
                     self.fps is not None and
                     other.fps!=self.fps):
                 raise ValueError(
-                        "Comparison between two Times with different FPS: "
+                        "Comparison between two Ts with different FPS: "
                         f"{self}, {other}"
                         )
 

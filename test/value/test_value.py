@@ -123,8 +123,8 @@ def test_value_timeline_assign():
     assert str(r)=='1.77'
 
     r.timeline = [
-            Waypoint(time=Time('0s', fps=24), value=Real(1.0)),
-            Waypoint(time=Time('1s', fps=24), value=Real(2.0)),
+            Waypoint(time=T('0s', fps=24), value=Real(1.0)),
+            Waypoint(time=T('1s', fps=24), value=Real(2.0)),
             ]
 
     s = Real(1.77)
