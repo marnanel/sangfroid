@@ -44,7 +44,7 @@ class T:
     """
     def __init__(
             self,
-            value,
+            value=0.0,
             fps = None,
             ):
         """

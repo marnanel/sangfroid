@@ -117,3 +117,8 @@ def test_t_examples():
             assert isinstance(e, example[4]), (
                     f"Wrong kind of exception: {example}\n{e}"
                     )
+
+def test_t_no_params():
+    zero_t = T()
+    assert zero_t.frames==0
+    assert zero_t.seconds==0
