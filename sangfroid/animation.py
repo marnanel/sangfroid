@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from sangfroid.keyframe import Keyframe
 from sangfroid.layer import Group
 from sangfroid.format import Format
-from sangfroid.value.complex import Color
+from sangfroid.value.color import Color
 
 class Animation(Group):
     def __init__(self, filename):
