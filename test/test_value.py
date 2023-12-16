@@ -17,11 +17,11 @@ def test_value_real():
     assert not amount==2
     assert not amount=='bananas'
 
-def test_value_vector():
+def test_value_vector_simple():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
-
     origin = green_circle['origin']
+
     assert origin['x'] == -2.7426433563
     assert origin['y'] == -1.7542968988
 
@@ -33,6 +33,11 @@ def test_value_vector():
     assert origin == (-2.7426433563, -1.7542968988)
     assert origin.as_tuple() == (-2.7426433563, -1.7542968988)
     assert len(origin) == 2
+
+def test_value_vector_as_dict():
+    sif = get_animation('circles.sif')
+    green_circle = sif.find(desc='Green circle')
+    origin = green_circle['origin']
 
     try:
         origin['wombat']

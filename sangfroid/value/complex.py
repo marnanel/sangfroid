@@ -20,29 +20,31 @@ class Vector(Value):
                  if isinstance(field, bs4.element.Tag)
                  ])
 
+    def _raise_type_error(self):
+        raise TypeError(
+                "Vectors may be constructed as Vector(x,y), or "
+                "Vector(dict_of_members).")
+
     @value.setter
     def value(self, v):
 
-        def _raise_type_error():
-            raise TypeError(
-                    "Vectors may be constructed as Vector(x,y), or "
-                    "Vector(dict_of_members).")
+        if isinstance(v, tuple):
+            if len(v)==0:
+                members = {}
+            elif len(v)==2:
+                members = dict(zip('xy', v))
 
-        if len(v)==0:
-            members = {}
-        elif len(v)==1:
-            members = v[0]
-            if not hasattr(members, 'items'):
+                print("9030", members)
+                if not (
+                        isinstance(members['x'], (float, int)) and
+                        isinstance(members['y'], (float, int))
+                        ):
+                    self._raise_type_error()
+
+            else:
                 self._raise_type_error()
-        elif len(v)==2:
-            members = dict(zip('xy', v))
-
-            if not (
-                    isinstance(members['x'], (float, int)) and
-                    isinstance(members['y'], (float, int))
-                    ):
-                self._raise_type_error()
-
+        elif hasattr(v, 'items'):
+            members = v
         else:
             self._raise_type_error()
 
@@ -54,19 +56,28 @@ class Vector(Value):
             addendum.string = str(v)
             self.tag.append(addendum)
 
-    def __getitem__(self, item):
-        if isinstance(item, int):
-            item = self.keys()[item]
+    def __getitem__(self, key):
+        result = self.get(key, default=None)
 
-        return self.our_type(self._value[item])
+        if result is None:
+            raise KeyError(key)
 
-    def get(self, value, default=None):
-        try:
-            result = self._value[value]
-        except KeyError:
+        return result
+
+    def get(self, key, default=None):
+        if isinstance(key, int):
+            key = self.keys()[key]
+
+        v = [field.string
+             for field in self.tag.children
+             if isinstance(field, bs4.element.Tag)
+             and field.name==key
+             ]
+
+        if len(v)==0:
             return default
 
-        return self.our_type(result)
+        return self.our_type(v[0])
 
     # FIXME: All these methods are written in terms of self.value,
     # which is inefficient because all the values must be created
@@ -79,7 +90,7 @@ class Vector(Value):
         return [self.our_type(v) for v in self.value.values()]
 
     def items(self):
-        return [(k, self.our_type(v)) for k,v in self_value.items()]
+        return [(k, self.our_type(v)) for k,v in self.value.items()]
 
     def __len__(self):
         return len(self.value)
@@ -104,6 +115,10 @@ class Vector(Value):
             return False
 
         return all([left==right for left,right in zip(self, other)])
+
+    def __iter__(self):
+        for v in self.values():
+            yield v
 
 @Value.handles_type()
 class Dynamic_List(Value):
