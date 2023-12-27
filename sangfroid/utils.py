@@ -29,7 +29,14 @@ def tag_to_fps(tag):
     Returns:
         float, the speed in frames per second.
     """
-    root = tag.find_parents()[-2] # -1 is "document", the anon root tag
+    parents = tag.find_parents()
+
+    if len(parents)<2:
+        raise ValueError(f"{tag} is not attached to a document, "
+                         "so I can't determine the correct FPS."
+                         )
+
+    root = parents[-2] # -1 is "document", the anon root tag
     assert root.name=='canvas'
     result = float(root['fps'])
     return result
