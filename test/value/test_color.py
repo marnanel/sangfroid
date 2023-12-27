@@ -92,7 +92,14 @@ def test_color_assign():
   <a>0.250980</a>
 </color>""", asserting='with 8 hex digits with no hash')
 
-def test_vector_constructor_str():
+def test_color_constructor_various():
+    assert Color('#ff0000').as_tuple() == (1, 0, 0, 1), 'from string'
+    assert Color((1,0,0,1)).as_tuple() == (1, 0, 0, 1), 'from tuple'
+
+    c = Color('#ff0000')
+    assert Color(c).as_tuple()         == (1, 0, 0, 1), 'from Color'
+
+def test_color_constructor_str():
     # Regression test
     for i in range(256):
         expected = '#%02x%02x%02x' % (i, i, i)

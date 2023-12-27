@@ -63,7 +63,10 @@ class Color(Value):
             else:
                 _raise_format_error()
 
+            result = tuple([float(d) for d in result])
+
         elif isinstance(v, str):
+
             if v.startswith('#'):
                 v = v[1:]
 
@@ -77,6 +80,11 @@ class Color(Value):
             result = tuple(
                 round(int(v[i*2:i*2+2], 16)/255, 6)
                 for i in range(4))
+
+        elif isinstance(v, Color):
+
+            result = v.as_tuple()
+
         else:
             _raise_format_error()
 
