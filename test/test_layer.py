@@ -162,13 +162,13 @@ LAYER_ITEMS_EXPECTED = """
      - skew_angle = Angle, 0°
      - scale = Vector, (animated), animated
  - canvas: Canvas, [[-🔵circle 'Bouncy ball'], [-🫴bevel]]
- - color: Color, ff0000ff
+ - color: Color, #ff0000
  - radius: Real, 1.0
  - feather: Real, 0.0
  - invert: Bool, True
  - type: Integer, 1
- - color1: Color, ffffffff
- - color2: Color, 000000ff
+ - color1: Color, #ffffff
+ - color2: Color, #000000
  - angle: Angle, 89.0588°
  - depth: Real, 0.5819661441
  - softness: Real, 0.3276240462
@@ -188,8 +188,8 @@ LAYER_ITEMS_EXPECTED = """
  - amount: Real, 0.75
  - blend_method: Integer, 13
  - type: Integer, 1
- - color1: Color, ffffffff
- - color2: Color, 000000ff
+ - color1: Color, #ffffff
+ - color2: Color, #000000
  - angle: Angle, 89.0588°
  - depth: Real, 0.5819661441
  - softness: Real, 0.3276240462
@@ -200,7 +200,7 @@ LAYER_ITEMS_EXPECTED = """
  - z_depth: Real, 0.0
  - amount: Real, 1.0
  - blend_method: Integer, 0
- - color: Color, ff0000ff
+ - color: Color, #ff0000
  - radius: Real, 1.0
  - feather: Real, 0.0
  - origin: Vector, (0.0, 0.0)
@@ -216,7 +216,7 @@ LAYER_ITEMS_EXPECTED = """
      - skew_angle = Angle, 0°
      - scale = Vector, (1.0, 0.3899480104)
  - canvas: Canvas, [[--🔵circle 'Shadow circle'], [--🟠blur]]
- - color: Color, 00000072
+ - color: Color, #00000072
  - radius: Real, 1.0
  - feather: Real, 0.0
  - invert: Bool, True
@@ -241,7 +241,7 @@ LAYER_ITEMS_EXPECTED = """
      - skew_angle = Angle, 0°
      - scale = Vector, (1.0, 0.3899480104)
  - canvas: Canvas, [[--🔵circle 'Shadow circle'], [--🟠blur]]
- - color: Color, 00000072
+ - color: Color, #00000072
  - radius: Real, 1.0
  - feather: Real, 0.0
  - invert: Bool, True
@@ -266,7 +266,7 @@ LAYER_ITEMS_EXPECTED = """
      - skew_angle = Angle, 0°
      - scale = Vector, (1.0, 1.0)
  - canvas: Canvas, [[-▊solid_color 'wall'], [-🟦rectangle 'floor']]
- - color: Color, ffb355ff
+ - color: Color, #ffb356
  - point1: Vector, (-4.0130858421, -2.3096354008)
  - point2: Vector, (4.0234375, -0.9031249881)
  - expand: Real, 0.0
@@ -287,7 +287,7 @@ LAYER_ITEMS_EXPECTED = """
  - z_depth: Real, 0.0
  - amount: Real, 1.0
  - blend_method: Integer, 0
- - color: Color, ffb355ff
+ - color: Color, #ffb356
  - point1: Vector, (-4.0130858421, -2.3096354008)
  - point2: Vector, (4.0234375, -0.9031249881)
  - expand: Real, 0.0
@@ -300,7 +300,7 @@ LAYER_ITEMS_EXPECTED = """
  - z_depth: Real, 0.0
  - amount: Real, 1.0
  - blend_method: Integer, 0
- - color: Color, ffffffff
+ - color: Color, #ffffff
 """.lstrip()
 
 if __name__=='__main__':
