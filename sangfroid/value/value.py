@@ -53,10 +53,10 @@ class Value:
     @timeline.setter
     def timeline(self, v):
         if v is None:
-            self.tag = bs4.element.Tag(name=__class__.__name__.lower())
+            self.tag = bs4.element.Tag(name=self.__class__.__name__.lower())
             self.value = None
         elif isinstance(v, list):
-            # Run this check before we do anything. Timeline.extend()
+            # Run this check before we do anything. Timeline.__iadd__()
             # will check too, but we'll have destroyed the current tag
             # by that time.
             if any([not isinstance(w, Waypoint) for w in v]):
@@ -68,8 +68,13 @@ class Value:
                 self.tag.name = 'animated'
                 self.tag['type'] = our_type
 
-                self.timeline.extend(v)
+            self.tag.clear()
+
+            self.timeline += v
+
         elif isinstance(v, Timeline):
+            if v.parent is self:
+                return
             self.timeline = list(v)
         else:
             raise TypeError("This can only be set to None or "
@@ -240,17 +245,7 @@ class Timeline:
         for waypoint in self._waypoints():
             yield waypoint
 
-    def append(self, waypoint):
-        if isinstance(waypoint, Value):
-            raise ValueError("Bare Values can't be appended to timelines; "
-                             "you need to wrap them in a Waypoint.")
-        elif not isinstance(waypoint, Waypoint):
-            raise ValueError("Only Waypoints can live in timelines; "
-                             f"you provided {waypoint}.")
-
-        self.extend([waypoint])
-
-    def extend(self, waypoints):
+    def __iadd__(self, waypoints):
         existing = self._waypoints()
         clashes = [
             (old.time, new.time)
@@ -264,12 +259,12 @@ class Timeline:
 
         existing.extend(waypoints)
 
-        tag = self.parent.tag
-
-        tag.clear()
+        self.parent.tag.clear()
 
         for w in sorted(existing):
-            tag.append(w.tag)
+            self.parent.tag.append(w.tag)
+
+        return self
 
     def __getitem__(self, index):
         return self._waypoints().__getitem__(index)

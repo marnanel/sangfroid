@@ -129,7 +129,31 @@ def test_value_timeline_assign():
 
     s = Real(1.77)
     s.timeline = r.timeline
-    assert False
+
+    for obj in [r, s]:
+        assert [str(w.value) for w in obj.timeline] == ['1.0', '2.0']
+
+    assert r.timeline[0] == s.timeline[0]
+    assert r.timeline[0] is not s.timeline[0]
+
+def test_value_timeline_assign_twice():
+    r = Real(1.77)
+    assert str(r)=='1.77'
+    assert r.is_animated == False
+
+    r.timeline = [
+            Waypoint(time=T('0f', fps=24), value=Real(1.0)),
+            ]
+    assert r.is_animated == True
+    assert len(r.timeline)==1
+    assert r.timeline[0].time == T('0f')
+
+    r.timeline = [
+            Waypoint(time=T('1f', fps=24), value=Real(2.0)),
+            ]
+    assert r.is_animated == True
+    assert len(r.timeline)==1
+    assert r.timeline[0].time == T('1f')
 
 def test_value_tag_name():
     r = Real(1.77)
