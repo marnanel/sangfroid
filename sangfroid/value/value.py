@@ -110,9 +110,7 @@ class Value:
 
     @property
     def value(self):
-        if isinstance(self._value, Timeline):
-            return None
-        return self._value
+        raise NotImplementedError()
 
     def __eq__(self, other):
         if isinstance(other, Value):
