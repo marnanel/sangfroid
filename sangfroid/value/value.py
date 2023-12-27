@@ -1,3 +1,4 @@
+import copy
 import bs4
 import functools
 from sangfroid.registry import Registry
@@ -180,7 +181,10 @@ class Timeline:
         tag = self.parent.tag
         assert tag.name=='animated'
 
-        fps = tag_to_fps(tag)
+        try:
+            fps = tag_to_fps(tag)
+        except ValueError:
+            fps = None
 
         waypoint_tags = [w for w in tag
                       if isinstance(w, bs4.element.Tag)]
@@ -207,9 +211,21 @@ class Timeline:
                         f"parent={parent_type}, child={v[0].name}")
 
             value = self.parent.from_tag(v[0])
+
+            try:
+                time = T(waypoint_tag['time'], fps)
+            except ValueError:
+                assert fps is None
+                raise ValueError(
+                        "If a value isn't attached to a document, "
+                        "T-values in its timeline must either be "
+                        "expressed in frames or must have the FPS "
+                        "specified explicitly."
+                        )
+
             result.append(
                     Waypoint(
-                        time = T(waypoint_tag['time'], fps),
+                        time = time,
                         value = value,
                         before = waypoint_tag['before'],
                         after = waypoint_tag['after'],
@@ -253,16 +269,18 @@ class Timeline:
         tag.clear()
 
         for w in sorted(existing):
-            tag.append(
-                    waypoint.as_tag(),
-                    )
-            tag.append("\n")
+            tag.append(w.tag)
 
     def __getitem__(self, index):
         return self._waypoints().__getitem__(index)
 
     def __eq__(self, other):
         return list(self)==list(other)
+
+    def __str__(self):
+        return f'[timeline of f{self.parent}]'
+
+    __repr__ = __str__
 
 #######################
 
@@ -339,6 +357,19 @@ class Waypoint:
 
         raise ValueError(f"Unknown interpolation type: {v}")
 
+    @property
+    def tag(self):
+        result = bs4.Tag(name="waypoint")
+        result['time'] = self.time
+        result['before'] = self._before
+        result['after'] = self._after
+        result.append(
+                copy.copy(
+                    self.value.tag
+                    )
+                )
+        return result
+
     def __lt__(self, other):
         return self.time < other.time
 
@@ -355,6 +386,6 @@ class Waypoint:
     __repr__ = __str__
 
 __all__ = [
-    'Value',
-    'Waypoint',
-    ]
+        'Value',
+        'Waypoint',
+        ]
