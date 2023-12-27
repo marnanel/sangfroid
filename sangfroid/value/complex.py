@@ -118,26 +118,6 @@ class Vector(Value):
             yield v
 
 @Value.handles_type()
-class Dynamic_List(Value):
-    def _set_value(self):
-        raise ValueError("do this later")
-
-@Value.handles_type()
-class Static_List(Value):
-    def _set_value(self):
-        raise ValueError("do this later")
-
-@Value.handles_type()
-class Wplist(Value):
-    def _set_value(self):
-        raise ValueError("do this later")
-
-@Value.handles_type()
-class Dilist(Value):
-    def _set_value(self):
-        raise ValueError("do this later")
-
-@Value.handles_type()
 class Composite(Value):
     @property
     def value(self):
