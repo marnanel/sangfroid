@@ -210,8 +210,11 @@ class Composite(Value):
 
 @Value.handles_type()
 class Canvas(Value):
-    def _set_value(self):
+    @property
+    def value(self):
+
         from sangfroid.layer.layer import Layer
+
         layers = [field
                  for field in self.tag.children
                  if isinstance(field, bs4.element.Tag)
@@ -221,4 +224,6 @@ class Canvas(Value):
                     f"Only layers can be the children of a canvas: {self.tag}"
                     )
 
-        self._value = [Layer.from_tag(layer) for layer in layers]
+        result = [Layer.from_tag(layer) for layer in layers]
+
+        return result
