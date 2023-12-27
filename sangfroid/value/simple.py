@@ -41,7 +41,7 @@ class Simple(Value):
                                 f"{v.__class__.__name__}."
                                 )
 
-        self.tag.name = __class__.__name__.lower()
+        self.tag.name = self.__class__.__name__.lower()
         self.tag.attrs = {
                 'value': result,
                 }

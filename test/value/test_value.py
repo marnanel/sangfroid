@@ -131,3 +131,6 @@ def test_value_timeline_assign():
     s.timeline = r.timeline
     assert False
 
+def test_value_tag_name():
+    r = Real(1.77)
+    assert str(r.tag)=='<real value="1.77"></real>'
