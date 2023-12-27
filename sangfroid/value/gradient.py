@@ -23,4 +23,3 @@ class Gradient(Value):
             raise ValueError("A gradient should contain two colours")
 
         self._value = (v[0], v[1])
-
