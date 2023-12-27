@@ -24,3 +24,7 @@ class Wplist(Tbd):
 @Value.handles_type()
 class Dilist(Tbd):
     pass
+
+@Value.handles_type()
+class Bline(Tbd):
+    pass

@@ -24,7 +24,3 @@ class Gradient(Value):
 
         self._value = (v[0], v[1])
 
-@Value.handles_type()
-class Bline(Value):
-    def _set_value(self):
-        raise ValueError("do this later")
