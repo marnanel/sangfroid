@@ -10,29 +10,29 @@ class Gradient(Value):
         if len(colours)<2:
             self._raise_colour_count_error()
 
-        self._value = [
-                Color(c) for c in colours
-                ]
+        self._value = dict([
+                (float(c['pos']), Color(c)) for c in colours
+                ])
 
         return self._value
 
     @value.setter
     def value(self, v):
-        if not isinstance(v, (tuple, list)) or len(v)<2:
+        if isinstance(v, Gradient):
+            v = v.value
+
+        if not isinstance(v, dict):
+            raise TypeError("Gradient.value must be a dict")
+
+        if len(v)<2:
             self._raise_colour_count_error()
-
-        def normalise(c):
-            if isinstance(c, Color):
-                return c
-            return Color(c)
-
-        v = [Color(c) for c in v]
 
         self.tag.clear()
 
-        for i, colour in enumerate(v):
+        for pos, colour in sorted(v.items()):
+            colour_tag = Color(colour).tag
             colour_tag = colour.tag
-            colour_tag['pos'] = '%.06f' % (i,) # yes, 6dp for an integer
+            colour_tag['pos'] = '%.06g' % (pos,)
             self.tag.append(colour_tag)
 
     def _raise_colour_count_error(self):
@@ -49,8 +49,17 @@ class Gradient(Value):
         previous[n] = v
         self.value = previous
 
+    def keys(self):
+        return self.value.keys()
+
+    def values(self):
+        return self.value.values()
+
+    def items(self):
+        return self.value.items()
+
     def __str__(self):
         return (
-                '[' +
-                ','.join([str(c) for c in self.value]) +
-                ']')
+                '{' +
+                ','.join([f'{k}:{v}' for k,v in self.items()]) +
+                '}')
