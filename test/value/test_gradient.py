@@ -30,7 +30,18 @@ def test_gradient_setitem():
     assert str(g)=='{0.0:#ff0000,1.0:#0000ff}'
     assert repr(g)=='[Gradient {0.0:#ff0000,1.0:#0000ff}]'
 
-def test_gradient_assign():
+def test_gradient_constructor():
+    g = Gradient({0.1: Color('#ff00ff'), 0.7: Color('#ffffff')})
+    assert str(g.tag)==(
+            '<gradient>'
+            '<color pos="0.1"><r>1.000000</r><g>0.000000</g>'
+            '<b>1.000000</b><a>1.000000</a></color>'
+            '<color pos="0.7"><r>1.000000</r><g>1.000000</g>'
+            '<b>1.000000</b><a>1.000000</a></color>'
+            '</gradient>'
+            )
+
+def test_gradient_assign_dict():
     sif = get_animation('pick-and-mix.sif')
     mandelbrot = sif.find(type='mandelbrot')
     g = mandelbrot['gradient_inside']
@@ -39,3 +50,20 @@ def test_gradient_assign():
 
     g.value = {0.1: Color('#ff00ff'), 0.7: Color('#ffffff')}
     assert g.value=={0.1: Color('#ff00ff'), 0.7: Color('#ffffff')}
+
+def test_gradient_assign_another_gradient():
+    sif = get_animation('pick-and-mix.sif')
+    mandelbrot = sif.find(type='mandelbrot')
+    g1 = mandelbrot['gradient_inside']
+
+    assert g1.value=={0.0: Color('#ff0000'), 1.0: Color('#ffff00')}
+
+    g2 = Gradient({0.1: Color('#ff00ff'), 0.7: Color('#ffffff')})
+    assert g2.value=={0.1: Color('#ff00ff'), 0.7: Color('#ffffff')}
+
+    g1.q = g2
+    a = dict(g2.value)
+    g1.value = dict(a)#g2.value
+    assert g1.value=={0.1: Color('#ff00ff'), 0.7: Color('#ffffff')}
+    assert g1.value==g2.value
+    assert mandelbrot['gradient_inside']==g2.value
