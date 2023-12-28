@@ -10,11 +10,11 @@ class Gradient(Value):
         if len(colours)<2:
             self._raise_colour_count_error()
 
-        self._value = dict([
+        result = dict([
                 (float(c['pos']), Color(c)) for c in colours
                 ])
 
-        return self._value
+        return result
 
     @value.setter
     def value(self, v):
@@ -30,8 +30,8 @@ class Gradient(Value):
         self.tag.clear()
 
         for pos, colour in sorted(v.items()):
+
             colour_tag = Color(colour).tag
-            colour_tag = colour.tag
             colour_tag['pos'] = '%.06g' % (pos,)
             self.tag.append(colour_tag)
 
