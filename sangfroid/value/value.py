@@ -12,7 +12,7 @@ class Value:
         if len(args)==1 and isinstance(args[0], bs4.element.Tag):
             self.tag = args[0]
         else:
-            self.tag = bs4.element.Tag(name=__class__.__name__.lower())
+            self.tag = bs4.element.Tag(name=self.__class__.__name__.lower())
 
             if len(args)==1:
                 self.value = args[0]
