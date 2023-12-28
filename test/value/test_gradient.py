@@ -29,3 +29,13 @@ def test_gradient_setitem():
     assert str(g[1])=='#0000ff'
     assert str(g)=='{0.0:#ff0000,1.0:#0000ff}'
     assert repr(g)=='[Gradient {0.0:#ff0000,1.0:#0000ff}]'
+
+def test_gradient_assign():
+    sif = get_animation('pick-and-mix.sif')
+    mandelbrot = sif.find(type='mandelbrot')
+    g = mandelbrot['gradient_inside']
+
+    assert g.value=={0.0: Color('#ff0000'), 1.0: Color('#ffff00')}
+
+    g.value = {0.1: Color('#ff00ff'), 0.7: Color('#ffffff')}
+    assert g.value=={0.1: Color('#ff00ff'), 0.7: Color('#ffffff')}
