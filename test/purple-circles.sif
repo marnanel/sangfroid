@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <canvas version="1.2" width="480" height="270" xres="2834.645669" yres="2835.000000" gamma-r="0.980000" gamma-g="0.990000" gamma-b="1.000000" view-box="-4.000000 2.250000 4.000000 -2.250000" antialias="1" fps="24.000" begin-time="0f" end-time="5s" bgcolor="0.500000 0.500000 0.500000 1.000000">
-  <name>circles.sif</name>
+  <name>purple-circles.sif</name>
   <desc>I like circles. They are round.</desc>
   <meta name="background_first_color" content="0.880000 0.880000 0.880000"/>
   <meta name="background_rendering" content="0"/>
@@ -107,7 +107,7 @@
           <param name="color">
             <color>
               <r>1.000000</r>
-              <g>1.000000</g>
+              <g>0.000000</g>
               <b>1.000000</b>
               <a>1.000000</a>
             </color>

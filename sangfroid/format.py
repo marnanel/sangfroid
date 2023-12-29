@@ -69,6 +69,13 @@ class Sif(Format):
     def main_file(self):
         return FileContextHandler(open(self.filename, 'r'))
 
+    def save(self, content, filename=None):
+        if filename is None:
+            filename = self.filename
+
+        with open(filename, 'w') as f:
+            f.write(str(content))
+
 class Sifz(Format):
     def main_file(self):
         return FileContextHandler(gzip.open(self.filename, 'r'))
