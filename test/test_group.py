@@ -9,6 +9,7 @@ def test_canvas_children():
             "[📂group 'More circles']",
             "[📂group \"Well, it's round\"]",
             "[📂group 'Blurry circle']",
+            "[📂group 'Background circle']",
             ]
 
     found = [str(layer) for layer in sif.children]
@@ -29,6 +30,9 @@ def test_canvas_descendants():
             "[📂group 'Blurry circle']",
             "[-🟠blur 'Blur']",
             "[-🔵circle 'Blue circle']",
+            "[📂group 'Background circle']",
+            "[-🔵circle 'Maybe white circle']",
+            "[-🔵circle 'Black circle']",
             ]
 
     found = [str(layer) for layer in sif.descendants]
