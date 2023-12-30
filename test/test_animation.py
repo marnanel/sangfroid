@@ -5,7 +5,7 @@ from test import *
 def test_animation_load_sif():
     sif = get_animation('circles.sif')
 
-    assert sif.name == 'circles'
+    assert sif.name == 'Circles'
     assert sif.description == 'I like circles. They are round.'
     assert sif.size == (480, 270)
     assert sif.resolution==(2834.645669, 2835)
