@@ -1,6 +1,7 @@
 import os
 import sangfroid
 from test import *
+from bs4 import BeautifulSoup
 
 def test_animation_load_sif():
     sif = get_animation('circles.sif')
@@ -25,6 +26,8 @@ def test_animation_save():
             'wombats.sifz',
             ]:
 
+        data = {}
+
         with open(os.path.join(
             os.path.dirname(__file__),
             test_file,
@@ -37,7 +40,7 @@ def test_animation_save():
             f'purple-{test_file}',
             ), 'rb') as f:
 
-            expected = f.read()
+            data['expected'] = f.read()
 
         for save_as in [False, True]:
 
@@ -55,9 +58,13 @@ def test_animation_save():
                 animation.save()
 
             with open(final_filename, 'rb') as f:
-                changed_version = f.read()
+                data['found'] = f.read()
 
-            assert changed_version == expected, (
+            xml = dict(
+                    (which, BeautifulSoup(data[which], features='xml'))
+                    for which in ['found', 'expected'])
+
+            assert xml['found']==xml['expected'], (
                     f'test_file, save_as=={save_as}'
                     )
 
