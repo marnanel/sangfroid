@@ -109,7 +109,7 @@ class Animation(Group):
             filename = self.filename
 
         self.format.save(
-                content = self.tag,
+                content = self.soup,
                 filename = filename,
                 )
 
