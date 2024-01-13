@@ -50,60 +50,63 @@ def strip_spaces(xml):
 
     return result
 
-def test_animation_save():
+def test_animation_save_and_saveas():
 
-    for test_file in [
-            'circles.sif',
-            'wombats.sifz',
-            ]:
+    for saveas in [False, True]:
+        for test_file in [
+                'circles.sif',
+                'wombats.sifz',
+                ]:
 
-        data = {}
+            assert not saveas
 
-        with open(os.path.join(
-            os.path.dirname(__file__),
-            test_file,
-            ), 'rb') as f:
+            data = {}
 
-            original = f.read()
+            with open(os.path.join(
+                os.path.dirname(__file__),
+                test_file,
+                ), 'rb') as f:
 
-        with open(os.path.join(
-            os.path.dirname(__file__),
-            f'purple-{test_file}',
-            ), 'rb') as f:
+                original = f.read()
 
-            data['expected'] = f.read()
+            with open(os.path.join(
+                os.path.dirname(__file__),
+                f'purple-{test_file}',
+                ), 'rb') as f:
 
-        for save_as in [False, True]:
+                data['expected'] = f.read()
 
-            tempname = temp_filename()
-            with open(tempname, 'wb') as f:
-                f.write(original)
+            for save_as in [False, True]:
 
-            animation = sangfroid.open(tempname)
+                tempname = temp_filename()
+                with open(tempname, 'wb') as f:
+                    f.write(original)
 
-            for circle in animation.find_all('circle'):
-                circle['color'].value = '#ff00ff'
+                animation = sangfroid.open(tempname)
 
-            if save_as:
-                final_filename = temp_filename()
-                animation.save(final_filename)
-            else:
-                final_filename = tempname
-                animation.save()
+                for circle in animation.find_all('circle'):
+                    circle['color'].value = '#ff00ff'
 
-            with open(final_filename, 'rb') as f:
-                data['found'] = f.read()
+                if save_as:
+                    final_filename = temp_filename()
+                    animation.save(final_filename)
+                else:
+                    final_filename = tempname
+                    animation.save()
 
-            xml = dict(
-                    (
-                        which,
-                        strip_spaces(BeautifulSoup(data[which],
-                                                   features='xml')),
+                with open(final_filename, 'rb') as f:
+                    data['found'] = f.read()
+
+                xml = dict(
+                        (
+                            which,
+                            strip_spaces(BeautifulSoup(data[which],
+                                                       features='xml')),
+                            )
+                        for which in ['found', 'expected'])
+
+                assert xml['found']==xml['expected'], (
+                        f'test_file, save_as=={save_as}'
                         )
-                    for which in ['found', 'expected'])
 
-            assert xml['found']==xml['expected'], (
-                    f'test_file, save_as=={save_as}'
-                    )
-
-            os.unlink(tempname)
+                os.unlink(tempname)

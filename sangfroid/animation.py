@@ -105,9 +105,6 @@ class Animation(Group):
             raise ValueError(f"I don't understand the time specification: {t}")
 
     def save(self, filename=None):
-        if filename is None:
-            filename = self.filename
-
         self.format.save(
                 content = self.soup,
                 filename = filename,
