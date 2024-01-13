@@ -33,7 +33,6 @@ class Layer:
     def parent(self):
         cursor = self.tag.parent
         while cursor is not None:
-            print("???", cursor.name)
             if cursor.name=='layer':
                 return Layer.from_tag(cursor)
                 return cursor
