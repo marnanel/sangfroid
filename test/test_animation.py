@@ -19,6 +19,37 @@ def test_animation_load_sifz():
     assert sif.name == 'wombats'
     assert sif.description == 'I like wombats. They live in Australia.'
 
+def strip_spaces(xml):
+    # This function used to strip out all space around NavigableStrings
+    # and return the changed XML. But that's almost impossible to read
+    # in pytest's output. So now it returns a list of:
+    #  - for NavigableStrings: the stripped form of item.text
+    #           (except that if the stripped form is the empty string,
+    #           it's are silently dropped);
+    #  - for everything else: lists of name and attributes.
+
+    result = []
+
+    for item in xml.descendants:
+        if isinstance(item, bs4.NavigableString):
+            s = item.text.strip()
+            if s!='':
+                result.append(s)
+        elif not item.attrs:
+            result.append(item.name)
+        else:
+            addendum = (
+                    item.name + ' ' +
+                    ' '.join([
+                        f'{k}={v}'
+                        for k,v
+                        in sorted(item.attrs.items())
+                        ]))
+
+            result.append(addendum)
+
+    return result
+
 def test_animation_save():
 
     for test_file in [
@@ -50,6 +81,9 @@ def test_animation_save():
 
             animation = sangfroid.open(tempname)
 
+            for circle in animation.find_all('circle'):
+                circle['color'].value = '#ff00ff'
+
             if save_as:
                 final_filename = temp_filename()
                 animation.save(final_filename)
@@ -61,7 +95,11 @@ def test_animation_save():
                 data['found'] = f.read()
 
             xml = dict(
-                    (which, BeautifulSoup(data[which], features='xml'))
+                    (
+                        which,
+                        strip_spaces(BeautifulSoup(data[which],
+                                                   features='xml')),
+                        )
                     for which in ['found', 'expected'])
 
             assert xml['found']==xml['expected'], (

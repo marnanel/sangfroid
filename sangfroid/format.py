@@ -1,4 +1,5 @@
 import gzip
+import bs4
 
 class Format:
     """
@@ -65,6 +66,11 @@ class FileContextHandler:
     def __exit__(self, exc_type, exc_value, traceback):
         self.f.close()
 
+class _SifFormatter(bs4.formatter.XMLFormatter):
+    def __init__(self, *args, **kwargs):
+        kwargs['indent'] = 2
+        super().__init__(*args, **kwargs)
+
 class Sif(Format):
     def main_file(self):
         return FileContextHandler(open(self.filename, 'r'))
@@ -73,8 +79,8 @@ class Sif(Format):
         if filename is None:
             filename = self.filename
 
-        with open(filename, 'w') as f:
-            f.write(str(content))
+        with open(filename, 'wb') as f:
+            f.write(content.encode(formatter=_SifFormatter(), indent_level=9))
 
 class Sifz(Format):
     def main_file(self):
