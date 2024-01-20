@@ -122,8 +122,17 @@ def test_layer_find_all():
     assert [x.desc for x in circles] == [
             'Shadow circle', 'Bouncy ball']
 
-    wombats = sif.find_all('wombat')
+    wombats = list(sif.find_all('wombat'))
     assert wombats == []
+
+    everything = list(sif.find_all(True))
+    assert len(everything)==11
+
+    def _find_the_shadows(t):
+        return 'shadow' in t.get('desc', '').lower()
+
+    shadows = [x.desc for x in sif.find_all(_find_the_shadows)]
+    assert sorted(shadows)==['Shadow', 'Shadow', 'Shadow circle']
 
 def test_layer_find():
     sif = get_animation('circles.sif')
