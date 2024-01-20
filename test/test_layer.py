@@ -130,7 +130,7 @@ def test_layer_find():
     assert isinstance(orange_circle, sangfroid.layer.Layer)
     assert orange_circle.desc == 'Orange circle'
 
-def test_layer_subscript_get():
+def test_layer_item_get():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
     assert green_circle['radius'] == 0.5055338531
@@ -143,7 +143,7 @@ def test_layer_subscript_get():
 
     assert ok, 'subscript of unreal string should raise KeyError'
 
-def test_layer_subscript_set():
+def test_layer_item_set():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
     assert green_circle['color'] == '#10FF00', (
@@ -161,6 +161,12 @@ def test_layer_subscript_set():
             'colour has been set to yellow via string'
             )
 
+def test_layer_item_contains():
+    sif = get_animation('circles.sif')
+    green_circle = sif.find(desc='Green circle')
+
+    assert 'color' in green_circle
+    assert 'wombat' not in green_circle
 
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]

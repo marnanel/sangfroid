@@ -56,6 +56,13 @@ class Layer:
             raise KeyError(f)
         return _name_and_value_of(found)[1]
 
+    def __contains__(self, f):
+        found = self.tag.find(
+                'param',
+                attrs={'name': f},
+                )
+        return found is not None
+
     @property
     def depth(self):
         cursor = self.tag.parent
