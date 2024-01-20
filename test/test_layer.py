@@ -1,5 +1,6 @@
 import re
 import sangfroid
+import pytest
 from test import *
 
 def test_layer_children():
@@ -160,6 +161,12 @@ def test_layer_item_set():
     assert green_circle['color'] == '#FFFF00', (
             'colour has been set to yellow via string'
             )
+
+    with pytest.raises(ValueError):
+        green_circle['color'] = '2s'
+
+    with pytest.raises(TypeError):
+        green_circle['color'] = sangfroid.T(s=2)
 
 def test_layer_item_contains():
     sif = get_animation('circles.sif')

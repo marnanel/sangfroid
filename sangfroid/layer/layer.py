@@ -56,6 +56,22 @@ class Layer:
             raise KeyError(f)
         return _name_and_value_of(found)[1]
 
+    def __setitem__(self, f, v):
+        found = self.tag.find('param', attrs={'name': f})
+        if found is None:
+            raise KeyError(f)
+        old_value = _name_and_value_of(found)[1]
+
+        if isinstance(v, Value):
+            if not isinstance(v, old_value.__class__):
+                raise TypeError(v.__class__)
+
+            new_value = v
+        else:
+            new_value = old_value.__class__(v)
+
+        old_value.tag.replace_with(new_value.tag)
+
     def __contains__(self, f):
         found = self.tag.find(
                 'param',
