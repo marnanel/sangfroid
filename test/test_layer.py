@@ -113,6 +113,9 @@ def _find_type_names_of_children_of_layer(layer):
             ]
     return result
 
+def _find_the_shadows(t):
+    return 'shadow' in t.get('desc', '').lower()
+
 def test_layer_find_all():
     sif = get_animation('bouncing.sif')
     shadows = sif.find_all(desc='Shadow')
@@ -128,10 +131,20 @@ def test_layer_find_all():
     everything = list(sif.find_all(True))
     assert len(everything)==11
 
-    def _find_the_shadows(t):
-        return 'shadow' in t.get('desc', '').lower()
-
     shadows = [x.desc for x in sif.find_all(_find_the_shadows)]
+    assert sorted(shadows)==['Shadow', 'Shadow', 'Shadow circle']
+
+def test_layer_find_all_recursive():
+    sif = get_animation('bouncing.sif')
+
+    shadows = [x.desc for x in sif.find_all(_find_the_shadows,
+                                            recursive=False,
+                                            )]
+    assert sorted(shadows)==['Shadow']
+
+    shadows = [x.desc for x in sif.find_all(_find_the_shadows,
+                                            recursive=True,
+                                            )]
     assert sorted(shadows)==['Shadow', 'Shadow', 'Shadow circle']
 
 def test_layer_find():

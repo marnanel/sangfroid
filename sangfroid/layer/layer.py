@@ -19,7 +19,6 @@ class Layer:
     def __init__(self, tag):
         self.tag = tag
 
-        # 'group' field?
         self.active = tag.get('active', True)
         self.synfig_version = tag.get('version', None)
         self.exclude_from_rendering = tag.get(
@@ -97,15 +96,15 @@ class Layer:
             cursor = cursor.parent
         return result
 
-    def find_all(self, *args, **kwargs):
+    def find_all(self,
+                 *args,
+                 recursive=True,
+                 **kwargs,
+                 ):
 
         matching_special = None
         match_in_attribs = {}
         match_in_params = {}
-
-        # FIXME True
-        # FIXME function
-        # FIXME attrs={}
 
         if len(args)>1:
             raise ValueError(
@@ -157,7 +156,13 @@ class Layer:
                     for param in found.find_all('param',
                                               recursive=False):
                         if param['name'] in match_in_params:
-                            return match_in_params['name'][param.string]
+                            t = [n for n in param.children
+                                 if isinstance(n, bs4.element.Tag)][0]
+
+                            value = Value.from_tag(t)
+
+                            if match_in_params[param['name']] == value:
+                                return True
 
                 return False
 
@@ -169,7 +174,9 @@ class Layer:
 
             raise ValueError(found)
 
-        for match in self.tag.find_all(matcher):
+        for match in self.tag.find_all(matcher,
+                                       recursive=recursive,
+                                       ):
             yield self.from_tag(match)
 
     def find(self, *args, **kwargs):
