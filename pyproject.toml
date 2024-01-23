@@ -27,7 +27,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://gitlab.com/marnanel/sangfroid"
 Repository = "https://gitlab.com/marnanel/sangfroid.git"
-Issues = "https://github.com/marnanel/sangfroid/issues"
+Issues = "https://gitlab.com/marnanel/sangfroid/issues"
 
 [build-system]
 requires = [
