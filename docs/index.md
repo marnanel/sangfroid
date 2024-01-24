@@ -6,7 +6,7 @@ Development happens [on gitlab](https://gitlab.com/marnanel/sangfroid), but ther
 
 Currently we're approaching our first pre-alpha release, *[0.1 liverpool](https://gitlab.com/marnanel/sangfroid/-/milestones/1)*.
 
-== How to install
+# How to install
 
 Short answer:
 
@@ -20,7 +20,7 @@ Long answer:
 * `. venv/bin/activate`
 * `python -m pip install .`
 
-== Get involved
+# Get involved
 
 * Drop by on [our Discord server](https://discord.gg/2eAHdQTUyb).
 * [Raise issues](https://gitlab.com/marnanel/sangfroid/-/issues/). We like issues.

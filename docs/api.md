@@ -1,10 +1,12 @@
 # API
 
-```{eval-rst}
-.. autosummary::
-   :toctree: generated
+Here's everything you (probably) need to know about working with Sangfroid.
 
-   sangfroid
-   sangfroid.layer
-   sangfroid.value
+```{eval-rst}
+.. toctree::
+
+   animation
+   t
+   layer
+   value
 ```
