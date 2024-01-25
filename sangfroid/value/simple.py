@@ -1,4 +1,3 @@
-import bs4
 from sangfroid.value.value import Value
 from sangfroid.t import T
 from sangfroid.utils import tag_to_fps
@@ -71,10 +70,6 @@ class Angle(Simple):
 
     def _str_inner(self):
         return '%g°' % (self.value,)
-
-@Value.handles_type()
-class String(Simple):
-    our_type = str
 
 @Value.handles_type()
 class Time(Simple):

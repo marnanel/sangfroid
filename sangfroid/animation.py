@@ -6,6 +6,7 @@ from sangfroid.value.color import Color
 
 class Animation(Group):
     def __init__(self, filename):
+        self.filename = filename
         self.format = Format.from_filename(filename)
 
         with self.format.main_file() as f:
@@ -102,6 +103,12 @@ class Animation(Group):
             return int(t[:-1])
         else:
             raise ValueError(f"I don't understand the time specification: {t}")
+
+    def save(self, filename=None):
+        self.format.save(
+                content = self.soup,
+                filename = filename,
+                )
 
 def open(filename):
     """
