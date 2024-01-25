@@ -81,7 +81,7 @@ class Format:
         return filename
 
     def _write_to_file(self, f, content):
-        f.write(content.encode(formatter=_SifFormatter(), indent_level=9))
+        f.write(str(content).encode('UTF-8'))
 
 class FileContextHandler:
     def __init__(self, f):
@@ -92,11 +92,6 @@ class FileContextHandler:
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.f.close()
-
-class _SifFormatter(bs4.formatter.XMLFormatter):
-    def __init__(self, *args, **kwargs):
-        kwargs['indent'] = 2
-        super().__init__(*args, **kwargs)
 
 class Sif(Format):
     def main_file(self):
