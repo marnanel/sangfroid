@@ -6,12 +6,19 @@ class Layer:
 
     SYMBOL = '?' # fallback
 
+    FIELDS_IN_TAG_ATTRIBUTES = [
+            'type',
+            'active',
+            'exclude_from_rendering',
+            'version',
+            'desc',
+            ]
+
     ########################
 
     def __init__(self, tag):
         self.tag = tag
 
-        # 'group' field?
         self.active = tag.get('active', True)
         self.synfig_version = tag.get('version', None)
         self.exclude_from_rendering = tag.get(
@@ -33,7 +40,6 @@ class Layer:
     def parent(self):
         cursor = self.tag.parent
         while cursor is not None:
-            print("???", cursor.name)
             if cursor.name=='layer':
                 return Layer.from_tag(cursor)
                 return cursor
@@ -57,6 +63,29 @@ class Layer:
             raise KeyError(f)
         return _name_and_value_of(found)[1]
 
+    def __setitem__(self, f, v):
+        found = self.tag.find('param', attrs={'name': f})
+        if found is None:
+            raise KeyError(f)
+        old_value = _name_and_value_of(found)[1]
+
+        if isinstance(v, Value):
+            if not isinstance(v, old_value.__class__):
+                raise TypeError(v.__class__)
+
+            new_value = v
+        else:
+            new_value = old_value.__class__(v)
+
+        old_value.tag.replace_with(new_value.tag)
+
+    def __contains__(self, f):
+        found = self.tag.find(
+                'param',
+                attrs={'name': f},
+                )
+        return found is not None
+
     @property
     def depth(self):
         cursor = self.tag.parent
@@ -67,51 +96,92 @@ class Layer:
             cursor = cursor.parent
         return result
 
-    def _find_or_find_all(self,
-                          *args, **kwargs):
+    def find_all(self,
+                 *args,
+                 recursive=True,
+                 **kwargs,
+                 ):
+
+        matching_special = None
+        match_in_attribs = {}
+        match_in_params = {}
+
         if len(args)>1:
             raise ValueError(
                     "You can only give one positional argument.")
         elif len(args)==1:
-            if 'type' in kwargs:
-                raise ValueError(
-                        "You can't give a type in both the positional "
-                        "and keyword arguments.")
-            kwargs['type'] = args[0]
+
+            if isinstance(args[0], str):
+                if 'type' in kwargs:
+                    raise ValueError(
+                            "You can't give a type in both the positional "
+                            "and keyword arguments.")
+                kwargs['type'] = args[0]
+
+            elif isinstance(args[0], bool):
+                matching_special = args[0]
+
+            elif hasattr(args[0], '__call__'):
+                matching_special = args[0]
+
+            else:
+                raise TypeError(args[0])
+
+        if 'attrs' in kwargs:
+            for k,v in kwargs['attrs'].items():
+                if k in kwargs:
+                    raise ValueError("{k} specified both as a kwarg and in attrs")
+                kwargs[k] = v
+
+            del kwargs['attrs']
 
         for k,v in kwargs.items():
-            if isinstance(v, str):
-                v = v.lower()
-                def _case_insensitive_match(s):
-                    if s is None:
-                        return False
-                    return s.lower()==v
-                kwargs[k] = _case_insensitive_match
-
-        find_all = kwargs.get('find_all', False)
-        if 'find_all' in kwargs:
-            del kwargs['find_all']
-
-        if find_all:
-            result = [
-                    Layer(tag=t)
-                    for t in self.tag.find_all('layer', attrs=kwargs)
-                    ]
-
-        else:
-            layer = self.tag.find('layer', attrs=kwargs)
-            if layer is None:
-                result = None
+            if k in self.FIELDS_IN_TAG_ATTRIBUTES:
+                match_in_attribs[k] = v
             else:
-                result = Layer(layer)
+                match_in_params[k] = v
 
-        return result
+        def matcher(found):
+            if found.name!='layer':
+                return False
+
+            if matching_special is None:
+
+                if match_in_attribs:
+                    for k,v in match_in_attribs.items():
+                        if found.attrs.get(k, None)==v:
+                            return True
+
+                if match_in_params:
+                    for param in found.find_all('param',
+                                              recursive=False):
+                        if param['name'] in match_in_params:
+                            t = [n for n in param.children
+                                 if isinstance(n, bs4.element.Tag)][0]
+
+                            value = Value.from_tag(t)
+
+                            if match_in_params[param['name']] == value:
+                                return True
+
+                return False
+
+            elif isinstance(matching_special, bool):
+                return matching_special
+
+            else:
+                return matching_special(found)
+
+            raise ValueError(found)
+
+        for match in self.tag.find_all(matcher,
+                                       recursive=recursive,
+                                       ):
+            yield self.from_tag(match)
 
     def find(self, *args, **kwargs):
-        return self._find_or_find_all(*args, find_all = False, **kwargs)
-
-    def find_all(self, *args, **kwargs):
-        return self._find_or_find_all(*args, find_all = True, **kwargs)
+        iterator = self.find_all(*args, **kwargs)
+        return next(iterator)
 
     __call__ = find
 

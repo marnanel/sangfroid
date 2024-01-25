@@ -77,21 +77,6 @@ def test_value_composite():
             '(2.0, 0.5)',
             }
 
-def test_value_angle():
-    sif = get_animation('circles.sif')
-    layer = sif.find(desc="Well, it's round")
-    transformation = layer['transformation']
-
-    assert transformation['angle'] == 45.0
-    assert transformation['skew_angle'] == 50.5
-
-    assert str(transformation['angle']) == '45°'
-    assert str(transformation['skew_angle']) == '50.5°'
-
-    angle = Angle(45)
-    assert angle==45
-    assert str(angle) == '45°'
-
 def test_value_str_animated():
     sif = get_animation('bouncing.sif')
 

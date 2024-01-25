@@ -1,5 +1,6 @@
 import re
 import sangfroid
+import pytest
 from test import *
 
 def test_layer_children():
@@ -112,6 +113,9 @@ def _find_type_names_of_children_of_layer(layer):
             ]
     return result
 
+def _find_the_shadows(t):
+    return 'shadow' in t.get('desc', '').lower()
+
 def test_layer_find_all():
     sif = get_animation('bouncing.sif')
     shadows = sif.find_all(desc='Shadow')
@@ -121,8 +125,27 @@ def test_layer_find_all():
     assert [x.desc for x in circles] == [
             'Shadow circle', 'Bouncy ball']
 
-    wombats = sif.find_all('wombat')
+    wombats = list(sif.find_all('wombat'))
     assert wombats == []
+
+    everything = list(sif.find_all(True))
+    assert len(everything)==11
+
+    shadows = [x.desc for x in sif.find_all(_find_the_shadows)]
+    assert sorted(shadows)==['Shadow', 'Shadow', 'Shadow circle']
+
+def test_layer_find_all_recursive():
+    sif = get_animation('bouncing.sif')
+
+    shadows = [x.desc for x in sif.find_all(_find_the_shadows,
+                                            recursive=False,
+                                            )]
+    assert sorted(shadows)==['Shadow']
+
+    shadows = [x.desc for x in sif.find_all(_find_the_shadows,
+                                            recursive=True,
+                                            )]
+    assert sorted(shadows)==['Shadow', 'Shadow', 'Shadow circle']
 
 def test_layer_find():
     sif = get_animation('circles.sif')
@@ -130,7 +153,7 @@ def test_layer_find():
     assert isinstance(orange_circle, sangfroid.layer.Layer)
     assert orange_circle.desc == 'Orange circle'
 
-def test_layer_subscript():
+def test_layer_item_get():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
     assert green_circle['radius'] == 0.5055338531
@@ -142,6 +165,37 @@ def test_layer_subscript():
         ok = True
 
     assert ok, 'subscript of unreal string should raise KeyError'
+
+def test_layer_item_set():
+    sif = get_animation('circles.sif')
+    green_circle = sif.find(desc='Green circle')
+    assert green_circle['color'] == '#10FF00', (
+            'we can read the colour'
+            )
+
+    red = sangfroid.value.Color('#770000')
+    green_circle['color'] = red
+    assert green_circle['color'] == '#770000', (
+            'colour has been set to red via Color'
+            )
+
+    green_circle['color'] = '#FFFF00'
+    assert green_circle['color'] == '#FFFF00', (
+            'colour has been set to yellow via string'
+            )
+
+    with pytest.raises(ValueError):
+        green_circle['color'] = '2s'
+
+    with pytest.raises(TypeError):
+        green_circle['color'] = sangfroid.T(s=2)
+
+def test_layer_item_contains():
+    sif = get_animation('circles.sif')
+    green_circle = sif.find(desc='Green circle')
+
+    assert 'color' in green_circle
+    assert 'wombat' not in green_circle
 
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]

@@ -1,4 +1,5 @@
 import gzip
+import bs4
 
 class Format:
     """
@@ -25,6 +26,9 @@ class Format:
         raise NotImplementedError()
 
     def __getitem__(self, v):
+        """
+        Looks up a file referred to by the main file.
+        """
         raise NotImplementedError()
 
     @classmethod
@@ -55,6 +59,30 @@ class Format:
         result.filename = filename
         return result
 
+    def save(self, content, filename=None):
+        """
+        Saves a file to disk.
+
+        Args:
+            content (bs4.Document): the XML document to save
+            filename (str or None): the filename to save under;
+                if None, we use self.filename; if not None,
+                this is a "save as", so self.filename will
+                be set to this value.
+        """
+        raise NotImplementedError()
+
+    def _filename_for_saving(self, filename):
+        if filename is None:
+            filename = self.filename
+        else:
+            self.filename = filename
+
+        return filename
+
+    def _write_to_file(self, f, content):
+        f.write(content.encode(formatter=_SifFormatter(), indent_level=9))
+
 class FileContextHandler:
     def __init__(self, f):
         self.f = f
@@ -65,13 +93,30 @@ class FileContextHandler:
     def __exit__(self, exc_type, exc_value, traceback):
         self.f.close()
 
+class _SifFormatter(bs4.formatter.XMLFormatter):
+    def __init__(self, *args, **kwargs):
+        kwargs['indent'] = 2
+        super().__init__(*args, **kwargs)
+
 class Sif(Format):
     def main_file(self):
         return FileContextHandler(open(self.filename, 'r'))
 
+    def save(self, content, filename=None):
+        filename = self._filename_for_saving(filename)
+
+        with open(filename, 'wb') as f:
+            self._write_to_file(f, content)
+
 class Sifz(Format):
     def main_file(self):
         return FileContextHandler(gzip.open(self.filename, 'r'))
+
+    def save(self, content, filename=None):
+        filename = self._filename_for_saving(filename)
+
+        with gzip.open(filename, 'wb') as f:
+            self._write_to_file(f, content)
 
 class Sfg(Format):
     def main_file(self):

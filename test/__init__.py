@@ -1,5 +1,6 @@
 import os
 import sangfroid
+import tempfile
 import bs4
 
 def get_animation(name):
@@ -36,3 +37,8 @@ def xml_compare(a, b,
         assert a==b, asserting
     else:
         return a==b
+
+def temp_filename():
+    fd, tempname = tempfile.mkstemp(prefix='sangfroid')
+    os.close(fd)
+    return tempname
