@@ -109,17 +109,3 @@ class Animation(Group):
                 content = self.soup,
                 filename = filename,
                 )
-
-def open(filename):
-    """
-    Loads the Synfig file with the given filename.
-
-    Args:
-        filename (str): the name of the source file. Can be .sfg, .sif,
-            or .sifz.
-
-    Returns:
-        Animation
-    """
-    result = Animation(filename)
-    return result
