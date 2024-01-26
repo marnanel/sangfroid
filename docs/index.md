@@ -32,6 +32,7 @@ Contents
 
 .. toctree::
 
+   examples
    usage
    api
 ```
