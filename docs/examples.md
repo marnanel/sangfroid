@@ -2,7 +2,7 @@
 
 Suppose you have this canvas, [colours.sif](examples/colours.sif):
 
-![Basic colours.sif](colours.png)
+![Basic colours.sif](_static/colours.png)
 
 Using `Animation.find_all()`, you can set the word "blue" to be
 magenta anywhere it occurs:
@@ -21,7 +21,7 @@ def main():
 if __name__=='__main__':
     main()
 ```
-![Stroop result](stroop.png)
+![Stroop result](_static/stroop.png)
 (Code: [stroop.py](examples/stroop.py))
 
 Alternatively, we can filter *all* text in the canvas through a
@@ -50,7 +50,7 @@ if __name__=='__main__':
     main()
 ```
 
-![French result](french.png)
+![French result](_static/french.png)
 (Code: [french.py](examples/french.py))
 
 Next, let's look at how to add keyframes... (to be continued)
