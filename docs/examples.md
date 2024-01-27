@@ -22,6 +22,7 @@ if __name__=='__main__':
     main()
 ```
 ![Stroop result](_static/stroop.png)
+
 (Code: [stroop.py](examples/stroop.py))
 
 Alternatively, we can filter *all* text in the canvas through a
@@ -51,6 +52,7 @@ if __name__=='__main__':
 ```
 
 ![French result](_static/french.png)
+
 (Code: [french.py](examples/french.py))
 
 Next, let's look at how to add keyframes... (to be continued)
