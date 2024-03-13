@@ -134,6 +134,9 @@ def test_layer_find_all():
     shadows = [x.desc for x in sif.find_all(_find_the_shadows)]
     assert sorted(shadows)==['Shadow', 'Shadow', 'Shadow circle']
 
+    bananas = sif.find_all(desc='Banana')
+    assert len(bananas)==0
+
 def test_layer_find_all_recursive():
     sif = get_animation('bouncing.sif')
 
@@ -152,6 +155,9 @@ def test_layer_find():
     orange_circle = sif.find(desc='Orange circle')
     assert isinstance(orange_circle, sangfroid.layer.Layer)
     assert orange_circle.desc == 'Orange circle'
+
+    pink_circle = sif.find(desc='Pink circle')
+    assert pink_circle is None, 'Matching nothing gives None'
 
 def test_layer_item_get():
     sif = get_animation('circles.sif')

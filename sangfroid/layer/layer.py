@@ -174,14 +174,21 @@ class Layer:
 
             raise ValueError(found)
 
-        for match in self.tag.find_all(matcher,
-                                       recursive=recursive,
-                                       ):
-            yield self.from_tag(match)
+        result = [
+                self.from_tag(x) for x in
+                self.tag.find_all(matcher,
+                                  recursive=recursive,
+                                  )
+                ]
+
+        return result
 
     def find(self, *args, **kwargs):
-        iterator = self.find_all(*args, **kwargs)
-        return next(iterator)
+        items = self.find_all(*args, **kwargs)
+        if items:
+            return items[0]
+        else:
+            return None
 
     __call__ = find
 
