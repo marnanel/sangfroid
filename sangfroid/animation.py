@@ -143,6 +143,17 @@ class Animation(Group):
                  fps=self.fps,
                  )
 
+    def __len__(self):
+        """
+        The number of frames in this animation.
+
+        Should be equal to `int(end_time)-int(begin_time)`.
+
+        Type:
+            int
+        """
+        return int(self.end_time) - int(self.begin_time)
+
     @property
     def background(self):
         """
