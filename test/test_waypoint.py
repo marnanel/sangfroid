@@ -12,7 +12,7 @@ def test_waypoint_loaded():
 
     assert scale.is_animated
 
-    for found, expected in zip(scale.timeline, [
+    for found, expected in zip(scale.values(), [
         ( '0f', 'ease', 'ease'),
         ('24f', 'linear', 'linear'),
         ('48f', 'ease', 'ease'),
@@ -69,3 +69,77 @@ def test_waypoint_time_spec():
 
     with pytest.raises(TypeError):
         Waypoint(time=None, value=value)
+
+def test_waypoint_add():
+    sif = get_animation('bouncing.sif')
+    assert len(sif)==120
+
+    ball = sif.find(desc='Bouncy ball')
+    color = ball['color']
+    assert not color.is_animated
+
+    color[0] = '#FF0000'
+    color[48] = '#00FF00'
+    color[-48] = '#0000FF'
+
+    sif.save('/tmp/flashy.sif')
+
+    assert False
+
+"""
+def test_value_timeline_on_and_off():
+    sif = get_animation('circles.sif')
+    orange_circle = sif.find(desc='Orange circle')
+    amount = orange_circle['amount']
+
+    assert str(amount)=='1.0'
+    assert amount.timeline is None
+    assert amount.our_type==float
+
+    amount.timeline = []
+    assert amount.timeline==[]
+    assert amount.our_type==float
+
+    amount.timeline = None
+    assert amount.timeline is None
+    assert amount.our_type==float
+
+def test_value_timeline_assign():
+    r = Real(1.77)
+    assert str(r)=='1.77'
+
+    r.timeline = [
+            Waypoint(time=T('0s', fps=24), value=Real(1.0)),
+            Waypoint(time=T('1s', fps=24), value=Real(2.0)),
+            ]
+
+    s = Real(1.77)
+    s.timeline = r.timeline
+
+    for obj in [r, s]:
+        assert [str(w.value) for w in obj.timeline] == ['1.0', '2.0']
+
+    assert r.timeline[0] == s.timeline[0]
+    assert r.timeline[0] is not s.timeline[0]
+
+def test_value_timeline_assign_twice():
+    r = Real(1.77)
+    assert str(r)=='1.77'
+    assert r.is_animated == False
+
+    r.timeline = [
+            Waypoint(time=T('0f', fps=24), value=Real(1.0)),
+            ]
+    assert r.is_animated == True
+    assert len(r.timeline)==1
+    assert r.timeline[0].time == T('0f')
+
+    r.timeline = [
+            Waypoint(time=T('1f', fps=24), value=Real(2.0)),
+            ]
+    assert r.is_animated == True
+    assert len(r.timeline)==1
+    assert r.timeline[0].time == T('1f')
+
+
+"""

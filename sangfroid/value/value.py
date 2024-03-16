@@ -3,7 +3,7 @@ import bs4
 import functools
 from sangfroid.registry import Registry
 from sangfroid.t import T
-from sangfroid.utils import tag_to_fps
+from sangfroid.utils import tag_to_fps, tag_to_canvas_duration
 
 class Value:
 
@@ -37,19 +37,44 @@ class Value:
         if v==self.is_animated:
             pass
         elif v:
-            self.timeline = []
+            our_type = self.tag.name
+            self.tag.attrs = {}
+            self.tag.name = 'animated'
+            self.tag['type'] = our_type
         else:
-            self.timeline = None
+            self.tag = bs4.element.Tag(name=self.__class__.__name__.lower())
+            self.value = None
 
-    @property
-    def timeline(self):
-        if self.tag.name!='animated':
-            return None
+    def __setitem__(self, t, v):
+
+        self.is_animated = True
+
+        if isinstance(t, T):
+            new_time = t
         else:
-            result = Timeline.__new__(Timeline)
-            result.parent = self
-            return result
+            try:
+                frames = float(t)
+            except TypeError:
+                raise TypeError(f"Needed T or int or float, not {type(t)}")
 
+            if frames<0:
+                frames = tag_to_canvas_duration(self.tag) + frames
+
+            new_time = T(float(frames))
+
+        if isinstance(v, self.__class__):
+            new_value = v
+        else:
+            new_value = self.__class__(v)
+
+        new_waypoint = Waypoint(
+                time = new_time,
+                value = new_value,
+                )
+
+        self.tag.append(new_waypoint.tag)
+
+    """
     @timeline.setter
     def timeline(self, v):
         if v is None:
@@ -79,6 +104,83 @@ class Value:
         else:
             raise TypeError("This can only be set to None or "
                             "a list of Waypoints.")
+                            """
+
+    @property
+    def timeline():
+        raise NotImplementedError() # for now, FIXME
+
+    def _waypoint_tags(self):
+        """
+        A dict of Beautiful Soup tags of waypoints on our timeline.
+
+        Returns:
+            dict mapping T to Tag
+        """
+
+        tag = self.tag
+
+        if tag.name!='animated':
+            return {}
+
+        try:
+            fps = tag_to_fps(tag)
+        except ValueError:
+            fps = None
+
+        def _construct_time(w):
+            try:
+                time = T(w['time'], fps)
+            except ValueError:
+                assert fps is None
+                raise ValueError(
+                        "If a value isn't attached to a document, "
+                        "T-values in its timeline must either be "
+                        "expressed in frames or must have the FPS "
+                        f"specified explicitly: {tag}"
+                        )
+
+        result = dict([
+            (_construct_time(w), w)
+            for w in tag
+            if isinstance(w, bs4.element.Tag)])
+
+        if any([w.name!='waypoint' for w in result.keys()]):
+            raise ValueError("Waypoints must all be called <waypoint>: "
+                                f"{tag}")
+
+        our_type = tag['type']
+
+        for waypoint_tag in result:
+            v = [t for t in waypoint_tag.children
+                 if isinstance(t, bs4.element.Tag)]
+
+            if len(v)==0:
+                raise ValueError(f"Waypoint without a value: {waypoint_tag}")
+            elif len(v)!=1:
+                raise ValueError(
+                        f"Waypoint with multiple values: {v}")
+            elif v[0].name!=our_type:
+                raise ValueError(
+                        "Waypoint type must match parent: "
+                        f"parent={parent_type}, child={v[0].name}")
+
+        return result
+
+    def __iter__(self):
+        """
+        An iterator over waypoints on our timeline.
+        """
+
+        for k,v in sorted(self._waypoint_tags().items()):
+            yield time, Waypoint(
+                        value = self.from_tag(v[0]),
+                        before = waypoint_tag['before'],
+                        after = waypoint_tag['after'],
+                        )
+
+    def __len__(self):
+        return len(self._waypoints())
 
     @property
     def our_type(self):
@@ -118,18 +220,6 @@ class Value:
 
         return self.value == other
 
-    def __iter__(self):
-        timeline = self.timeline
-        if not timeline:
-            return
-        for waypoint in sorted(timeline):
-
-            # Check the value isn't animated, just in case
-            # someone's managed to change it on the fly
-            assert not waypoint.value.is_animated
-
-            yield waypoint
-
     ########################
 
     # Factories, and setup for factories
@@ -155,8 +245,8 @@ class Value:
 
 #######################
 
+"""
 class Timeline:
-    """
     A wrapper for a Value, giving access to its Waypoints.
 
     This can't be created directly; it should only be created by
@@ -164,80 +254,14 @@ class Timeline:
     to the Value which created it.
 
     Fields:
-        parent (Value): the value which created it.
-    """
+        items (list of Waypoints): the waypoints, in order.
     def __init__(self):
         raise NotImplementedError(
                 "Don't construct timelines directly."
                 )
 
-    def _waypoints(self):
-        """
-        A list of waypoints on the parent value's timeline.
-
-        Private, because __iter__() is a perfectly good interface
-        for the caller, and everything can go through it.
-        """
-
-        assert self.parent is not None
-
-        tag = self.parent.tag
-        assert tag.name=='animated'
-
-        try:
-            fps = tag_to_fps(tag)
-        except ValueError:
-            fps = None
-
-        waypoint_tags = [w for w in tag
-                      if isinstance(w, bs4.element.Tag)]
-
-        if any([w.name!='waypoint' for w in waypoint_tags]):
-            raise ValueError("Waypoints must all be called <waypoint>: "
-                                f"{tag}")
-
-        result = []
-        parent_type = tag['type']
-
-        for waypoint_tag in waypoint_tags:
-            v = [t for t in waypoint_tag.children
-                 if isinstance(t, bs4.element.Tag)]
-
-            if len(v)==0:
-                raise ValueError(f"Waypoint without a value: {waypoint_tag}")
-            elif len(v)!=1:
-                raise ValueError(
-                        f"Waypoint with multiple values: {v}")
-            elif v[0].name!=parent_type:
-                raise ValueError(
-                        "Waypoint type must match parent: "
-                        f"parent={parent_type}, child={v[0].name}")
-
-            value = self.parent.from_tag(v[0])
-
-            try:
-                time = T(waypoint_tag['time'], fps)
-            except ValueError:
-                assert fps is None
-                raise ValueError(
-                        "If a value isn't attached to a document, "
-                        "T-values in its timeline must either be "
-                        "expressed in frames or must have the FPS "
-                        "specified explicitly."
-                        )
-
-            result.append(
-                    Waypoint(
-                        time = time,
-                        value = value,
-                        before = waypoint_tag['before'],
-                        after = waypoint_tag['after'],
-                        ))
-
-        return result
-
-    def __len__(self):
-        return len(self._waypoints())
+    def __iter__(self):
+        return iter(self.items)
 
     def __iter__(self):
         for waypoint in self._waypoints():
@@ -267,6 +291,9 @@ class Timeline:
     def __getitem__(self, index):
         return self._waypoints().__getitem__(index)
 
+    def __setitem__(self, index, value):
+        self._waypoints().__getitem__(index, value)
+
     def __eq__(self, other):
         return list(self)==list(other)
 
@@ -274,6 +301,7 @@ class Timeline:
         return f'[timeline of f{self.parent}]'
 
     __repr__ = __str__
+    """
 
 #######################
 
@@ -375,6 +403,20 @@ class Waypoint:
                 f'{INTERPOLATION_TYPES[self.after][1]} - '
                 f'{self.value}]'
                 )
+
+    def __getitem__(self, index):
+        for k,v in self._waypoints():
+            if k==index:
+                return v
+
+        raise KeyError(index)
+
+    def __setitem__(self, index):
+        for k,v in self._waypoints():
+            if k==index:
+                return v
+
+        raise KeyError(index)
 
     __repr__ = __str__
 
