@@ -78,10 +78,10 @@ def tag_to_canvas_duration(tag):
     root_tag = _canvas_root(tag)
     fps = _root_tag_to_fps(root_tag)
 
-    begin_time = T(tag.attrs['begin-time'],
+    begin_time = T(root_tag.attrs['begin-time'],
                  fps=fps,
                  )
-    end_time = T(tag.attrs['end-time'],
+    end_time = T(root_tag.attrs['end-time'],
                  fps=fps,
                  )
     result = int(end_time) - int(begin_time)

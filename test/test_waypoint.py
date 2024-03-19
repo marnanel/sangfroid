@@ -8,11 +8,21 @@ def test_waypoint_loaded():
     sif = get_animation('bouncing.sif')
 
     ball = sif.find(desc='Ball')
+    angle = ball['transformation']['angle']
+
+    assert not angle.is_animated
+    assert angle.timeline==[]
+    assert not angle.timeline
+    assert len(angle.timeline)==0
+
     scale = ball['transformation']['scale']
 
     assert scale.is_animated
+    assert scale.timeline!=[]
+    assert scale.timeline
+    assert len(scale.timeline)==3
 
-    for found, expected in zip(scale.values(), [
+    for found, expected in zip(scale.timeline.values(), [
         ( '0f', 'ease', 'ease'),
         ('24f', 'linear', 'linear'),
         ('48f', 'ease', 'ease'),
@@ -78,15 +88,14 @@ def test_waypoint_add():
     color = ball['color']
     assert not color.is_animated
 
-    color[0] = '#FF0000'
-    color[48] = '#00FF00'
-    color[-48] = '#0000FF'
+    color.timeline[0] = '#FF0000'
+    color.timeline[48] = '#00FF00'
+    color.timeline[-48] = '#0000FF'
 
     sif.save('/tmp/flashy.sif')
 
     assert False
 
-"""
 def test_value_timeline_on_and_off():
     sif = get_animation('circles.sif')
     orange_circle = sif.find(desc='Orange circle')
@@ -141,5 +150,19 @@ def test_value_timeline_assign_twice():
     assert len(r.timeline)==1
     assert r.timeline[0].time == T('1f')
 
+def test_value_is_animated():
+    sif = get_animation('bouncing.sif')
 
-"""
+    ball = sif.find(desc='Ball')
+    scale = ball['transformation']['scale']
+
+    assert scale.is_animated
+    original_point_0 = scale.timeline[0].value
+
+    scale.is_animated = False
+    assert not scale.is_animated
+    assert scale==original_point_0
+
+    scale.is_animated = True
+    assert scale.is_animated
+    assert scale.timeline[0].value==original_point_0

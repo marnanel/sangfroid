@@ -26,7 +26,9 @@ class Vector(Value):
     @value.setter
     def value(self, v):
 
-        if isinstance(v, tuple):
+        if v is None:
+            members = {}
+        elif isinstance(v, tuple):
             if len(v)==0:
                 members = {}
             elif len(v)==2:
@@ -84,6 +86,8 @@ class Vector(Value):
         return sorted(self.value.keys())
 
     def values(self):
+        if self.is_animated:
+            return None
         return [self.our_type(v) for v in self.value.values()]
 
     def items(self):
