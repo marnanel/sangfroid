@@ -74,37 +74,20 @@ class Value:
         result.parent = self
         return result
 
-    """
     @timeline.setter
     def timeline(self, v):
-        if v is None:
-            self.tag = bs4.element.Tag(name=self.__class__.__name__.lower())
-            self.value = None
-        elif isinstance(v, list):
-            # Run this check before we do anything. Timeline.__iadd__()
-            # will check too, but we'll have destroyed the current tag
-            # by that time.
-            if any([not isinstance(w, Waypoint) for w in v]):
-                raise ValueError("Only Waypoints may live in a timeline")
 
-            if self.tag.name!=ANIMATED:
-                our_type = self.tag.name
-                self.tag.attrs = {}
-                self.tag.name = ANIMATED
-                self.tag['type'] = our_type
-
-            self.tag.clear()
-
-            self.timeline += v
-
+        if isinstance(v, list) and all([n for n in v if isinstance(n, Waypoint)]):
+            self._set_waypoints(v)
+        elif isinstance(v, dict):
+            self.timeline = list(v.values())
         elif isinstance(v, Timeline):
             if v.parent is self:
                 return
-            self.timeline = list(v)
+            self._set_waypoints(list(v))
         else:
-            raise TypeError("This can only be set to None or "
-                            "a list of Waypoints.")
-                            """
+            raise TypeError("A timeline can only be set to another timeline or "
+                            "a dict or list of Waypoints.")
 
     def _waypoint_tags(self):
         """
