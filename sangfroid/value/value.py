@@ -141,13 +141,18 @@ class Value:
         except ValueError:
             fps = None
 
+        waypoints = self._waypoint_tags()
+
+        if not waypoints:
+            return {}
+
         our_type = self.tag['type']
 
         values = [Waypoint.from_tag(wt,
                                     fps = fps,
                                     our_type = our_type,
                                     )
-                  for wt in self._waypoint_tags()]
+                  for wt in waypoints]
 
         result = dict([(v.time, v) for v in values])
 
