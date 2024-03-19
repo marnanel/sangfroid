@@ -1,5 +1,6 @@
 import sangfroid
 from sangfroid.value.value import Waypoint
+from sangfroid.value import Real
 from sangfroid.t import T
 from test import *
 import bs4
