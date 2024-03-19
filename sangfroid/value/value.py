@@ -310,7 +310,7 @@ class Timeline:
 
         if isinstance(v, Waypoint):
             new_waypoint = v
-        elif isinstance(v, self.parent.our_type):
+        elif isinstance(v, self.parent.__class__):
             new_waypoint = Waypoint(
                     time = t,
                     value = v,
