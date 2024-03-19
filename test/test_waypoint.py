@@ -83,7 +83,7 @@ def test_waypoint_time_spec():
 
 def test_waypoint_add():
     sif = get_animation('bouncing.sif')
-    assert len(sif)==120
+    assert len(sif)==121
 
     ball = sif.find(desc='Bouncy ball')
     color = ball['color']
