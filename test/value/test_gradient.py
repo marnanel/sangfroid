@@ -9,7 +9,7 @@ def test_gradient_simple():
     g = mandelbrot['gradient_inside']
 
     assert len(g)==2
-    assert all([isinstance(c, Color) for c in g])
+    assert all([isinstance(k, float) and isinstance(v, Color) for k,v in g.items()])
     assert str(g[0])=='#ff0000'
     assert str(g[1])=='#ffff00'
     assert list(g.keys())==[0.0, 1.0]

@@ -18,6 +18,7 @@ class Gradient(Value):
 
     @value.setter
     def value(self, v):
+        print("9000", v)
         if isinstance(v, Gradient):
             v = v.value
 
@@ -57,6 +58,9 @@ class Gradient(Value):
 
     def items(self):
         return self.value.items()
+
+    def __iter__(self):
+        yield from iter(self.value)
 
     def __str__(self):
         return (
