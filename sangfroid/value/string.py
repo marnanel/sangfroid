@@ -1,7 +1,6 @@
 import bs4
 from sangfroid.value.value import Value
 from sangfroid.t import T
-from sangfroid.utils import tag_to_fps
 
 @Value.handles_type()
 class String(Value):

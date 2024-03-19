@@ -4,7 +4,6 @@ from sangfroid.layer import Group
 from sangfroid.format import Format
 from sangfroid.value.color import Color
 from sangfroid.t import T
-from sangfroid.utils import tag_to_canvas_duration
 
 class Animation(Group):
     """
@@ -129,7 +128,7 @@ class Animation(Group):
             T
         """
         return T(self.tag.attrs['begin-time'],
-                 fps=self.fps,
+                 reference_tag = self.tag,
                  )
 
     @property
@@ -141,7 +140,7 @@ class Animation(Group):
             T
         """
         return T(self.tag.attrs['end-time'],
-                 fps=self.fps,
+                 reference_tag = self.tag,
                  )
 
     def __len__(self):
@@ -153,7 +152,7 @@ class Animation(Group):
         Type:
             int
         """
-        return tag_to_canvas_duration(self.tag)
+        return int(T(-1, reference_tag=self.tag).frames)+1
 
     @property
     def background(self):

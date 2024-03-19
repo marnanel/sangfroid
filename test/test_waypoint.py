@@ -2,6 +2,7 @@ import sangfroid
 from sangfroid.value.value import Waypoint
 from sangfroid.t import T
 from test import *
+import bs4
 import pytest
 
 def test_waypoint_loaded():
@@ -94,6 +95,11 @@ def test_waypoint_add():
 
     sif.save('/tmp/flashy.sif')
 
+    waypoint_details = [str(c) for c in color.tag.children
+                        if isinstance(c, bs4.Tag)]
+
+    assert waypoint_details == []
+
     assert False
 
 def test_value_timeline_on_and_off():
@@ -118,8 +124,8 @@ def test_value_timeline_assign():
     assert str(r)=='1.77'
 
     r.timeline = [
-            Waypoint(time=T('0s', fps=24), value=Real(1.0)),
-            Waypoint(time=T('1s', fps=24), value=Real(2.0)),
+            Waypoint(time=T('0f'), value=Real(1.0)),
+            Waypoint(time=T('1f'), value=Real(2.0)),
             ]
 
     s = Real(1.77)
@@ -137,14 +143,14 @@ def test_value_timeline_assign_twice():
     assert r.is_animated == False
 
     r.timeline = [
-            Waypoint(time=T('0f', fps=24), value=Real(1.0)),
+            Waypoint(time=T('0f'), value=Real(1.0)),
             ]
     assert r.is_animated == True
     assert len(r.timeline)==1
     assert r.timeline[0].time == T('0f')
 
     r.timeline = [
-            Waypoint(time=T('1f', fps=24), value=Real(2.0)),
+            Waypoint(time=T('1f'), value=Real(2.0)),
             ]
     assert r.is_animated == True
     assert len(r.timeline)==1

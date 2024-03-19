@@ -11,59 +11,97 @@ class T:
     of seconds, both measured from the start of the animation.
     In both cases, it's a float, usually but not always integral.
 
-    The time may be specified in one of four ways, where "F" represents
+    The time may be specified in one of four ways, where `F` represents
     any decimal integer or float:
-        - a float, the number of frames
-        - "Ff"
-        - "Fs"
-        - "Fs Ff", in which case the values are added together.
 
-    For types involving seconds, the FPS must be supplied to the constructor.
-    You can find this using the "fps" property of the Animation.
-    It's almost always 24. The reason we don't default to 24 is that
-    it risks introducing subtle bugs which are only discovered when
-    the actual frame rate isn't 24.
+        - an `int` or `float`, giving the number of frames counting forwards
+          from the start of the animation. But if the number is negative,
+          it counts backwards from the end, in the usual Python indexing style.
 
-    However, if the time is zero (that is, the start of the film), you may
-    write it as "0s" or "0s 0f" even if you don't supply the FPS.
-    This doesn't allow you to write "0s 2f" without supplying the FPS,
-    even though the FPS wouldn't make a difference, because edge cases
-    give rise to bugs.
+        - `"Ff"`
+
+        - `"Fs"`
+
+        - `"Fs Ff"`, in which case the values are added together.
+
+    For the reference_tag parameter, you may supply the root Beautiful Soup
+    tag of an animation, or any of that tag's descendants. If this parameter
+    is unspecified, or `None`, but we need to calculate something from it,
+    we throw `ValueError`.
+
+    There are two reasons you might need to specify a reference_tag:
+
+        - If the specification is `int` or `float`, and it's negative;
+          this is because we will need to look up the animation length.
+
+        - If the specification is given as `"Fs"` or `"Fs Ff"`;
+          this is because we need to look up the speed in frames per second.
+          It's almost always 24. The reason we don't default to 24 is that
+          it risks introducing subtle bugs which are only discovered when
+          the actual frame rate isn't 24.
+
+    However, if the time is zero (that is, at the start of the animation),
+    you may write it as `"0s"` or `"0s 0f"` even if you don't supply
+    the reference_tag.  This doesn't allow you to write `"0s 2f"` without
+    supplying the reference_tag, even though the FPS wouldn't make
+    a difference, because edge cases give rise to bugs.
 
     Ts compare numerically to other Ts, but unless the frame
     count is zero, they must have the same FPS.
 
-    Ts may be negative. However, in time specifications giving
-    both the seconds and the frames, the frame count may not be negative.
+    The number of seconds in a `"Fs"` or `"Fs Ff"` may be negative,
+    which allows you to set times before the start of the animation.
+    However, the number of *frames* in a `"Fs Ff"` specification
+    may not be negative.
 
     In time specifications giving both seconds and frames, the number
     of frames may be equal to or higher than the FPS. (So, for example,
-    "2s 48f" is a valid time even if fps=24, when it's equivalent to "4s".)
+    `"2s 48f"` is a valid time even if `fps=24`, when it's equivalent
+    to `"4s`"`.)
 
     This type is immutable and hashable.
+
+    Attrs:
+        _frames (float): distance in frames from the start of the animation
+        _fps (float or None): speed in frames per second, if known
     """
     def __init__(
             self,
             value=0.0,
-            fps = None,
+            reference_tag = None,
             ):
-        """
-        Constructor.
-
-        Args:
-            value (str, or float): the time. See the type docstring.
-            fps (int, or None): the number of frames per second.
-                If "value" contains a number of seconds, and this
-                is None, it raises ValueError.
-        """
  
-        self._fps = fps
+        if reference_tag is None:
+            self._fps = None
+        else:
+            reference_tag = _canvas_root(reference_tag)
+            self._fps = float(reference_tag['fps'])
+            
+            if self._fps<=0.0:
+                raise ValueError(f"FPS must be positive: {self._fps}")
 
         try:
             if isinstance(value, str):
                 self._frames = self._parse_time_spec(value)
             else:
                 self._frames = float(value)
+
+                if self._frames < 0:
+                    if reference_tag is None:
+                        raise ValueError("Negative frame counts require "
+                                         "a reference_tag.")
+                    animation_duration = (
+                            self._parse_time_spec(
+                                reference_tag.attrs['end-time'],
+                                )
+                            - 
+                            self._parse_time_spec(
+                                reference_tag.attrs['begin-time'],
+                                )
+                            )
+
+                    self._frames = animation_duration + self._frames
+
         except TypeError:
             raise ValueError(f"Invalid time specification: {value}")
 
@@ -92,12 +130,12 @@ class T:
 
         if found.group(2) is not None:
             seconds = float(found.group(2))
-            if self._fps is not None:
+
+            if seconds!=0.0:
+                if self._fps is None:
+                    raise ValueError("Time specifications in seconds require "
+                                     "a reference_tag.")
                 result += seconds * self._fps
-            elif seconds!=0:
-                raise ValueError(
-                        "If you specify a number of seconds, you "
-                        f"must also specify the FPS: {s}")
 
         if found.group(3) is not None:
             result += float(found.group(3))
@@ -117,7 +155,7 @@ class T:
     @property
     def fps(self):
         """
-        Speed of the film, in frames per seconds. Always a positive integer,
+        Speed of the film, in frames per second. Always a positive float,
         or None if we don't know the speed.
         """
         return self._fps
@@ -204,3 +242,22 @@ TIMESPEC_RE = re.compile(
         r' ?'
         r'(?:([0-9.]+)f)?'
         )
+
+def _canvas_root(tag):
+    parents = tag.find_parents()
+
+    if len(parents)==0:
+        raise ValueError(f"{tag} is not attached to a document, "
+                         "so I can't use it to calculate a time."
+                         )
+
+    elif len(parents)==1:
+        root = tag
+    else:
+        root = parents[-2] # -1 is "document", the anon root tag
+    assert root.name=='canvas'
+    return root
+
+__all__ = [
+        'T',
+        ]

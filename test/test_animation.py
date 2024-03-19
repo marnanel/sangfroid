@@ -12,7 +12,7 @@ def test_animation_load_sif():
     assert sif.resolution==(2834.645669, 2835)
     assert sif.background==sangfroid.value.Color('#808080')
     assert sif.begin_time==0
-    assert sif.end_time==sangfroid.T('5s', fps=sif.fps)
+    assert sif.end_time==sangfroid.T('5s', reference_tag=sif.tag)
 
 def test_animation_load_sifz():
     sif = get_animation('wombats.sifz')

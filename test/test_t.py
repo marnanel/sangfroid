@@ -59,9 +59,19 @@ TESTS = [
           ]
 
 def test_t_examples():
+
+    sif = get_animation('bouncing.sif')
+
     for example in TESTS:
         try:
-            time = T(example[0], fps=example[1])
+
+            if example[1] is None:
+                tag = None
+            else:
+                sif.tag['fps'] = str(example[1])
+                tag = sif.tag
+
+            time = T(example[0], reference_tag=tag)
 
             assert round(time.frames, 2)==example[2], (
                     f"frames property: {example}"
@@ -76,9 +86,9 @@ def test_t_examples():
             assert time  < example[2]+1, f"less than constant: {example}"
             assert time  > example[2]-1, f"more than constant: {example}"
 
-            t_same   = T(example[2],   fps=example[1])
-            t_before = T(example[2]-1, fps=example[1])
-            t_after  = T(example[2]+1, fps=example[1])
+            t_same   = T(f'{example[2]}f',   reference_tag=tag)
+            t_before = T(f'{example[2]-1}f', reference_tag=tag)
+            t_after  = T(f'{example[2]+1}f', reference_tag=tag)
 
             assert time == t_same,   f"equal to another T: {example}"
             assert time != t_before, f"not equal to another T: {example}"

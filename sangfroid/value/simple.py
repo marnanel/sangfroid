@@ -1,6 +1,5 @@
 from sangfroid.value.value import Value
 from sangfroid.t import T
-from sangfroid.utils import tag_to_fps
 
 class Simple(Value):
 
@@ -78,5 +77,5 @@ class Time(Simple):
     def _construct_value(self, v):
         return self.our_type(
                 v,
-                fps = tag_to_fps(self.tag),
+                reference_tag = self.tag,
                 )

@@ -3,7 +3,6 @@ import bs4
 import functools
 from sangfroid.registry import Registry
 from sangfroid.t import T
-from sangfroid.utils import tag_to_fps, tag_to_canvas_duration
 
 ANIMATED = 'animated'
 
@@ -136,11 +135,6 @@ class Value:
             dict mapping T to Waypoint
         """
 
-        try:
-            fps = tag_to_fps(self.tag)
-        except ValueError:
-            fps = None
-
         waypoints = self._waypoint_tags()
 
         if not waypoints:
@@ -151,6 +145,7 @@ class Value:
         values = [Waypoint.from_tag(wt,
                                     fps = fps,
                                     our_type = our_type,
+                                    reference_tag = self.tag,
                                     )
                   for wt in waypoints]
 
@@ -173,6 +168,7 @@ class Value:
         self._set_animated(True,
             adjust_contents = False,
                            )
+        self.tag.clear()
 
         for i, w in enumerate(sorted(v)):
             if i!=0:
@@ -314,11 +310,13 @@ class Timeline:
             new_waypoint = Waypoint(
                     time = t,
                     value = v,
+                    reference_tag = self.parent.tag,
                     )
         else:
             new_waypoint = Waypoint(
                     time = t,
                     value = self.parent.__class__(v),
+                    reference_tag = self.parent.tag,
                     )
 
         self.parent.is_animated = True
@@ -365,7 +363,9 @@ INTERPOLATION_TYPE_SYNONYMS = dict(
 
 @functools.total_ordering
 class Waypoint:
-    def __init__(self, time, value, before='clamped', after='clamped'):
+    def __init__(self, time, value, before='clamped', after='clamped',
+                 reference_tag = None,
+                 ):
 
         if not isinstance(value, Value):
             raise TypeError(value)
@@ -376,7 +376,9 @@ class Waypoint:
         if isinstance(time, T):
             self.time = time
         elif isinstance(time, (int, float)):
-            self.time = T(time)
+            self.time = T(time,
+                          reference_tag = reference_tag,
+                          )
         else:
             raise TypeError(
                     f"time parameter should be T, or numeric: {time}")
