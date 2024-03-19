@@ -115,7 +115,7 @@ def test_waypoint_add():
              '</color></waypoint>'),
             ]
 
-def test_value_timeline_assign():
+def test_value_timeline_assign_once():
     r = Real(1.77)
     assert str(r)=='1.77'
 
@@ -144,13 +144,17 @@ def test_value_timeline_assign_twice():
     assert r.is_animated == True
     assert len(r.timeline)==1
     assert r.timeline[0].time == T('0f')
+    with pytest.raises(KeyError):
+        r.timeline[1]
 
     r.timeline = [
             Waypoint(time=T('1f'), value=Real(2.0)),
             ]
     assert r.is_animated == True
     assert len(r.timeline)==1
-    assert r.timeline[0].time == T('1f')
+    with pytest.raises(KeyError):
+        r.timeline[0]
+    assert r.timeline[1].time == T('1f')
 
 def test_value_is_animated():
     sif = get_animation('bouncing.sif')

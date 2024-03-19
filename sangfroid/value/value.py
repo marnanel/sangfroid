@@ -84,7 +84,7 @@ class Value:
         elif isinstance(v, Timeline):
             if v.parent is self:
                 return
-            self._set_waypoints(list(v))
+            self._set_waypoints(v.values())
         else:
             raise TypeError("A timeline can only be set to another timeline or "
                             "a dict or list of Waypoints.")
@@ -241,8 +241,8 @@ class Timeline:
                 )
 
     def __iter__(self):
-        for t in self.parent._waypoint_tags().keys():
-            yield t
+        for t,w in sorted(self.parent._waypoints().items()):
+            yield w
 
     def keys(self):
         return list(self.parent._waypoints().keys())
@@ -279,9 +279,9 @@ class Timeline:
             if t==time:
                 return wt
             elif t>time:
-                return False
+                raise KeyError(time)
 
-        return False
+        raise KeyError(time)
 
     def __setitem__(self, t, v):
 
