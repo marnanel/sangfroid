@@ -111,4 +111,4 @@ def test_animation_save_and_saveas():
 
 def test_animation_len():
     sif = get_animation('bouncing.sif')
-    assert len(sif)==120
+    assert len(sif)==121

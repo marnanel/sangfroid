@@ -74,11 +74,14 @@ class T:
         if reference_tag is None:
             self._fps = None
         else:
-            reference_tag = _canvas_root(reference_tag)
-            self._fps = float(reference_tag['fps'])
+            root_tag = _canvas_root(reference_tag)
+            if root_tag is None:
+                self._fps = None
+            else:
+                self._fps = float(root_tag['fps'])
             
-            if self._fps<=0.0:
-                raise ValueError(f"FPS must be positive: {self._fps}")
+                if self._fps<=0.0:
+                    raise ValueError(f"FPS must be positive: {self._fps}")
 
         try:
             if isinstance(value, str):
@@ -87,16 +90,17 @@ class T:
                 self._frames = float(value)
 
                 if self._frames < 0:
-                    if reference_tag is None:
+                    if root_tag is None:
                         raise ValueError("Negative frame counts require "
-                                         "a reference_tag.")
-                    animation_duration = (
+                                         "an anchored reference_tag.")
+
+                    animation_duration = 1+(
                             self._parse_time_spec(
-                                reference_tag.attrs['end-time'],
+                                root_tag.attrs['end-time'],
                                 )
                             - 
                             self._parse_time_spec(
-                                reference_tag.attrs['begin-time'],
+                                root_tag.attrs['begin-time'],
                                 )
                             )
 
@@ -134,7 +138,7 @@ class T:
             if seconds!=0.0:
                 if self._fps is None:
                     raise ValueError("Time specifications in seconds require "
-                                     "a reference_tag.")
+                                     "an anchored reference_tag.")
                 result += seconds * self._fps
 
         if found.group(3) is not None:
@@ -247,16 +251,16 @@ def _canvas_root(tag):
     parents = tag.find_parents()
 
     if len(parents)==0:
-        raise ValueError(f"{tag} is not attached to a document, "
-                         "so I can't use it to calculate a time."
-                         )
-
+        return None
     elif len(parents)==1:
         root = tag
     else:
         root = parents[-2] # -1 is "document", the anon root tag
-    assert root.name=='canvas'
-    return root
+
+    if root.name=='canvas':
+        return root
+    else:
+        return None
 
 __all__ = [
         'T',

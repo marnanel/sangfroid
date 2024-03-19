@@ -149,9 +149,13 @@ class Animation(Group):
 
         Should be equal to `int(end_time)-int(begin_time)`.
 
+        Note that this is one higher than the number of
+        the last frame.
+
         Type:
             int
         """
+        print(T(-1, reference_tag=self.tag))
         return int(T(-1, reference_tag=self.tag).frames)+1
 
     @property
