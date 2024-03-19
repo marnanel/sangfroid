@@ -18,7 +18,6 @@ class Gradient(Value):
 
     @value.setter
     def value(self, v):
-        print("9000", v)
         if isinstance(v, Gradient):
             v = v.value
 
