@@ -143,9 +143,7 @@ class Value:
         our_type = self.tag['type']
 
         values = [Waypoint.from_tag(wt,
-                                    fps = fps,
                                     our_type = our_type,
-                                    reference_tag = self.tag,
                                     )
                   for wt in waypoints]
 
@@ -441,7 +439,6 @@ class Waypoint:
 
     @classmethod
     def from_tag(cls, tag,
-                 fps = None,
                  our_type = None,
                  ):
         if tag.name!='waypoint':
@@ -449,14 +446,12 @@ class Waypoint:
                                 f"{tag}")
 
         try:
-            time = T(tag['time'], fps)
+            time = T(tag['time'], reference_tag=tag)
         except ValueError:
-            assert fps is None, tag
             raise ValueError(
                     "If a value isn't attached to a document, "
-                    "T-values in its timeline must either be "
-                    "expressed in frames or must have the FPS "
-                    f"specified explicitly: {tag}"
+                    "T-values in its timeline must be"
+                    "expressed in frames: {tag}"
                     )
 
         v = [t for t in tag.children if isinstance(t, bs4.element.Tag)]

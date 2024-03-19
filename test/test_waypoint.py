@@ -90,17 +90,29 @@ def test_waypoint_add():
     assert not color.is_animated
 
     color.timeline[0] = '#FF0000'
-    color.timeline[48] = '#00FF00'
-    color.timeline[-48] = '#0000FF'
+    color.timeline[16] = '#00FF00'
+    color.timeline[32] = '#0000FF'
+    color.timeline[47] = '#FF0000'
 
     sif.save('/tmp/flashy.sif')
 
     waypoint_details = [str(c) for c in color.tag.children
                         if isinstance(c, bs4.Tag)]
 
-    assert waypoint_details == []
-
-    assert False
+    assert waypoint_details == [
+            ('<waypoint after="clamped" before="clamped" time="0f"><color>'
+             '<r>1.000000</r><g>0.000000</g><b>0.000000</b><a>1.000000</a>'
+             '</color></waypoint>'),
+            ('<waypoint after="clamped" before="clamped" time="16f"><color>'
+             '<r>0.000000</r><g>1.000000</g><b>0.000000</b><a>1.000000</a>'
+             '</color></waypoint>'),
+            ('<waypoint after="clamped" before="clamped" time="1s 8f"><color>'
+             '<r>0.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a>'
+             '</color></waypoint>'),
+            ('<waypoint after="clamped" before="clamped" time="1s 23f"><color>'
+             '<r>1.000000</r><g>0.000000</g><b>0.000000</b><a>1.000000</a>'
+             '</color></waypoint>'),
+            ]
 
 def test_value_timeline_on_and_off():
     sif = get_animation('circles.sif')
