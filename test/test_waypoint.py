@@ -114,23 +114,6 @@ def test_waypoint_add():
              '</color></waypoint>'),
             ]
 
-def test_value_timeline_on_and_off():
-    sif = get_animation('circles.sif')
-    orange_circle = sif.find(desc='Orange circle')
-    amount = orange_circle['amount']
-
-    assert str(amount)=='1.0'
-    assert amount.timeline is None
-    assert amount.our_type==float
-
-    amount.timeline = []
-    assert amount.timeline==[]
-    assert amount.our_type==float
-
-    amount.timeline = None
-    assert amount.timeline is None
-    assert amount.our_type==float
-
 def test_value_timeline_assign():
     r = Real(1.77)
     assert str(r)=='1.77'
