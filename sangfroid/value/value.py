@@ -1,6 +1,7 @@
 import copy
 import bs4
 import functools
+import copy
 from sangfroid.registry import Registry
 from sangfroid.t import T
 
@@ -61,12 +62,14 @@ class Value:
                 if len(timeline)==0:
                     first_value = None
                 else:
-                    first_value = timeline.values()[0].value
+                    first_value = timeline.values()[0]
 
-            self.tag = bs4.element.Tag(name=self.__class__.__name__.lower())
+            self.tag.name=self.__class__.__name__.lower()
+            self.tag.clear()
 
-            if adjust_contents:
-                self.value = first_value
+            if first_value is not None:
+                for c in first_value.value.tag.children:
+                    self.tag.append(copy.deepcopy(c))
 
     @property
     def timeline(self):
@@ -356,13 +359,13 @@ class Waypoint:
 
         if isinstance(time, T):
             self.time = time
-        elif isinstance(time, (int, float)):
+        elif isinstance(time, (int, float, str)):
             self.time = T(time,
                           reference_tag = reference_tag,
                           )
         else:
             raise TypeError(
-                    f"time parameter should be T, or numeric: {time}")
+                    f"time parameter should be T, or numeric, or str: {time}")
 
         self._before = self._check_interpolation_type(before, True)
         self._after = self._check_interpolation_type(after, True)
