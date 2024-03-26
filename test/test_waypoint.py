@@ -43,11 +43,10 @@ def test_value_set_is_animated():
     assert not angle.is_animated
     angle.is_animated = True
     assert angle.is_animated
-    angle.timeline[T('1s')] = Angle(90)
+    angle.timeline['1s'] = 90
 
     angle.is_animated = False
     assert not angle.is_animated
-
 
 def test_waypoint_interpolation_types():
 
