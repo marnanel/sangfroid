@@ -1,6 +1,6 @@
 import sangfroid
 from sangfroid.value.value import Waypoint
-from sangfroid.value import Real
+from sangfroid.value import Real, Angle
 from sangfroid.t import T
 from test import *
 import bs4
@@ -33,6 +33,21 @@ def test_waypoint_loaded():
         assert found.time==T(expected[0])
         assert found.before==expected[1]
         assert found.after==expected[2]
+
+def test_value_set_is_animated():
+    sif = get_animation('bouncing.sif')
+    
+    ball = sif.find(desc='Ball')
+    angle = ball['transformation']['angle']
+
+    assert not angle.is_animated
+    angle.is_animated = True
+    assert angle.is_animated
+    angle.timeline[T('1s')] = Angle(90)
+
+    angle.is_animated = False
+    assert not angle.is_animated
+
 
 def test_waypoint_interpolation_types():
 
