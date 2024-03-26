@@ -63,7 +63,12 @@ class Value:
                 else:
                     first_value = timeline.values()[0].value
 
-            self.tag = bs4.element.Tag(name=self.__class__.__name__.lower())
+            self.tag.name=self.__class__.__name__.lower()
+            self.tag.clear()
+
+            if first_value is not None:
+                for c in first_value.tag.children:
+                    self.tag.append(c)
 
             if adjust_contents:
                 self.value = first_value
@@ -356,13 +361,13 @@ class Waypoint:
 
         if isinstance(time, T):
             self.time = time
-        elif isinstance(time, (int, float)):
+        elif isinstance(time, (int, float, str)):
             self.time = T(time,
                           reference_tag = reference_tag,
                           )
         else:
             raise TypeError(
-                    f"time parameter should be T, or numeric: {time}")
+                    f"time parameter should be T, or numeric, or str: {time}")
 
         self._before = self._check_interpolation_type(before, True)
         self._after = self._check_interpolation_type(after, True)

@@ -91,7 +91,7 @@ def test_waypoint_time_spec():
     w1 = Waypoint(time=T('20f'), value=value)
     assert int(w1.time)==20
 
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         Waypoint(time='bananas', value=value)
 
     with pytest.raises(TypeError):
