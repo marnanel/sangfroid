@@ -34,20 +34,6 @@ def test_waypoint_loaded():
         assert found.before==expected[1]
         assert found.after==expected[2]
 
-def test_value_set_is_animated():
-    sif = get_animation('bouncing.sif')
-    
-    ball = sif.find(desc='Ball')
-    angle = ball['transformation']['angle']
-
-    assert not angle.is_animated
-    angle.is_animated = True
-    assert angle.is_animated
-    angle.timeline['1s'] = 90
-
-    angle.is_animated = False
-    assert not angle.is_animated
-
 def test_waypoint_interpolation_types():
 
     value = sangfroid.value.Bool(True)
@@ -170,19 +156,33 @@ def test_value_timeline_assign_twice():
         r.timeline[0]
     assert r.timeline[1].time == T('1f')
 
-def test_value_is_animated():
+def test_value_get_is_animated():
     sif = get_animation('bouncing.sif')
 
     ball = sif.find(desc='Ball')
     scale = ball['transformation']['scale']
 
     assert scale.is_animated
-    original_point_0 = scale.timeline[0].value
+    original_point_0 = str(scale.timeline[0].value)
 
     scale.is_animated = False
     assert not scale.is_animated
-    assert scale==original_point_0
+    assert str(scale)==original_point_0
 
     scale.is_animated = True
     assert scale.is_animated
-    assert scale.timeline[0].value==original_point_0
+    assert str(scale.timeline[0].value)==original_point_0
+
+def test_value_set_is_animated():
+    sif = get_animation('bouncing.sif')
+
+    ball = sif.find(desc='Ball')
+    angle = ball['transformation']['angle']
+
+    assert not angle.is_animated
+    angle.is_animated = True
+    assert angle.is_animated
+    angle.timeline['1s'] = 90
+
+    angle.is_animated = False
+    assert not angle.is_animated

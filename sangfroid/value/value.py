@@ -1,6 +1,7 @@
 import copy
 import bs4
 import functools
+import copy
 from sangfroid.registry import Registry
 from sangfroid.t import T
 
@@ -61,17 +62,14 @@ class Value:
                 if len(timeline)==0:
                     first_value = None
                 else:
-                    first_value = timeline.values()[0].value
+                    first_value = timeline.values()[0]
 
             self.tag.name=self.__class__.__name__.lower()
             self.tag.clear()
 
             if first_value is not None:
-                for c in first_value.tag.children:
-                    self.tag.append(c)
-
-            if adjust_contents:
-                self._value = first_value
+                for c in first_value.value.tag.children:
+                    self.tag.append(copy.deepcopy(c))
 
     @property
     def timeline(self):
