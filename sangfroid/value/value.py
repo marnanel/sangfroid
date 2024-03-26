@@ -71,7 +71,7 @@ class Value:
                     self.tag.append(c)
 
             if adjust_contents:
-                self.value = first_value
+                self._value = first_value
 
     @property
     def timeline(self):
