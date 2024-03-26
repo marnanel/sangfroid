@@ -48,7 +48,6 @@ def test_value_set_is_animated():
     angle.is_animated = False
     assert not angle.is_animated
 
-
 def test_waypoint_interpolation_types():
 
     value = sangfroid.value.Bool(True)
@@ -98,14 +97,34 @@ def test_waypoint_time_spec():
         Waypoint(time=None, value=value)
 
 def test_waypoint_value_spec():
+    sif = get_animation('bouncing.sif')
+
     value = sangfroid.value.Bool(True)
     w1 = Waypoint(time=T('20f'), value=value)
     assert int(w1.time)==20
     assert w1.value==True
 
-    w2 = Waypoint(time=T('40f'), value='False')
-    assert int(w2.time)==20
-    assert w2.value==False
+    with pytest.raises(TypeError):
+        w2 = Waypoint(time=T('40f'), value=False)
+
+    sif = get_animation('bouncing.sif')
+    shadow = sif.find(desc='Shadow circle')
+    invert = shadow['invert']
+
+    assert not invert.is_animated
+    invert.is_animated = True
+    invert.timeline[10] = w1
+    invert.timeline[20] = False
+
+    assert len(invert.timeline)==2
+
+    assert (
+            [str(n) for n in invert.timeline.items()]==
+            [
+                '(0f, [ 0f 🔶-🔶 - True])',
+                '(20f, [20f 🔶-🔶 - False])',
+                ]
+            )
 
 def test_waypoint_add():
     sif = get_animation('bouncing.sif')
