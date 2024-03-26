@@ -82,6 +82,16 @@ def test_waypoint_time_spec():
     with pytest.raises(TypeError):
         Waypoint(time=None, value=value)
 
+def test_waypoint_value_spec():
+    value = sangfroid.value.Bool(True)
+    w1 = Waypoint(time=T('20f'), value=value)
+    assert int(w1.time)==20
+    assert w1.value==True
+
+    w2 = Waypoint(time=T('40f'), value='False')
+    assert int(w2.time)==20
+    assert w2.value==False
+
 def test_waypoint_add():
     sif = get_animation('bouncing.sif')
     assert len(sif)==121
@@ -172,3 +182,4 @@ def test_value_is_animated():
     scale.is_animated = True
     assert scale.is_animated
     assert scale.timeline[0].value==original_point_0
+
