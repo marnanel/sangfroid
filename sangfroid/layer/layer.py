@@ -1,6 +1,7 @@
 import bs4
 from sangfroid.value import Value
 from sangfroid.registry import Registry
+from sangfroid.util import normalise_synfig_layer_type_name
 
 class Layer:
 
@@ -111,11 +112,16 @@ class Layer:
                     "You can only give one positional argument.")
         elif len(args)==1:
 
-            if isinstance(args[0], str):
+            if (
+                    isinstance(args[0], str) or
+                    (isinstance(args[0], type) and
+                     issubclass(args[0], Layer))
+                    ):
                 if 'type' in kwargs:
                     raise ValueError(
                             "You can't give a type in both the positional "
                             "and keyword arguments.")
+
                 kwargs['type'] = args[0]
 
             elif isinstance(args[0], bool):
@@ -136,8 +142,16 @@ class Layer:
             del kwargs['attrs']
 
         for k,v in kwargs.items():
-            if k in self.FIELDS_IN_TAG_ATTRIBUTES:
+            if k=='type':
+                if isinstance(v, type) and issubclass(v, Layer):
+                    v = v.__name__
+
+                v = normalise_synfig_layer_type_name(v)
                 match_in_attribs[k] = v
+
+            elif k in self.FIELDS_IN_TAG_ATTRIBUTES:
+                match_in_attribs[k] = v
+
             else:
                 match_in_params[k] = v
 
@@ -149,7 +163,12 @@ class Layer:
 
                 if match_in_attribs:
                     for k,v in match_in_attribs.items():
-                        if found.attrs.get(k, None)==v:
+                        found_attr = found.attrs.get(k, None)
+                        if k=='type':
+                            found_attr = normalise_synfig_layer_type_name(
+                                    found_attr)
+
+                        if found_attr==v:
                             return True
 
                 if match_in_params:

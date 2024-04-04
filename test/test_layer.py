@@ -203,6 +203,26 @@ def test_layer_item_contains():
     assert 'color' in green_circle
     assert 'wombat' not in green_circle
 
+def test_layer_find_type():
+
+    def names_of(n):
+        print(n)
+        return set([x.desc for x in n])
+
+    sif = get_animation('circles.sif')
+
+    circles = sif.find_all(type='circle')
+    assert names_of(circles) == CIRCLES
+
+    circles = sif.find_all(type=sangfroid.layer.Circle)
+    assert names_of(circles) == CIRCLES
+
+    circles = sif.find_all(type='CIRCLE')
+    assert names_of(circles) == CIRCLES
+
+    circles = sif.find_all(type='c_i_rcle')
+    assert names_of(circles) == CIRCLES
+
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0
@@ -362,6 +382,12 @@ LAYER_ITEMS_EXPECTED = """
  - blend_method: Integer, 0
  - color: Color, #ffffff
 """.lstrip()
+
+CIRCLES = {
+        'Black circle', 'Maybe white circle', 'Blue circle',
+        'Purple circle', 'Orange circle', 'Green circle',
+        'Yellow circle', 'Red circle',
+        }
 
 if __name__=='__main__':
     test_layer_items(dump = True)
