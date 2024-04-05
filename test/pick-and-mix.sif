@@ -3024,7 +3024,7 @@
       <integer value="0" static="true"/>
     </param>
     <param name="text">
-      <string></string>
+      <string>Hello wombat!</string>
     </param>
     <param name="color">
       <color>

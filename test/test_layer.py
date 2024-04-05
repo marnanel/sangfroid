@@ -223,6 +223,12 @@ def test_layer_find_type():
     circles = sif.find_all(type='c_i_rcle')
     assert names_of(circles) == CIRCLES
 
+def test_text_simple():
+    sif = get_animation('pick-and-mix.sif')
+
+    text = sif.find('text')
+    assert text['text']=='Hello wombat!'
+
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0
