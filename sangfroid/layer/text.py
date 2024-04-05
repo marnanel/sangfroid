@@ -24,4 +24,10 @@ class Text(Layer):
         "invert": v.Bool,
     }
 
+    @property
+    def text(self):
+        return self['text'].value
 
+    @text.setter
+    def text(self, v):
+        self['text'].value = v

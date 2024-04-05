@@ -228,6 +228,18 @@ def test_text_simple():
 
     text = sif.find('text')
     assert text['text']=='Hello wombat!'
+    assert isinstance(text['text'], sangfroid.value.String)
+
+    assert text.text=='Hello wombat!'
+    assert isinstance(text.text, str)
+
+    text.text='Bananas'
+
+    assert text['text']=='Bananas'
+    assert isinstance(text['text'], sangfroid.value.String)
+
+    assert text.text=='Bananas'
+    assert isinstance(text.text, str)
 
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
