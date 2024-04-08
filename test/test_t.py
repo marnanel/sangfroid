@@ -79,35 +79,52 @@ def test_t_examples():
 
             time = T(example[0], reference_tag=tag)
 
+            message = (
+                    "\n"
+                    f"Constructor argument: {repr(example[0])}\n"
+                    f"            with FPS: {example[1]}\n"
+                    )
+
+            if isinstance(example[4], str):
+                message += (
+                        f"    gives a value of: "
+                        f"{example[2]}s {example[3]}f\n"
+                        f"which stringifies to: {example[4]}\n"
+                        )
+            else:
+                message += (
+                        f"        should raise: {example[4]}\n"
+                        )
+
             assert round(time.frames, 2)==example[2], (
-                    f"frames property: {example}"
+                    f"frames property: {message}"
                     )
             
             if example[3] is not None:
                 assert round(time.seconds, 2)==example[3], (
-                    f"seconds property: {example}"
+                    f"seconds property: {message}"
                     )
 
-            assert time == example[2],   f"equal to constant: {example}"
-            assert time  < example[2]+1, f"less than constant: {example}"
-            assert time  > example[2]-1, f"more than constant: {example}"
+            assert time == example[2],   f"equal to constant: {message}"
+            assert time  < example[2]+1, f"less than constant: {message}"
+            assert time  > example[2]-1, f"more than constant: {message}"
 
             t_same   = T(f'{example[2]}f',   reference_tag=tag)
             t_before = T(f'{example[2]-1}f', reference_tag=tag)
             t_after  = T(f'{example[2]+1}f', reference_tag=tag)
 
-            assert time == t_same,   f"equal to another T: {example}"
-            assert time != t_before, f"not equal to another T: {example}"
-            assert time != t_after,  f"not equal to another T: {example}"
-            assert time < t_after,   f"less than another T: {example}"
-            assert time > t_before,  f"more than another T: {example}"
+            assert time == t_same,   f"equal to another T: {message}"
+            assert time != t_before, f"not equal to another T: {message}"
+            assert time != t_after,  f"not equal to another T: {message}"
+            assert time < t_after,   f"less than another T: {message}"
+            assert time > t_before,  f"more than another T: {message}"
 
-            assert hash(time)==hash(t_same),   f"hash equal: {example}"
-            assert hash(time)!=hash(t_before), f"hash not equal: {example}"
-            assert hash(time)!=hash(t_after),  f"hash not equal: {example}"
+            assert hash(time)==hash(t_same),   f"hash equal: {message}"
+            assert hash(time)!=hash(t_before), f"hash not equal: {message}"
+            assert hash(time)!=hash(t_after),  f"hash not equal: {message}"
 
             if isinstance(example[4], str):
-                assert str(time)==example[4], f"str(): {example}"
+                assert str(time)==example[4], f"str(): {message}"
 
             with pytest.raises(AttributeError):
                 time.frames = 0

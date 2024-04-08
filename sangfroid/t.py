@@ -114,9 +114,9 @@ class T:
     def _parse_time_spec(self, s):
         assert isinstance(s, str)
 
-        def complain():
+        def complain(problem):
             raise ValueError(
-                    f"bad time specification: {s}")
+                    f"bad time specification: {s}\n{problem}")
 
         s = s.strip()
 
@@ -125,27 +125,44 @@ class T:
 
         found = TIMESPEC_RE.fullmatch(s)
         if found is None:
-            complain()
+            complain("This doesn't look like a time specification at all.")
+
+        print("9030", found, found.groups())
+        parts = {}
+        for spec in found.groups():
+            if spec[-1] in parts:
+                complain(
+                        f"The '{spec[-1]}' part was specified "
+                        "more than once.")
+            try:
+                parts[spec[-1]] = float(spec[:-1])
+            except ValueError:
+                complain(
+                        f"'{spec[:-1]}' is not a valid number.")
+
+        print("9000", s, parts, found, found.groups())
+        seconds = None
+
+        for unit, size in [
+                ('h', 60*60),
+                ('m', 60),
+                ('s', 1),
+                ]:
+            if unit in parts:
+                seconds = (seconds or 0.0) + parts[unit]*size
 
         result = 0.0
 
-        if found.group(2) is None and found.group(3) is None:
-            complain()
+        print("9040", seconds)
+        if seconds is not None and seconds!=0.0:
 
-        if found.group(2) is not None:
-            seconds = float(found.group(2))
+            if self._fps is None:
+                complain("Time specifications in seconds require "
+                         "an anchored reference_tag.")
+            result += seconds * self._fps
 
-            if seconds!=0.0:
-                if self._fps is None:
-                    raise ValueError("Time specifications in seconds require "
-                                     "an anchored reference_tag.")
-                result += seconds * self._fps
-
-        if found.group(3) is not None:
-            result += float(found.group(3))
-
-        if found.group(1)=='-':
-            result = -result
+        if 'f' in parts:
+            result += parts['f']
 
         return result
 
@@ -241,10 +258,7 @@ class T:
 # It doesn't matter that you can produce invalid decimals with this regex:
 # that will be discovered when we do the float conversion.
 TIMESPEC_RE = re.compile(
-        r'(-?)'
-        r'(?:([0-9.]+)s)?'
-        r' ?'
-        r'(?:([0-9.]+)f)?'
+        r'^((?:-?[0-9.]+[hmsf])+\s*)+$'
         )
 
 def _canvas_root(tag):

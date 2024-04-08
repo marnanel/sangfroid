@@ -257,10 +257,26 @@ class Timeline:
         return list(self.parent._waypoints().items())
 
     def __iadd__(self, waypoints):
-        existing = self._waypoints()
+
+        if isinstance(waypoints, dict):
+            waypoints = waypoints.values()
+        elif isinstance(waypoints, Waypoint):
+            waypoints = [waypoints]
+        elif isinstance(waypoints, list):
+            pass
+        else:
+            raise TypeError(type(waypoints))
+
+        # check they're sensible
+        for w in waypoints:
+            if not isinstance(w.tag, bs4.Tag):
+                raise TypeError(
+                        f'{w} has a tag of type {type(bs4.Tag)}')
+
+        existing = self.parent._waypoints()
         clashes = [
             (old.time, new.time)
-                for old in existing
+                for old in existing.values()
                 for new in waypoints
                 if old.time==new.time
                 ]
@@ -268,11 +284,13 @@ class Timeline:
             raise ValueError("There are already Waypoints with those "
                              f"times in this timeline: {clashes}")
 
-        existing.extend(waypoints)
+        self.parent.is_animated = True
+
+        existing |= dict([(w.time, w) for w in waypoints])
 
         self.parent.tag.clear()
 
-        for w in sorted(existing):
+        for w in sorted(existing.values()):
             self.parent.tag.append(w.tag)
 
         return self
@@ -318,7 +336,11 @@ class Timeline:
             return self.values()==list(other)
 
     def __str__(self):
-        return f'[timeline of {self.parent.__class__.__name__}: {self.parent}]'
+        result = (
+                f'[timeline of {self.parent.__class__.__name__}:'
+                f'{self.parent._waypoints()}]'
+                )
+        return result
 
     def __len__(self):
         return len(self.keys())
@@ -479,20 +501,6 @@ class Waypoint:
                 f'{INTERPOLATION_TYPES[self.after][1]} - '
                 f'{self.value}]'
                 )
-
-    def __getitem__(self, index):
-        for k,v in self._waypoints():
-            if k==index:
-                return v
-
-        raise KeyError(index)
-
-    def __setitem__(self, index):
-        for k,v in self._waypoints():
-            if k==index:
-                return v
-
-        raise KeyError(index)
 
     __repr__ = __str__
 
