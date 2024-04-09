@@ -151,11 +151,9 @@ class T:
                 ]:
             if unit in parts:
                 seconds = (seconds or 0.0) + parts[unit]*size
-                print("9039", seconds, unit, size)
 
         result = 0.0
 
-        print("9040", seconds, self._fps)
         if seconds is not None and seconds!=0.0:
 
             if self._fps is None:
