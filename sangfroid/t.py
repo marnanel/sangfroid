@@ -123,24 +123,25 @@ class T:
         seconds = None
         frames = 0.0
 
-        found = TIMESPEC_RE.fullmatch(s)
+        found = TIMESPEC_RE.split(s)
         if found is None:
             complain("This doesn't look like a time specification at all.")
 
-        print("9030", found, found.groups())
         parts = {}
-        for spec in found.groups():
-            if spec[-1] in parts:
+        for spec in found:
+            if spec.strip()=='':
+                continue
+            elif spec[-1] in parts:
                 complain(
                         f"The '{spec[-1]}' part was specified "
                         "more than once.")
+
             try:
                 parts[spec[-1]] = float(spec[:-1])
             except ValueError:
                 complain(
                         f"'{spec[:-1]}' is not a valid number.")
 
-        print("9000", s, parts, found, found.groups())
         seconds = None
 
         for unit, size in [
@@ -150,10 +151,11 @@ class T:
                 ]:
             if unit in parts:
                 seconds = (seconds or 0.0) + parts[unit]*size
+                print("9039", seconds, unit, size)
 
         result = 0.0
 
-        print("9040", seconds)
+        print("9040", seconds, self._fps)
         if seconds is not None and seconds!=0.0:
 
             if self._fps is None:
@@ -162,7 +164,16 @@ class T:
             result += seconds * self._fps
 
         if 'f' in parts:
-            result += parts['f']
+            if seconds and parts['f']<0:
+                complain("If you give a number of seconds, the number "
+                         "of frames can't be negative.")
+
+            seconds = seconds or 0
+
+            if seconds<0:
+                result -= parts['f']
+            else:
+                result += parts['f']
 
         return result
 
@@ -258,7 +269,7 @@ class T:
 # It doesn't matter that you can produce invalid decimals with this regex:
 # that will be discovered when we do the float conversion.
 TIMESPEC_RE = re.compile(
-        r'^((?:-?[0-9.]+[hmsf])+\s*)+$'
+        r'(-?[0-9.]+[hmsf])'
         )
 
 def _canvas_root(tag):
