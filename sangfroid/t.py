@@ -240,18 +240,37 @@ class T:
         return self._compare(other, lambda a,b:a==b)
 
     def __str__(self):
-        if self._fps is None or abs(self._frames) < self._fps:
+        if self._fps is None:
             return '%gf' % (self._frames, )
 
+        frames = self._frames
+        seconds = abs(self._frames/self._fps)
 
-        result = '%gs' % (
-            (abs(self._frames) // self._fps) * (
-                math.copysign(1, self._frames))
-            )
-        if (self._frames % self._fps)!=0:
-            result += ' %gf' % (
-                    abs(self._frames % math.copysign(self._fps, self._frames)),
-                    )
+        result = []
+
+        for unit, size in [
+                ('h', 60*60),
+                ('m', 60),
+                ('s', 1),
+                ]:
+
+            if seconds>=size:
+                result.append('%d%c' % (seconds//size, unit))
+                seconds = seconds % size
+                print("9050", result, seconds)
+
+        if seconds!=0 or result==[]:
+            print("9060", frames)
+            frames = abs(frames) % self._fps
+            print("9061", frames)
+            result.append('%gf' % (frames,))
+
+        if self._frames<0:
+            minus = '-'
+        else:
+            minus = ''
+
+        result = minus + ' '.join(result)
 
         return result
 
