@@ -257,12 +257,9 @@ class T:
             if seconds>=size:
                 result.append('%d%c' % (seconds//size, unit))
                 seconds = seconds % size
-                print("9050", result, seconds)
 
         if seconds!=0 or result==[]:
-            print("9060", frames)
             frames = abs(frames) % self._fps
-            print("9061", frames)
             result.append('%gf' % (frames,))
 
         if self._frames<0:
