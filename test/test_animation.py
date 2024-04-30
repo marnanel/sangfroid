@@ -1,7 +1,10 @@
 import os
 import sangfroid
+import gzip
 from test import *
 from bs4 import BeautifulSoup
+
+GZIP_HEADER = b'\x1f\x8b'
 
 def test_animation_load_sif():
     sif = get_animation('circles.sif')
@@ -20,7 +23,7 @@ def test_animation_load_sifz():
     assert sif.name == 'wombats'
     assert sif.description == 'I like wombats. They live in Australia.'
 
-def strip_spaces(xml):
+def normalise_xml(s):
     # This function used to strip out all space around NavigableStrings
     # and return the changed XML. But that's almost impossible to read
     # in pytest's output. So now it returns a list of:
@@ -29,9 +32,15 @@ def strip_spaces(xml):
     #           it's are silently dropped);
     #  - for everything else: lists of name and attributes.
 
+    if s.startswith(GZIP_HEADER):
+        s = gzip.decompress(s)
+
+    if isinstance(s, (str, bytes)):
+        s = BeautifulSoup(s, features='xml')
+
     result = []
 
-    for item in xml.descendants:
+    for item in s.descendants:
         if isinstance(item, bs4.NavigableString):
             s = item.text.strip()
             if s!='':
@@ -53,61 +62,126 @@ def strip_spaces(xml):
 
 def test_animation_save_and_saveas():
 
-    for test_file in [
-            'circles.sif',
-            'wombats.sifz',
-            ]:
+    with open(os.path.join(
+        os.path.dirname(__file__),
+        'circles.sif',
+        ), 'rb') as f:
 
-        data = {}
+        original = f.read()
 
-        with open(os.path.join(
-            os.path.dirname(__file__),
-            test_file,
-            ), 'rb') as f:
+    with open(os.path.join(
+        os.path.dirname(__file__),
+        f'purple-circles.sif',
+        ), 'rb') as f:
 
-            original = f.read()
+        expected = f.read()
 
-        with open(os.path.join(
-            os.path.dirname(__file__),
-            f'purple-{test_file}',
-            ), 'rb') as f:
+    expected = normalise_xml(expected)
 
-            data['expected'] = f.read()
+    for compress_source in [False, True]:
 
         for save_as in [False, True]:
 
-            tempname = temp_filename()
-            with open(tempname, 'wb') as f:
-                f.write(original)
+            # Firstly, let's set up the source file that we're
+            # going to read back in.
 
-            animation = sangfroid.open(tempname)
+            if compress_source:
+                source_suffix = '.sifz'
+                source_contents = gzip.compress(original)
+            else:
+                source_suffix = '.sif'
+                source_contents = original
+
+            source_filename = temp_filename(suffix=source_suffix)
+
+            # For assertion messages:
+            details = (
+                    f'compress_source={compress_source}; '
+                    f'save_as={save_as}; '
+                    f'source_filename={source_filename}'
+                    )
+
+            with open(source_filename, 'wb') as f:
+                f.write(source_contents)
+
+            # Right. Now, what happens when we load it, make
+            # some changes, and write it out again?
+
+            animation = sangfroid.open(source_filename)
 
             for circle in animation.find_all('circle'):
                 circle['color'].value = '#ff00ff'
 
             if save_as:
                 final_filename = temp_filename()
+                details += f'; final_filename={final_filename}'
                 animation.save(final_filename)
             else:
-                final_filename = tempname
+                final_filename = source_filename
                 animation.save()
 
-            with open(final_filename, 'rb') as f:
-                data['found'] = f.read()
-
-            xml = dict(
-                    (
-                        which,
-                        strip_spaces(BeautifulSoup(data[which],
-                                                   features='xml')),
-                        )
-                    for which in ['found', 'expected'])
-
-            assert xml['found']==xml['expected'], (
-                    f'test_file, save_as=={save_as}'
+            assert os.path.isfile(final_filename), (
+                    f"save created a file ({details})"
+                    )
+            assert os.path.getsize(final_filename)!=0, (
+                    f"savefile is not empty ({details})"
                     )
 
-            os.unlink(tempname)
+            with open(final_filename, 'rb') as f:
+                found = f.read()
+
+            found = normalise_xml(found)
+
+            assert found==expected, (
+                    f'{details}; final_filename={final_filename}'
+                    )
+
+            os.unlink(source_filename)
+            if final_filename!=source_filename:
+                os.unlink(final_filename)
+
+def test_animation_saveas_different_format():
+
+    def format_for(suffix):
+        if suffix=='sif':
+            return sangfroid.format.Sif
+        elif suffix=='sifz':
+            return sangfroid.format.Sifz
+        else:
+            raise ValueError(suffix)
+
+    for read_from, write_to in [
+            ('sif',  'sif' ),
+            ('sif',  'sifz'),
+            ('sifz', 'sif' ),
+            ('sifz', 'sifz'),
+            ]:
+
+        if read_from=='sif':
+            source_filename = 'circles.sif'
+        elif read_from=='sifz':
+            source_filename = 'wombats.sifz'
+        else:
+            raise ValueError(source_filename)
+
+        source = sangfroid.open(
+                os.path.join(
+                    os.path.dirname(__file__),
+                    source_filename,
+                    ))
+        assert isinstance(source.format, format_for(read_from))
+
+        tempname = temp_filename(
+                suffix=f'.{write_to}')
+
+        source.save(filename=tempname)
+
+        revenant = sangfroid.open(tempname)
+
+        assert source.description==revenant.description
+        assert isinstance(source.format, format_for(write_to))
+
+        os.unlink(tempname)
 
 def test_animation_len():
     sif = get_animation('bouncing.sif')

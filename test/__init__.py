@@ -38,7 +38,12 @@ def xml_compare(a, b,
     else:
         return a==b
 
-def temp_filename():
-    fd, tempname = tempfile.mkstemp(prefix='sangfroid')
+def temp_filename(
+        suffix = '.sif',
+        ):
+    fd, tempname = tempfile.mkstemp(
+            prefix='sangfroid',
+            suffix=suffix,
+            )
     os.close(fd)
     return tempname
