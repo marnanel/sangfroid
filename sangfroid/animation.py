@@ -1,6 +1,6 @@
 from sangfroid.keyframe import Keyframe
 from sangfroid.layer import Group
-from sangfroid.format import Format
+from sangfroid.format import Format, Blank
 from sangfroid.value.color import Color
 from sangfroid.t import T
 
@@ -18,7 +18,7 @@ class Animation(Group):
 
     Most of the properties don't yet have setters. They will.
     """
-    def __init__(self, filename:str):
+    def __init__(self, filename:str=None):
         """
         Args:
             filename: the name of the main file to load.
@@ -26,7 +26,7 @@ class Animation(Group):
         self.filename = filename
 
         if filename is None:
-            self.format = None
+            self.format = Blank()
         else:
             self.format = Format.from_filename(filename)
 
@@ -56,9 +56,14 @@ class Animation(Group):
         So you know what it is when you find it again next year.
 
         Type:
-            str
+            str or None
         """
-        return self.tag.find('desc').string
+        tag = self.tag.find('desc')
+
+        if tag is None:
+            return ''
+        else:
+            return tag.string
 
     @property
     def size(self):
@@ -182,7 +187,7 @@ class Animation(Group):
         over the keyframes. But the keyframe collection needs to be
         a class in itself, so you can add and delete them.
         """
-        for kf in self.sif.tag.find_all('keyframe'):
+        for kf in self.tag.find_all('keyframe'):
             yield Keyframe.from_tag(kf)
  
     def save(self, filename:str=None):

@@ -201,3 +201,57 @@ class Sfg(Format):
                 '.sfg is not yet supported. See: \n'
                 'https://gitlab.com/marnanel/sangfroid/-/issues/2'
                 )
+
+class Blank(Format):
+    """
+    The blank animation you get if you instantiate Animation without
+    a filename.
+
+    Unlike most subclasses of Format, this can be instantiated
+    directly.
+    """
+
+    magic_number = None
+    extensions = tuple()
+
+    def __init__(self):
+        self.filename = None
+
+    def main_file(self):
+        return FileContextHandler(BLANK_ANIMATION)
+
+    def save(self, *args, **kwargs):
+        raise ValueError(
+                'It makes no sense to save to new'
+                )
+
+BLANK_ANIMATION = """<?xml version="1.0" encoding="UTF-8"?>
+<canvas
+        version="1.2"
+        width="480" height="270"
+        xres="2834.645669" yres="2834.645669"
+        gamma-r="1.000000" gamma-g="1.000000" gamma-b="1.000000"
+        view-box="-4.000000 2.250000 4.000000 -2.250000"
+        antialias="1" fps="24.000"
+        begin-time="0f" end-time="5s"
+        bgcolor="0.500000 0.500000 0.500000 1.000000"
+        >
+  <name>New animation</name>
+  <meta name="background_first_color" content="0.880000 0.880000 0.880000"/>
+  <meta name="background_rendering" content="0"/>
+  <meta name="background_second_color" content="0.650000 0.650000 0.650000"/>
+  <meta name="background_size" content="15.000000 15.000000"/>
+  <meta name="grid_color" content="0.623529 0.623529 0.623529"/>
+  <meta name="grid_show" content="0"/>
+  <meta name="grid_size" content="0.250000 0.250000"/>
+  <meta name="grid_snap" content="0"/>
+  <meta name="guide_color" content="0.435294 0.435294 1.000000"/>
+  <meta name="guide_show" content="1"/>
+  <meta name="guide_snap" content="0"/>
+  <meta name="jack_offset" content="0.000000"/>
+  <meta name="onion_skin" content="0"/>
+  <meta name="onion_skin_future" content="0"/>
+  <meta name="onion_skin_keyframes" content="1"/>
+  <meta name="onion_skin_past" content="1"/>
+  <keyframe time="0f" active="true">start</keyframe>
+</canvas>"""

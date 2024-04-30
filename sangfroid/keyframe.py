@@ -1,3 +1,5 @@
+from sangfroid.t import T
+
 class Keyframe:
     def __init__(self, time, name,
                  active = True,
@@ -10,10 +12,10 @@ class Keyframe:
     @classmethod
     def from_tag(cls, tag):
         result = cls(
-                time = tag['time'],
-                name = tag['name'],
+                time = T(tag['time']),
+                name = tag.get('name', None),
                 active = tag['active'],
                 )
         result.tag = tag
 
-
+        return result
