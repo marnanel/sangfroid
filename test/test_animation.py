@@ -1,6 +1,7 @@
 import os
 import sangfroid
 import gzip
+import pytest
 from test import *
 from bs4 import BeautifulSoup
 
@@ -186,3 +187,40 @@ def test_animation_saveas_different_format():
 def test_animation_len():
     sif = get_animation('bouncing.sif')
     assert len(sif)==121
+
+def test_animation_blank_simple():
+
+    sif = sangfroid.Animation()
+    blank_sif_assertions(sif, 'simple')
+
+def blank_sif_assertions(sif, name):
+
+    assert sif.name == 'New animation', name
+    assert sif.description == '', name
+    assert sif.size == (480, 270), name
+    assert sif.resolution==(2834.645669, 2834.645669), name
+    assert sif.background==sangfroid.value.Color('#808080'), name
+    assert sif.begin_time==0, name
+    assert sif.end_time==sangfroid.T('5s', reference_tag=sif.tag), name
+
+    keyframes = list(sif.keyframes)
+    assert len(keyframes)==1, name
+    assert keyframes[0].time==0, name
+
+def test_animation_blank_save():
+    sif = sangfroid.Animation()
+    
+    names = {
+            'uncompressed': temp_filename(suffix='.sif'),
+            'compressed': temp_filename(suffix='.sifz'),
+            }
+
+    with pytest.raises(ValueError):
+        sif.save()
+
+    for n in names.values():
+        sif.save(n)
+
+    for name, filename in names.items():
+        sif2 = sangfroid.Animation(filename)
+        blank_sif_assertions(sif2, name)
