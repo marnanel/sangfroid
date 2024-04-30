@@ -182,13 +182,8 @@ class Animation(Group):
     def keyframes(self):
         """
         The defined keyframes.
-
-        This is subject to change. At present it's just a generator
-        over the keyframes. But the keyframe collection needs to be
-        a class in itself, so you can add and delete them.
         """
-        for kf in self.tag.find_all('keyframe'):
-            yield Keyframe.from_tag(kf)
+        return Keyframe.all_in_animation(self)
  
     def save(self, filename:str=None):
         """
