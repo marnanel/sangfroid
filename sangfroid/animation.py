@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from sangfroid.keyframe import Keyframe
 from sangfroid.layer import Group
 from sangfroid.format import Format
@@ -25,13 +24,14 @@ class Animation(Group):
             filename: the name of the main file to load.
         """
         self.filename = filename
-        self.format = Format.from_filename(filename)
 
-        with self.format.main_file() as f:
-            self.soup = BeautifulSoup(
-                    f,
-                    features = 'xml',
-                    )
+        if filename is None:
+            self.format = None
+        else:
+            self.format = Format.from_filename(filename)
+
+        with self.format.main_file() as soup:
+            self.soup = soup
 
         assert len(self.soup.contents)==1
         tag = self.soup.contents[0]
@@ -193,6 +193,22 @@ class Animation(Group):
             filename: the filename to save the animation to.
                 If None, we use the filename we loaded it from.
         """
+
+        if filename is None:
+            if self.format is None:
+                raise ValueError(
+                        "If you didn't give a filename at creation, "
+                        "you must give one when you save."
+                        )
+            filename = self.format.filename
+        else:
+            new_format = Format.from_filename(filename,
+                                              load = False,
+                                              )
+            if new_format!=self.format:
+                # XXX copy the images over
+                self.format = new_format
+
         self.format.save(
                 content = self.soup,
                 filename = filename,

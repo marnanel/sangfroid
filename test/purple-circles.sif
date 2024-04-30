@@ -1,650 +1,610 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<canvas version="1.2" width="480" height="270" xres="2834.645669" yres="2835.000000" gamma-r="0.980000" gamma-g="0.990000" gamma-b="1.000000" view-box="-4.000000 2.250000 4.000000 -2.250000" antialias="1" fps="24.000" begin-time="0f" end-time="5s" bgcolor="0.500000 0.500000 0.500000 1.000000">
-  <name>Circles</name>
-  <desc>I like circles. They are round.</desc>
-  <meta name="background_first_color" content="0.880000 0.880000 0.880000"/>
-  <meta name="background_rendering" content="0"/>
-  <meta name="background_second_color" content="0.650000 0.650000 0.650000"/>
-  <meta name="background_size" content="15.000000 15.000000"/>
-  <meta name="grid_color" content="0.623529 0.623529 0.623529"/>
-  <meta name="grid_show" content="0"/>
-  <meta name="grid_size" content="0.250000 0.250000"/>
-  <meta name="grid_snap" content="0"/>
-  <meta name="guide_color" content="0.435294 0.435294 1.000000"/>
-  <meta name="guide_show" content="1"/>
-  <meta name="guide_snap" content="0"/>
-  <meta name="jack_offset" content="0.000000"/>
-  <meta name="onion_skin" content="0"/>
-  <meta name="onion_skin_future" content="0"/>
-  <meta name="onion_skin_keyframes" content="1"/>
-  <meta name="onion_skin_past" content="1"/>
-  <meta name="status_ruler" content="1"/>
-  <keyframe time="0f" active="true"/>
-  <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="Background circle">
-    <param name="z_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="amount">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="blend_method">
-      <integer value="0" static="true"/>
-    </param>
-    <param name="origin">
-      <vector>
-        <x>0.0000000000</x>
-        <y>0.0000000000</y>
-      </vector>
-    </param>
-    <param name="transformation">
-      <composite type="transformation">
-        <offset>
-          <vector>
-            <x>0.0000000000</x>
-            <y>0.0000000000</y>
-          </vector>
-        </offset>
-        <angle>
-          <angle value="0.000000"/>
-        </angle>
-        <skew_angle>
-          <angle value="0.000000"/>
-        </skew_angle>
-        <scale>
-          <vector>
-            <x>1.0000000000</x>
-            <y>1.0000000000</y>
-          </vector>
-        </scale>
-      </composite>
-    </param>
-    <param name="canvas">
-      <canvas>
-        <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Black circle">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="0" static="true"/>
-          </param>
-          <param name="color">
-            <color>
-              <r>1.000000</r>
-              <g>0.000000</g>
-              <b>1.000000</b>
-              <a>1.000000</a>
-            </color>
-          </param>
-          <param name="radius">
-            <real value="1.4428369868"/>
-          </param>
-          <param name="feather">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="origin">
-            <vector>
-              <x>-1.3889974356</x>
-              <y>-0.3257812560</y>
-            </vector>
-          </param>
-          <param name="invert">
-            <bool value="false"/>
-          </param>
-        </layer>
-        <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Maybe white circle">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="0" static="true"/>
-          </param>
-          <param name="color">
-            <color>
-              <r>1.000000</r>
-              <g>0.000000</g>
-              <b>1.000000</b>
-              <a>1.000000</a>
-            </color>
-          </param>
-          <param name="radius">
-            <real value="1.3211588542"/>
-          </param>
-          <param name="feather">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="origin">
-            <vector>
-              <x>-1.3889974356</x>
-              <y>-0.3257812560</y>
-            </vector>
-          </param>
-          <param name="invert">
-            <bool value="false"/>
-          </param>
-        </layer>
-      </canvas>
-    </param>
-    <param name="time_dilation">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="time_offset">
-      <time value="0s"/>
-    </param>
-    <param name="children_lock">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="outline_grow">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="z_range_position">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_blur">
-      <real value="0.0000000000"/>
-    </param>
-  </layer>
-  <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="Blurry circle">
-    <param name="z_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="amount">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="blend_method">
-      <integer value="0" static="true"/>
-    </param>
-    <param name="origin">
-      <vector>
-        <x>0.0000000000</x>
-        <y>0.0000000000</y>
-      </vector>
-    </param>
-    <param name="transformation">
-      <composite type="transformation">
-        <offset>
-          <vector>
-            <x>0.0000000000</x>
-            <y>0.0000000000</y>
-          </vector>
-        </offset>
-        <angle>
-          <angle value="0.000000"/>
-        </angle>
-        <skew_angle>
-          <angle value="0.000000"/>
-        </skew_angle>
-        <scale>
-          <vector>
-            <x>1.0000000000</x>
-            <y>1.0000000000</y>
-          </vector>
-        </scale>
-      </composite>
-    </param>
-    <param name="canvas">
-      <canvas>
-        <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Blue circle">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="0" static="true"/>
-          </param>
-          <param name="color">
-            <color>
-              <r>1.000000</r>
-              <g>0.000000</g>
-              <b>1.000000</b>
-              <a>1.000000</a>
-            </color>
-          </param>
-          <param name="radius">
-            <real value="0.4475911446"/>
-          </param>
-          <param name="feather">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="origin">
-            <vector>
-              <x>1.6032551527</x>
-              <y>-1.0030598640</y>
-            </vector>
-          </param>
-          <param name="invert">
-            <bool value="false"/>
-          </param>
-        </layer>
-        <layer type="blur" active="true" exclude_from_rendering="false" version="0.3" desc="Blur">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="1" static="true"/>
-          </param>
-          <param name="size">
-            <vector>
-              <x>0.4166666567</x>
-              <y>0.4166666567</y>
-            </vector>
-          </param>
-          <param name="type">
-            <integer value="1" static="true"/>
-          </param>
-        </layer>
-      </canvas>
-    </param>
-    <param name="time_dilation">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="time_offset">
-      <time value="0s"/>
-    </param>
-    <param name="children_lock">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="outline_grow">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="z_range_position">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_blur">
-      <real value="0.0000000000"/>
-    </param>
-  </layer>
-  <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="Well, it's round">
-    <param name="z_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="amount">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="blend_method">
-      <integer value="0" static="true"/>
-    </param>
-    <param name="origin">
-      <vector>
-        <x>0.0000000000</x>
-        <y>0.0000000000</y>
-      </vector>
-    </param>
-    <param name="transformation">
-      <composite type="transformation">
-        <offset>
-          <vector>
-            <x>3.3333332539</x>
-            <y>-0.8333333135</y>
-          </vector>
-        </offset>
-        <angle>
-          <angle value="45.000000"/>
-        </angle>
-        <skew_angle>
-          <angle value="50.500000"/>
-        </skew_angle>
-        <scale>
-          <vector>
-            <x>2.0000000000</x>
-            <y>0.5000000000</y>
-          </vector>
-        </scale>
-      </composite>
-    </param>
-    <param name="canvas">
-      <canvas>
-        <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Purple circle">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="0" static="true"/>
-          </param>
-          <param name="color">
-            <color>
-              <r>1.000000</r>
-              <g>0.000000</g>
-              <b>1.000000</b>
-              <a>1.000000</a>
-            </color>
-          </param>
-          <param name="radius">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="feather">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="origin">
-            <vector>
-              <x>0.0000000000</x>
-              <y>0.0000000000</y>
-            </vector>
-          </param>
-          <param name="invert">
-            <bool value="false"/>
-          </param>
-        </layer>
-      </canvas>
-    </param>
-    <param name="time_dilation">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="time_offset">
-      <time value="0s"/>
-    </param>
-    <param name="children_lock">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="outline_grow">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="z_range_position">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_blur">
-      <real value="0.0000000000"/>
-    </param>
-  </layer>
-  <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="More circles">
-    <param name="z_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="amount">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="blend_method">
-      <integer value="0" static="true"/>
-    </param>
-    <param name="origin">
-      <vector>
-        <x>0.0000000000</x>
-        <y>0.0000000000</y>
-      </vector>
-    </param>
-    <param name="transformation">
-      <composite type="transformation">
-        <offset>
-          <vector>
-            <x>0.0000000000</x>
-            <y>0.0000000000</y>
-          </vector>
-        </offset>
-        <angle>
-          <angle value="0.000000"/>
-        </angle>
-        <skew_angle>
-          <angle value="0.000000"/>
-        </skew_angle>
-        <scale>
-          <vector>
-            <x>1.0000000000</x>
-            <y>1.0000000000</y>
-          </vector>
-        </scale>
-      </composite>
-    </param>
-    <param name="canvas">
-      <canvas>
-        <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Orange circle">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="0" static="true"/>
-          </param>
-          <param name="color">
-            <color>
-              <r>1.000000</r>
-              <g>0.000000</g>
-              <b>1.000000</b>
-              <a>1.000000</a>
-            </color>
-          </param>
-          <param name="radius">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="feather">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="origin">
-            <vector>
-              <x>0.0000000000</x>
-              <y>0.0000000000</y>
-            </vector>
-          </param>
-          <param name="invert">
-            <bool value="false"/>
-          </param>
-        </layer>
-        <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="All right, one more circle">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="0" static="true"/>
-          </param>
-          <param name="origin">
-            <vector>
-              <x>0.0000000000</x>
-              <y>0.0000000000</y>
-            </vector>
-          </param>
-          <param name="transformation">
-            <composite type="transformation">
-              <offset>
-                <vector>
-                  <x>0.0000000000</x>
-                  <y>0.0000000000</y>
-                </vector>
-              </offset>
-              <angle>
-                <angle value="0.000000"/>
-              </angle>
-              <skew_angle>
-                <angle value="0.000000"/>
-              </skew_angle>
-              <scale>
-                <vector>
-                  <x>1.0000000000</x>
-                  <y>1.0000000000</y>
-                </vector>
-              </scale>
-            </composite>
-          </param>
-          <param name="canvas">
-            <canvas>
-              <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Green circle">
-                <param name="z_depth">
-                  <real value="0.0000000000"/>
-                </param>
-                <param name="amount">
-                  <real value="1.0000000000"/>
-                </param>
-                <param name="blend_method">
-                  <integer value="0" static="true"/>
-                </param>
-                <param name="color">
-                  <color>
-                    <r>1.000000</r>
-                    <g>0.000000</g>
-                    <b>1.000000</b>
-                    <a>1.000000</a>
-                  </color>
-                </param>
-                <param name="radius">
-                  <real value="0.5055338531"/>
-                </param>
-                <param name="feather">
-                  <real value="0.0000000000"/>
-                </param>
-                <param name="origin">
-                  <vector>
-                    <x>-2.7426433563</x>
-                    <y>-1.7542968988</y>
-                  </vector>
-                </param>
-                <param name="invert">
-                  <bool value="false"/>
-                </param>
-              </layer>
-            </canvas>
-          </param>
-          <param name="time_dilation">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="time_offset">
-            <time value="0s"/>
-          </param>
-          <param name="children_lock">
-            <bool value="false" static="true"/>
-          </param>
-          <param name="outline_grow">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="z_range">
-            <bool value="false" static="true"/>
-          </param>
-          <param name="z_range_position">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="z_range_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="z_range_blur">
-            <real value="0.0000000000"/>
-          </param>
-        </layer>
-        <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Yellow circle">
-          <param name="z_depth">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="amount">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="blend_method">
-            <integer value="0" static="true"/>
-          </param>
-          <param name="color">
-            <color>
-              <r>1.000000</r>
-              <g>0.000000</g>
-              <b>1.000000</b>
-              <a>1.000000</a>
-            </color>
-          </param>
-          <param name="radius">
-            <real value="1.0000000000"/>
-          </param>
-          <param name="feather">
-            <real value="0.0000000000"/>
-          </param>
-          <param name="origin">
-            <vector>
-              <x>2.1391277313</x>
-              <y>0.2886067629</y>
-            </vector>
-          </param>
-          <param name="invert">
-            <bool value="false"/>
-          </param>
-        </layer>
-      </canvas>
-    </param>
-    <param name="time_dilation">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="time_offset">
-      <time value="0s"/>
-    </param>
-    <param name="children_lock">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="outline_grow">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range">
-      <bool value="false" static="true"/>
-    </param>
-    <param name="z_range_position">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="z_range_blur">
-      <real value="0.0000000000"/>
-    </param>
-  </layer>
-  <layer type="circle" active="true" exclude_from_rendering="false" version="0.2" desc="Red circle">
-    <param name="z_depth">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="amount">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="blend_method">
-      <integer value="0" static="true"/>
-    </param>
-    <param name="color">
-      <color>
-        <r>1.000000</r>
-        <g>0.000000</g>
-        <b>1.000000</b>
-        <a>1.000000</a>
-      </color>
-    </param>
-    <param name="radius">
-      <real value="1.0000000000"/>
-    </param>
-    <param name="feather">
-      <real value="0.0000000000"/>
-    </param>
-    <param name="origin">
-      <vector>
-        <x>-2.0835285187</x>
-        <y>0.9919921756</y>
-      </vector>
-    </param>
-    <param name="invert">
-      <bool value="false"/>
-    </param>
-  </layer>
+<?xml version="1.0" encoding="utf-8"?>
+<canvas antialias="1" begin-time="0f" bgcolor="0.500000 0.500000 0.500000 1.000000" end-time="5s" fps="24.000" gamma-b="1.000000" gamma-g="0.990000" gamma-r="0.980000" height="270" version="1.2" view-box="-4.000000 2.250000 4.000000 -2.250000" width="480" xres="2834.645669" yres="2835.000000">
+<name>Circles</name>
+<desc>I like circles. They are round.</desc>
+<meta content="0.880000 0.880000 0.880000" name="background_first_color"/>
+<meta content="0" name="background_rendering"/>
+<meta content="0.650000 0.650000 0.650000" name="background_second_color"/>
+<meta content="15.000000 15.000000" name="background_size"/>
+<meta content="0.623529 0.623529 0.623529" name="grid_color"/>
+<meta content="0" name="grid_show"/>
+<meta content="0.250000 0.250000" name="grid_size"/>
+<meta content="0" name="grid_snap"/>
+<meta content="0.435294 0.435294 1.000000" name="guide_color"/>
+<meta content="1" name="guide_show"/>
+<meta content="0" name="guide_snap"/>
+<meta content="0.000000" name="jack_offset"/>
+<meta content="0" name="onion_skin"/>
+<meta content="0" name="onion_skin_future"/>
+<meta content="1" name="onion_skin_keyframes"/>
+<meta content="1" name="onion_skin_past"/>
+<meta content="1" name="status_ruler"/>
+<keyframe active="true" time="0f"/>
+<layer active="true" desc="Background circle" exclude_from_rendering="false" type="group" version="0.3">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="origin">
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</param>
+<param name="transformation">
+<composite type="transformation">
+<offset>
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</offset>
+<angle>
+<angle value="0.000000"/>
+</angle>
+<skew_angle>
+<angle value="0.000000"/>
+</skew_angle>
+<scale>
+<vector>
+<x>1.0000000000</x>
+<y>1.0000000000</y>
+</vector>
+</scale>
+</composite>
+</param>
+<param name="canvas">
+<canvas>
+<layer active="true" desc="Black circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="1.4428369868"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>-1.3889974356</x>
+<y>-0.3257812560</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
+<layer active="true" desc="Maybe white circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="1.3211588542"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>-1.3889974356</x>
+<y>-0.3257812560</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
+</canvas>
+</param>
+<param name="time_dilation">
+<real value="1.0000000000"/>
+</param>
+<param name="time_offset">
+<time value="0s"/>
+</param>
+<param name="children_lock">
+<bool static="true" value="false"/>
+</param>
+<param name="outline_grow">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range">
+<bool static="true" value="false"/>
+</param>
+<param name="z_range_position">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_blur">
+<real value="0.0000000000"/>
+</param>
+</layer>
+<layer active="true" desc="Blurry circle" exclude_from_rendering="false" type="group" version="0.3">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="origin">
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</param>
+<param name="transformation">
+<composite type="transformation">
+<offset>
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</offset>
+<angle>
+<angle value="0.000000"/>
+</angle>
+<skew_angle>
+<angle value="0.000000"/>
+</skew_angle>
+<scale>
+<vector>
+<x>1.0000000000</x>
+<y>1.0000000000</y>
+</vector>
+</scale>
+</composite>
+</param>
+<param name="canvas">
+<canvas>
+<layer active="true" desc="Blue circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="0.4475911446"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>1.6032551527</x>
+<y>-1.0030598640</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
+<layer active="true" desc="Blur" exclude_from_rendering="false" type="blur" version="0.3">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="1"/>
+</param>
+<param name="size">
+<vector>
+<x>0.4166666567</x>
+<y>0.4166666567</y>
+</vector>
+</param>
+<param name="type">
+<integer static="true" value="1"/>
+</param>
+</layer>
+</canvas>
+</param>
+<param name="time_dilation">
+<real value="1.0000000000"/>
+</param>
+<param name="time_offset">
+<time value="0s"/>
+</param>
+<param name="children_lock">
+<bool static="true" value="false"/>
+</param>
+<param name="outline_grow">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range">
+<bool static="true" value="false"/>
+</param>
+<param name="z_range_position">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_blur">
+<real value="0.0000000000"/>
+</param>
+</layer>
+<layer active="true" desc="Well, it's round" exclude_from_rendering="false" type="group" version="0.3">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="origin">
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</param>
+<param name="transformation">
+<composite type="transformation">
+<offset>
+<vector>
+<x>3.3333332539</x>
+<y>-0.8333333135</y>
+</vector>
+</offset>
+<angle>
+<angle value="45.000000"/>
+</angle>
+<skew_angle>
+<angle value="50.500000"/>
+</skew_angle>
+<scale>
+<vector>
+<x>2.0000000000</x>
+<y>0.5000000000</y>
+</vector>
+</scale>
+</composite>
+</param>
+<param name="canvas">
+<canvas>
+<layer active="true" desc="Purple circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="1.0000000000"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
+</canvas>
+</param>
+<param name="time_dilation">
+<real value="1.0000000000"/>
+</param>
+<param name="time_offset">
+<time value="0s"/>
+</param>
+<param name="children_lock">
+<bool static="true" value="false"/>
+</param>
+<param name="outline_grow">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range">
+<bool static="true" value="false"/>
+</param>
+<param name="z_range_position">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_blur">
+<real value="0.0000000000"/>
+</param>
+</layer>
+<layer active="true" desc="More circles" exclude_from_rendering="false" type="group" version="0.3">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="origin">
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</param>
+<param name="transformation">
+<composite type="transformation">
+<offset>
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</offset>
+<angle>
+<angle value="0.000000"/>
+</angle>
+<skew_angle>
+<angle value="0.000000"/>
+</skew_angle>
+<scale>
+<vector>
+<x>1.0000000000</x>
+<y>1.0000000000</y>
+</vector>
+</scale>
+</composite>
+</param>
+<param name="canvas">
+<canvas>
+<layer active="true" desc="Orange circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="1.0000000000"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
+<layer active="true" desc="All right, one more circle" exclude_from_rendering="false" type="group" version="0.3">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="origin">
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</param>
+<param name="transformation">
+<composite type="transformation">
+<offset>
+<vector>
+<x>0.0000000000</x>
+<y>0.0000000000</y>
+</vector>
+</offset>
+<angle>
+<angle value="0.000000"/>
+</angle>
+<skew_angle>
+<angle value="0.000000"/>
+</skew_angle>
+<scale>
+<vector>
+<x>1.0000000000</x>
+<y>1.0000000000</y>
+</vector>
+</scale>
+</composite>
+</param>
+<param name="canvas">
+<canvas>
+<layer active="true" desc="Green circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="0.5055338531"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>-2.7426433563</x>
+<y>-1.7542968988</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
+</canvas>
+</param>
+<param name="time_dilation">
+<real value="1.0000000000"/>
+</param>
+<param name="time_offset">
+<time value="0s"/>
+</param>
+<param name="children_lock">
+<bool static="true" value="false"/>
+</param>
+<param name="outline_grow">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range">
+<bool static="true" value="false"/>
+</param>
+<param name="z_range_position">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_blur">
+<real value="0.0000000000"/>
+</param>
+</layer>
+<layer active="true" desc="Yellow circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="1.0000000000"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>2.1391277313</x>
+<y>0.2886067629</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
+</canvas>
+</param>
+<param name="time_dilation">
+<real value="1.0000000000"/>
+</param>
+<param name="time_offset">
+<time value="0s"/>
+</param>
+<param name="children_lock">
+<bool static="true" value="false"/>
+</param>
+<param name="outline_grow">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range">
+<bool static="true" value="false"/>
+</param>
+<param name="z_range_position">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="z_range_blur">
+<real value="0.0000000000"/>
+</param>
+</layer>
+<layer active="true" desc="Red circle" exclude_from_rendering="false" type="circle" version="0.2">
+<param name="z_depth">
+<real value="0.0000000000"/>
+</param>
+<param name="amount">
+<real value="1.0000000000"/>
+</param>
+<param name="blend_method">
+<integer static="true" value="0"/>
+</param>
+<param name="color">
+<color><r>1.000000</r><g>0.000000</g><b>1.000000</b><a>1.000000</a></color>
+</param>
+<param name="radius">
+<real value="1.0000000000"/>
+</param>
+<param name="feather">
+<real value="0.0000000000"/>
+</param>
+<param name="origin">
+<vector>
+<x>-2.0835285187</x>
+<y>0.9919921756</y>
+</vector>
+</param>
+<param name="invert">
+<bool value="false"/>
+</param>
+</layer>
 </canvas>
