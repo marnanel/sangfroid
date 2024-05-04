@@ -19,7 +19,12 @@
   <meta name="onion_skin_keyframes" content="1"/>
   <meta name="onion_skin_past" content="1"/>
   <meta name="status_ruler" content="1"/>
-  <keyframe time="0f" active="true"/>
+  <keyframe time="0f" active="true">it's white</keyframe>
+  <keyframe time="20f" active="true">now it's pink</keyframe>
+  <keyframe time="1s 1f" active="true">now it's mauve</keyframe>
+  <keyframe time="1s 9f" active="false">this one is inactive</keyframe>
+  <keyframe time="1s 11f" active="true">blue</keyframe>
+  <keyframe time="1s 17f" active="true"/>
   <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="Background circle">
     <param name="z_depth">
       <real value="0.0000000000"/>
@@ -105,12 +110,48 @@
             <integer value="0" static="true"/>
           </param>
           <param name="color">
-            <color>
-              <r>1.000000</r>
-              <g>1.000000</g>
-              <b>1.000000</b>
-              <a>1.000000</a>
-            </color>
+            <animated type="color">
+              <waypoint time="0s" before="halt" after="halt">
+                <color guid="DC1D9670A7B789809F3FB284F5C262E3">
+                  <r>1.000000</r>
+                  <g>1.000000</g>
+                  <b>1.000000</b>
+                  <a>1.000000</a>
+                </color>
+              </waypoint>
+              <waypoint time="0.83333331s" before="halt" after="halt">
+                <color guid="6346C0AE2FE5166117A4B6D9BB5DBC1B">
+                  <r>1.000000</r>
+                  <g>0.722866</g>
+                  <b>0.574960</b>
+                  <a>1.000000</a>
+                </color>
+              </waypoint>
+              <waypoint time="1.04166663s" before="halt" after="halt">
+                <color guid="C4DDA268D41624B527C3ECF7689A3286">
+                  <r>0.880711</r>
+                  <g>0.692760</g>
+                  <b>1.000000</b>
+                  <a>1.000000</a>
+                </color>
+              </waypoint>
+              <waypoint time="1.45833337s" before="halt" after="halt">
+                <color guid="BE3AA1328607576CE9F3EA198890F76E">
+                  <r>0.000000</r>
+                  <g>0.193479</g>
+                  <b>1.000000</b>
+                  <a>1.000000</a>
+                </color>
+              </waypoint>
+              <waypoint time="1.70833337s" before="halt" after="halt">
+                <color guid="173BBF26E5A3E59BCC5D0929D1F0D6C5">
+                  <r>1.000000</r>
+                  <g>1.000000</g>
+                  <b>1.000000</b>
+                  <a>1.000000</a>
+                </color>
+              </waypoint>
+            </animated>
           </param>
           <param name="radius">
             <real value="1.3211588542"/>

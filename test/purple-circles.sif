@@ -19,7 +19,12 @@
 <meta content="1" name="onion_skin_keyframes"/>
 <meta content="1" name="onion_skin_past"/>
 <meta content="1" name="status_ruler"/>
-<keyframe active="true" time="0f"/>
+<keyframe time="0f" active="true">it's white</keyframe>
+<keyframe time="20f" active="true">now it's pink</keyframe>
+<keyframe time="1s 1f" active="true">now it's mauve</keyframe>
+<keyframe time="1s 9f" active="false">this one is inactive</keyframe>
+<keyframe time="1s 11f" active="true">blue</keyframe>
+<keyframe time="1s 17f" active="true"/>
 <layer active="true" desc="Background circle" exclude_from_rendering="false" type="group" version="0.3">
 <param name="z_depth">
 <real value="0.0000000000"/>

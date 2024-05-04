@@ -1,21 +1,61 @@
 from sangfroid.t import T
 
 class Keyframe:
-    def __init__(self, time, name,
-                 active = True,
-                 ):
-        self.time = time
-        self.name = name
-        self.active = active
-        self.tag = None
+    def __init__(self, tag):
+        self.tag = tag
+
+    @property
+    def time(self):
+        return T(self.tag['time'],
+                 reference_tag = self.tag,
+                 )
+
+    @property
+    def name(self):
+        return self.tag.text
+
+    @property
+    def active(self):
+        if self.tag['active']=='true':
+            return True
+        else:
+            return False
+
+    def __str__(self):
+        if self.active:
+            active = ''
+        else:
+            active = ' (inactive)'
+        return f'{self.time} {repr(self.name)}{active}'
+
+    __repr__ = __str__
 
     @classmethod
-    def from_tag(cls, tag):
-        result = cls(
-                time = T(tag['time']),
-                name = tag.get('name', None),
-                active = tag['active'],
-                )
-        result.tag = tag
+    def all_in_animation(cls, animation):
+        result = Keyframes.__new__(Keyframes)
+        result.animation = animation
 
         return result
+
+class Keyframes:
+    def __init__(self):
+        raise ValueError("Don't instantiate the Keyframes class directly.")
+
+    def __len__(self):
+        return len(self.animation.tag.find_all('keyframe'))
+
+    def __iter__(self):
+        for keyframe_tag in self.animation.tag.find_all('keyframe'):
+            yield Keyframe(keyframe_tag)
+
+    def __str__(self):
+        result = f'Keyframes of {self.animation}:'
+        if len(self)==0:
+            result += '\n  (none)'
+        else:
+            for keyframe in self:
+                result += f'\n  - {keyframe}'
+
+        return result
+
+    __repr__ = __str__
