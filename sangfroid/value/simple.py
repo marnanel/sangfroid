@@ -1,6 +1,8 @@
 from sangfroid.value.value import Value
 from sangfroid.t import T
 
+NEAR_AS_DAMMIT = 0.0001
+
 class Simple(Value):
 
     our_type = None
@@ -47,9 +49,17 @@ class Simple(Value):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.value == other.value
+            v = other.value
         else:
-            return self.value == other
+            try:
+                v = self.our_type(other)
+            except ValueError:
+                v = other
+
+        try:
+            return abs(self.value-v)<=NEAR_AS_DAMMIT
+        except TypeError:
+            return False
 
 @Value.handles_type()
 class Real(Simple):
