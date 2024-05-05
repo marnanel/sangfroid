@@ -12,10 +12,6 @@ class Animation(Group):
     called a "canvas". At first we called it "Sif", but that was
     no good, because it might be loaded from a `.sifz` or `.sfg` file.
 
-    At present there's no way to create a new, blank canvas.
-    You have to create one in Synfig Studio first.
-    This will be fixed soon.
-
     Most of the properties don't yet have setters. They will.
     """
     def __init__(self, filename:str=None):
