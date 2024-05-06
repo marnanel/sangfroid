@@ -1,7 +1,11 @@
 import bs4
 from sangfroid.value import Value
 from sangfroid.registry import Registry
-from sangfroid.util import normalise_synfig_layer_type_name
+from sangfroid.util import (
+        normalise_synfig_layer_type_name,
+        bool_to_str,
+        str_to_bool,
+        )
 
 class Layer:
 
@@ -20,10 +24,21 @@ class Layer:
     def __init__(self, tag):
         self.tag = tag
 
-        self.active = tag.get('active', True)
-        self.synfig_version = tag.get('version', None)
-        self.exclude_from_rendering = tag.get(
-                'exclude_from_rendering', False)
+    @property
+    def active(self):
+        return str_to_bool(self.tag.get('active', 'true'))
+
+    @active.setter
+    def active(self, v):
+        self.tag['active'] = bool_to_str(v)
+
+    @property
+    def synfig_version(self):
+        return tag.get('version', None)
+
+    @property
+    def exclude_from_rendering(self):
+        return str_to_bool(self.tag.get('exclude_from_rendering', 'false'))
 
     @property
     def desc(self):

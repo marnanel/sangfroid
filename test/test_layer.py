@@ -241,6 +241,26 @@ def test_text_simple():
     assert text.text=='Bananas'
     assert isinstance(text.text, str)
 
+def test_layer_active():
+    sif = get_animation('circles.sif')
+
+    black = sif.find(desc='Black circle')
+    assert black.active
+    assert black.tag['active']=='true'
+
+    black.active = False
+    assert not black.active
+    assert black.tag['active']=='false'
+
+    black.active = True
+    assert black.active
+    assert black.tag['active']=='true'
+
+    black.active = True
+    assert black.active
+    assert black.tag['active']=='true'
+
+
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0

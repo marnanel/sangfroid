@@ -10,3 +10,12 @@ def normalise_synfig_layer_type_name(s):
         str
     """
     return s.lower().replace('_', '')
+
+def str_to_bool(s):
+    return s.lower()=='true'
+
+def bool_to_str(b):
+    if bool(b):
+        return 'true'
+    else:
+        return 'false'
