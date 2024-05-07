@@ -11,11 +11,18 @@ def normalise_synfig_layer_type_name(s):
     """
     return s.lower().replace('_', '')
 
-def str_to_bool(s):
-    return s.lower()=='true'
-
-def bool_to_str(b):
-    if bool(b):
-        return 'true'
+def type_and_value_to_str(t, v):
+    if v is None:
+        return None
+    elif issubclass(t, bool):
+        return str(bool(v)).lower()
     else:
-        return 'false'
+        return str(v)
+
+def type_and_str_to_value(t, s):
+    if v is None:
+        return None
+    elif issubclass(t, bool):
+        return v.lower()=='true'
+    else:
+        return t(v)

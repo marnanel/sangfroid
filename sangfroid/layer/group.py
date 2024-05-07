@@ -40,7 +40,7 @@ class Group(Layer):
             result = Layer.from_tag(child)
             yield result
 
-            if include_descendants and hasattr(result, 'children'):
+            if include_descendants:
                 yield from result.children
 
     @property

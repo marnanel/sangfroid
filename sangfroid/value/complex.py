@@ -121,6 +121,11 @@ class Vector(Value):
         for v in self.values():
             yield v
 
+class XY(Vector):
+    pass
+class Dimensions(Vector):
+    pass
+
 @Value.handles_type()
 class Composite(Value):
     @property
@@ -212,4 +217,5 @@ class Composite(Value):
 
         return True
 
-
+class Transformation(Composite):
+    pass

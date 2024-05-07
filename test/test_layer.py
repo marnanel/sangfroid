@@ -249,6 +249,7 @@ def test_layer_active():
     assert black.tag['active']=='true'
 
     black.active = False
+    print("9020", repr(black.active))
     assert not black.active
     assert black.tag['active']=='false'
 

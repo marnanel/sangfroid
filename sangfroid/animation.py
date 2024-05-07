@@ -1,8 +1,9 @@
 from sangfroid.keyframe import Keyframe
-from sangfroid.layer import Group
+from sangfroid.layer import Group, Field
 from sangfroid.format import Format, Blank
 from sangfroid.value.color import Color
 from sangfroid.t import T
+import sangfroid.value as v
 
 class Animation(Group):
     """
@@ -11,9 +12,43 @@ class Animation(Group):
     Synfig calls this a "canvas", but it also has a layer attribute
     called a "canvas". At first we called it "Sif", but that was
     no good, because it might be loaded from a `.sifz` or `.sfg` file.
-
-    Most of the properties don't yet have setters. They will.
     """
+
+    FIELDS = Field.dict_of(
+            Field('version',          float,       1.2),
+            Field('width',            int,         480),
+            Field('height',           int,         270),
+            Field('xres',             float,       2834.645669),
+            Field('yres',             float,       2834.645669),
+            Field('gamma-r',          float,       1.0),
+            Field('gamma-g',          float,       1.0),
+            Field('gamma-b',          float,       1.0),
+            Field('view-box',         str, '-4.0 2.25 4.0 -2.25'), # XXX wrong
+            Field('antialias',        int,         1), # XXX enum?
+            Field('fps',              float,       24.0),
+            Field('begin-time',       T,           0),
+            Field('end-time',         T,           '5s'),
+            Field('active',           bool,        True),
+            Field('bgcolor',          str,         '0.5 0.5 0.5 1.0'),
+
+            Field('background_first_color',  v.Color, (0.88, 0.88, 0.88)),
+            Field('background_rendering',    v.Integer, 0),
+            Field('background_second_color', v.Color, (0.65, 0.65, 0.65)),
+            Field('background_size',         v.Dimensions,     (15.0, 15.0)),
+            Field('grid_color',              v.Color, (0.623529, 0.623529, 0.623529)),
+            Field('grid_show',               v.Integer, 0),
+            Field('grid_size',               v.Dimensions, (0.25, 0.25)),
+            Field('grid_snap',               v.Integer, 0),
+            Field('guide_color',             v.Color, (0.435294, 0.435294, 1.09)),
+            Field('guide_show',              v.Integer, 1),
+            Field('guide_snap',              v.Integer, 0),
+            Field('jack_offset',             v.Real, 0.0),
+            Field('onion_skin',              v.Integer, 0),
+            Field('onion_skin_future',       v.Integer, 0),
+            Field('onion_skin_keyframes',    v.Integer, 1),
+            Field('onion_skin_past',         v.Integer, 1),
+            )
+
     def __init__(self, filename:str=None):
         """
         Args:
@@ -209,3 +244,12 @@ class Animation(Group):
                 content = self.soup,
                 filename = filename,
                 )
+
+    @classmethod
+    def _prep_param(cls, f, v):
+        # XXX This isn't quite right because something
+        # XXX will need to format "content"
+        result = bs4.Tag('meta')
+        result['name'] = f
+        result['content'] = v
+        return result
