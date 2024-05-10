@@ -2,21 +2,21 @@ from sangfroid.t import T
 
 class Keyframe:
     def __init__(self, tag):
-        self.tag = tag
+        self._tag = tag
 
     @property
     def time(self):
-        return T(self.tag['time'],
-                 reference_tag = self.tag,
+        return T(self._tag['time'],
+                 reference_tag = self._tag,
                  )
 
     @property
     def name(self):
-        return self.tag.text
+        return self._tag.text
 
     @property
     def active(self):
-        if self.tag['active']=='true':
+        if self._tag['active']=='true':
             return True
         else:
             return False

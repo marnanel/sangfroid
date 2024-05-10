@@ -12,16 +12,16 @@ class Value:
     def __init__(self, *args):
 
         if len(args)==1 and isinstance(args[0], bs4.element.Tag):
-            self.tag = args[0]
+            self._tag = args[0]
         else:
-            self.tag = bs4.element.Tag(name=self.__class__.__name__.lower())
+            self._tag = bs4.element.Tag(name=self.__class__.__name__.lower())
 
             if len(args)==1:
                 self.value = args[0]
             else:
                 self.value = args
 
-        assert self.tag is not None
+        assert self._tag is not None
 
     @property
     def is_animated(self):
@@ -31,7 +31,7 @@ class Value:
         Returns:
             bool
         """
-        return self.tag.name==ANIMATED
+        return self._tag.name==ANIMATED
 
     @is_animated.setter
     def is_animated(self, v):
@@ -48,13 +48,13 @@ class Value:
             if adjust_contents:
                 former_value = self.value
 
-            our_type = self.tag.name
-            self.tag.attrs = {}
-            self.tag.name = ANIMATED
-            self.tag['type'] = our_type
+            our_type = self._tag.name
+            self._tag.attrs = {}
+            self._tag.name = ANIMATED
+            self._tag['type'] = our_type
 
             if adjust_contents:
-                self.tag.clear()
+                self._tag.clear()
                 self.timeline[0] = former_value
         else:
             if adjust_contents:
@@ -64,12 +64,12 @@ class Value:
                 else:
                     first_value = timeline.values()[0]
 
-            self.tag.name=self.__class__.__name__.lower()
-            self.tag.clear()
+            self._tag.name=self.__class__.__name__.lower()
+            self._tag.clear()
 
             if first_value is not None:
                 for c in first_value.value.tag.children:
-                    self.tag.append(copy.deepcopy(c))
+                    self._tag.append(copy.deepcopy(c))
 
     @property
     def timeline(self):
@@ -103,10 +103,10 @@ class Value:
             list of Tag
         """
 
-        if self.tag.name!=ANIMATED:
+        if self._tag.name!=ANIMATED:
             return []
 
-        result = [wt for wt in self.tag
+        result = [wt for wt in self._tag
                   if isinstance(wt, bs4.element.Tag)]
 
         return result
@@ -126,7 +126,7 @@ class Value:
         if not waypoints:
             return {}
 
-        our_type = self.tag['type']
+        our_type = self._tag['type']
 
         values = [Waypoint.from_tag(wt,
                                     our_type = our_type,
@@ -152,12 +152,12 @@ class Value:
         self._set_animated(True,
             adjust_contents = False,
                            )
-        self.tag.clear()
+        self._tag.clear()
 
         for i, w in enumerate(sorted(v)):
             if i!=0:
-                self.tag.append('\n')
-            self.tag.append(w.tag)
+                self._tag.append('\n')
+            self._tag.append(w.tag)
 
     def __len__(self):
         return len(self._waypoints())
@@ -172,9 +172,9 @@ class Value:
         Returns:
             str
         """
-        result = self.tag.name
+        result = self._tag.name
         if result==ANIMATED:
-            result = self.tag['type']
+            result = self._tag['type']
 
         return result
 

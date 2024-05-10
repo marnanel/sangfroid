@@ -12,9 +12,9 @@ class Simple(Value):
         if self.our_type is None:
             raise NotImplementedError()
 
-        result = self.tag.get('value', None)
+        result = self._tag.get('value', None)
         if result is None:
-            raise ValueError(f"value tag had no value: {self.tag}")
+            raise ValueError(f"value tag had no value: {self._tag}")
 
         result = self._construct_value(result)
 
@@ -41,11 +41,11 @@ class Simple(Value):
                                 f"{v.__class__.__name__}."
                                 )
 
-        self.tag.name = self.__class__.__name__.lower()
-        self.tag.attrs = {
+        self._tag.name = self.__class__.__name__.lower()
+        self._tag.attrs = {
                 'value': result,
                 }
-        self.tag.clear()
+        self._tag.clear()
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -87,5 +87,5 @@ class Time(Simple):
     def _construct_value(self, v):
         return self.our_type(
                 v,
-                reference_tag = self.tag,
+                reference_tag = self._tag,
                 )

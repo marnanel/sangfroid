@@ -14,7 +14,7 @@ class Vector(Value):
         return dict(
                 [(field.name,
                   field.string)
-                 for field in self.tag.children
+                 for field in self._tag.children
                  if isinstance(field, bs4.element.Tag)
                  ])
 
@@ -47,13 +47,13 @@ class Vector(Value):
         else:
             self._raise_type_error()
 
-        self.tag.name = self.__class__.__name__.lower()
-        self.tag.attrs = {}
+        self._tag.name = self.__class__.__name__.lower()
+        self._tag.attrs = {}
 
         for k, v in members.items():
             addendum = bs4.element.Tag(name=k)
             addendum.string = str(v)
-            self.tag.append(addendum)
+            self._tag.append(addendum)
 
     def __getitem__(self, key):
         result = self.get(key, default=None)
@@ -68,7 +68,7 @@ class Vector(Value):
             key = self.keys()[key]
 
         v = [field.string
-             for field in self.tag.children
+             for field in self._tag.children
              if isinstance(field, bs4.element.Tag)
              and field.name==key
              ]
@@ -80,7 +80,7 @@ class Vector(Value):
 
     # FIXME: All these methods are written in terms of self.value,
     # which is inefficient because all the values must be created
-    # every time. They should be fixed to read self.tag themselves.
+    # every time. They should be fixed to read self._tag themselves.
 
     def keys(self):
         return sorted(self.value.keys())
@@ -151,7 +151,7 @@ class Composite(Value):
 
         return dict(
                 [name_and_value(field)
-                 for field in self.tag.children
+                 for field in self._tag.children
                  if isinstance(field, bs4.element.Tag)
                  ])
 
@@ -163,7 +163,7 @@ class Composite(Value):
 
     def get(self, key, default=None):
         found = [v
-                 for v in self.tag.children
+                 for v in self._tag.children
                  if isinstance(v, bs4.element.Tag)
                  and v.name==key
                  ]
@@ -190,7 +190,7 @@ class Composite(Value):
     def keys(self):
         # No point constructing all the values
         return [v.name
-                 for v in self.tag.children
+                 for v in self._tag.children
                  if isinstance(v, bs4.element.Tag)
                  ]
 
@@ -202,7 +202,7 @@ class Composite(Value):
 
     def __len__(self):
         return len([v
-                 for v in self.tag.children
+                 for v in self._tag.children
                  if isinstance(v, bs4.element.Tag)
                  ])
 

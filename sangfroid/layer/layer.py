@@ -1,81 +1,81 @@
 import copy
+import six
 import bs4
 import sangfroid.value as v
 from sangfroid.registry import Registry
-from sangfroid.layer.field import Field
+from sangfroid.layer.field import Field, TagField, ClassWithFields
 from sangfroid.util import (
         normalise_synfig_layer_type_name,
         type_and_str_to_value,
         type_and_value_to_str,
         )
 
+@Field.put_in_layer(
+        Field('type',             str,         None),
+        Field('active',           bool,        True),
+        Field('exclude_from_rendering', bool,  False),
+        Field('version',          float,       None),
+        Field('desc',             str,         None,
+              doc = "A description of this layer."),
+        Field('z_depth',          v.Real,      0.0),
+        Field('amount',           v.Real,      1.0),
+        Field('blend_method',     v.Integer,     0), # XXX ??
+        Field('origin',           v.XY,        (0.0, 0.0)),
+        Field('transformation',   v.Transformation,
+                                  {
+                                      Field('offset', v.XY, (0.0, 0.0)),
+                                      Field('angle', v.Angle, 0.0),
+                                      Field('skew_angle', v.Angle, 0.0),
+                                      Field('scale', v.XY, (0.0, 0.0)),
+                                      }),
+        Field('canvas',           v.Canvas,    None),
+        Field('time_dilation',    v.Real,      1.0),
+        Field('time_offset',      v.Time,      0),
+        Field('children_lock',    v.Bool,      True),
+        Field('outline_grow',     v.Real,      0.0),
+        Field('z_range',          v.Bool,      False),
+        Field('z_range_position', v.Real,      0.0),
+        Field('z_range_depth',    v.Real,      0.0),
+        Field('z_range_blur',     v.Real,      0.0),
+        TagField(),
+        )
+@six.add_metaclass(ClassWithFields)
 class Layer:
 
     SYMBOL = '?' # fallback
 
-    FIELDS = Field.dict_of(
-            Field('type',             str,         None),
-            Field('active',           bool,        True),
-            Field('exclude_from_rendering', bool,  False),
-            Field('version',          float,       None),
-            Field('desc',             str,         None),
-            Field('z_depth',          v.Real,      0.0),
-            Field('amount',           v.Real,      1.0),
-            Field('blend_method',     v.Integer,     0), # XXX ??
-            Field('origin',           v.XY,        (0.0, 0.0)),
-            Field('transformation',   v.Transformation,
-                                      {
-                                          Field('offset', v.XY, (0.0, 0.0)),
-                                          Field('angle', v.Angle, 0.0),
-                                          Field('skew_angle', v.Angle, 0.0),
-                                          Field('scale', v.XY, (0.0, 0.0)),
-                                          }),
-            Field('canvas',           v.Canvas,    None),
-            Field('time_dilation',    v.Real,      1.0),
-            Field('time_offset',      v.Time,      0),
-            Field('children_lock',    v.Bool,      True),
-            Field('outline_grow',     v.Real,      0.0),
-            Field('z_range',          v.Bool,      False),
-            Field('z_range_position', v.Real,      0.0),
-            Field('z_range_depth',    v.Real,      0.0),
-            Field('z_range_blur',     v.Real,      0.0),
-            )
-
-     ########################
+    ########################
 
     def __init__(self, tag):
-        self.tag = tag
+        self._tag = tag
 
+    """
     def __getattr__(self, f):
         if f not in self.FIELDS:
-            raise KeyError(f)
+            raise AttributeError(f)
 
-        print("9800 GET", f)
         field = self.FIELDS[f]
-        if field.in_params:
-            result = self._get_param(field.name)
-        else:
-            result = type_and_value_to_str(
-                    field.type_,
-                    self.tag.get(field.name, None),
-                    )
-        print("9850", field, result)
-        print("9851", str(self.tag)[:80])
+
+        result = field.read_from(
+                tag = self._tag,
+                )
 
         return result
 
     def __setattr__(self, f, v):
-        if f not in self.FIELDS:
-            raise KeyError(f)
-
-        print("9900 SET", f)
-        field = self.FIELDS[f]
-
-        raise ValueError(field)
-
+        if f.startswith('_'):
+            object.__setattr__(self, f, v)
+        elif f not in self.FIELDS:
+            raise AttributeError(f)
+        else:
+            field = self.FIELDS[f]
+            field.write_to(
+                    tag = self._tag,
+                    value = v,
+                    )
     @property
     def parent(self):
-        cursor = self.tag.parent
+        cursor = self._tag.parent
         while cursor is not None:
             if cursor.name=='layer':
                 return Layer.from_tag(cursor)
@@ -95,13 +95,13 @@ class Layer:
         return result
 
     def __getitem__(self, f):
-        found = self.tag.find('param', attrs={'name': f})
+        found = self._tag.find('param', attrs={'name': f})
         if found is None:
             raise KeyError(f)
         return _name_and_value_of(found)[1]
 
     def __setitem__(self, f, val):
-        found = self.tag.find('param', attrs={'name': f})
+        found = self._tag.find('param', attrs={'name': f})
         if found is None:
             raise KeyError(f)
         old_value = _name_and_value_of(found)[1]
@@ -115,9 +115,11 @@ class Layer:
             new_value = old_value.__class__(val)
 
         old_value.tag.replace_with(new_value.tag)
+    """
 
+    """
     def __contains__(self, f):
-        found = self.tag.find(
+        found = self._tag.find(
                 'param',
                 attrs={'name': f},
                 )
@@ -125,7 +127,7 @@ class Layer:
 
     @property
     def depth(self):
-        cursor = self.tag.parent
+        cursor = self._tag.parent
         result = 0
         while cursor is not None:
             if cursor.name=='layer':
@@ -174,8 +176,8 @@ class Layer:
                 kwargs[k] = v
 
             del kwargs['attrs']
-
         """
+    """
         for k,v in kwargs.items():
             if k=='type':
                 if isinstance(v, type) and issubclass(v, Layer):
@@ -186,6 +188,7 @@ class Layer:
 
             else blah
             """
+    """
         for k,v in kwargs.items():
             if k=='type':
                 if not isinstance(v, str):
@@ -217,8 +220,8 @@ class Layer:
                     if found_tag_value==want_value:
                         return True
 
-
                     """
+    """
                         if found_tag_attr==v:
                             return True
 
@@ -234,6 +237,7 @@ class Layer:
                             if match_in_params[param['name']] == value:
                                 return True
                                 """
+    """
 
                 return False
 
@@ -247,7 +251,7 @@ class Layer:
 
         result = [
                 self.from_tag(x) for x in
-                self.tag.find_all(matcher,
+                self._tag.find_all(matcher,
                                   recursive=recursive,
                                   )
                 ]
@@ -283,7 +287,7 @@ class Layer:
     def _as_dict(self):
         return dict([
             _name_and_value_of(param)
-            for param in self.tag.find_all('param')
+            for param in self._tag.find_all('param')
             ])
 
     def items(self):
@@ -299,7 +303,7 @@ class Layer:
         return self._as_dict().__iter__()
 
     def _get_param(self, k):
-        tag = self.tag.find('param',
+        tag = self._tag.find('param',
                             attribs={
                                 'name': k,
                                 })
@@ -314,7 +318,14 @@ class Layer:
         result['name'] = f
         result.append(v.tag)
         return result
-  
+        """
+
+class L:
+    def __dir__(self):
+        return []
+
+raise ValueError(dir(L))
+
 #####################
 # Specific layer types.
 # I'm moving these out to their own modules.

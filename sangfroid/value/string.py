@@ -8,9 +8,9 @@ class String(Value):
 
     @property
     def value(self):
-        result = str(self.tag.string)
+        result = str(self._tag.string)
         return result
 
     @value.setter
     def value(self, v):
-        self.tag.string = str(v)
+        self._tag.string = str(v)

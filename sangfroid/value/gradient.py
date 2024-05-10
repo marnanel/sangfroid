@@ -6,7 +6,7 @@ from sangfroid.value.color import Color
 class Gradient(Value):
     @property
     def value(self):
-        colours = self.tag.find_all('color')
+        colours = self._tag.find_all('color')
         if len(colours)<2:
             self._raise_colour_count_error()
 
@@ -27,13 +27,13 @@ class Gradient(Value):
         if len(v)<2:
             self._raise_colour_count_error()
 
-        self.tag.clear()
+        self._tag.clear()
 
         for pos, colour in sorted(v.items()):
 
             colour_tag = Color(colour).tag
             colour_tag['pos'] = '%.06g' % (pos,)
-            self.tag.append(colour_tag)
+            self._tag.append(colour_tag)
 
     def _raise_colour_count_error(self):
         raise ValueError("there should be at least two colours in a gradient")

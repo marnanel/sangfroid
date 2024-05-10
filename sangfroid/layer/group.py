@@ -26,10 +26,10 @@ class Group(Layer):
                  include_descendants = False,
                  ):
 
-        if self.tag.name=='layer':
-            canvas = self.tag.find('canvas')
+        if self._tag.name=='layer':
+            canvas = self._tag.find('canvas')
         else:
-            canvas = self.tag
+            canvas = self._tag
 
         for child in reversed(canvas.contents):
             if not isinstance(child, bs4.element.Tag):

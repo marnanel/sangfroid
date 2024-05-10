@@ -11,7 +11,7 @@ def test_animation_load_sif():
     sif = get_animation('circles.sif')
 
     assert sif.name == 'Circles'
-    assert sif.description == 'I like circles. They are round.'
+    assert sif.desc == 'I like circles. They are round.'
     assert sif.size == (480, 270)
     assert sif.resolution==(2834.645669, 2835)
     assert sif.background==sangfroid.value.Color('#808080')
@@ -22,7 +22,7 @@ def test_animation_load_sifz():
     sif = get_animation('wombats.sifz')
 
     assert sif.name == 'wombats'
-    assert sif.description == 'I like wombats. They live in Australia.'
+    assert sif.desc == 'I like wombats. They live in Australia.'
 
 def normalise_xml(s):
     # This function used to strip out all space around NavigableStrings
@@ -170,7 +170,7 @@ def test_animation_saveas_different_format():
                     os.path.dirname(__file__),
                     source_filename,
                     ))
-        assert isinstance(source.format, format_for(read_from))
+        assert isinstance(source._format, format_for(read_from))
 
         tempname = temp_filename(
                 suffix=f'.{write_to}')
@@ -179,8 +179,8 @@ def test_animation_saveas_different_format():
 
         revenant = sangfroid.open(tempname)
 
-        assert source.description==revenant.description
-        assert isinstance(source.format, format_for(write_to))
+        assert source.desc==revenant.desc
+        assert isinstance(source._format, format_for(write_to))
 
         os.unlink(tempname)
 
@@ -196,7 +196,7 @@ def test_animation_blank_simple():
 def blank_sif_assertions(sif, name):
 
     assert sif.name == 'New animation', name
-    assert sif.description == '', name
+    assert sif.desc == '', name
     assert sif.size == (480, 270), name
     assert sif.resolution==(2834.645669, 2834.645669), name
     assert sif.background==sangfroid.value.Color('#808080'), name

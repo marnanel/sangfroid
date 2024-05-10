@@ -10,7 +10,7 @@ class Color(Value):
     def value(self):
         result = '#' + (''.join([
                 '%02x' % (
-                    int(round(float(self.tag(dimension)[0].string)*255.0)),)
+                    int(round(float(self._tag(dimension)[0].string)*255.0)),)
             for dimension in RGBA
             ]))
 
@@ -20,7 +20,7 @@ class Color(Value):
 
     def as_tuple(self):
         result = tuple([
-            float(self.tag(dimension)[0].string)
+            float(self._tag(dimension)[0].string)
             for dimension in RGBA
             ])
         return result
@@ -91,11 +91,11 @@ class Color(Value):
         assert isinstance(result, tuple), result
         assert [type(n) for n in result]==[float]*4, result
 
-        self.tag.name = __class__.__name__.lower()
-        self.tag.attrs = {}
-        self.tag.clear()
+        self._tag.name = __class__.__name__.lower()
+        self._tag.attrs = {}
+        self._tag.clear()
 
         for i, dimension in enumerate(RGBA):
             dimension_tag = bs4.element.Tag(name=dimension)
             dimension_tag.string = '%.06f' % (result[i],)
-            self.tag.append(dimension_tag)
+            self._tag.append(dimension_tag)
