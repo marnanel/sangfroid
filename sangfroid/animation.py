@@ -1,62 +1,61 @@
 from sangfroid.keyframe import Keyframe
-from sangfroid.layer import Group, Field, NamedChildField
+from sangfroid.layer import (
+        Group, Field, field, NamedChildField, TagField,
+        )
 from sangfroid.format import Format, Blank
 from sangfroid.value.color import Color
 from sangfroid.t import T
 import bs4
 import sangfroid.value as v
 
-@Field.put_in_layer(
-        Field('version',          float,       1.2),
-        Field('width',            int,         480),
-        Field('height',           int,         270),
-        Field('xres',             float,       2834.645669),
-        Field('yres',             float,       2834.645669),
-        Field('gamma-r',          float,       1.0),
-        Field('gamma-g',          float,       1.0),
-        Field('gamma-b',          float,       1.0),
-        Field('view-box',         str, '-4.0 2.25 4.0 -2.25'), # XXX wrong
-        Field('antialias',        int,         1), # XXX enum?
-        Field('fps',              float,       24.0),
-        Field('begin-time',       T,           0),
-        Field('end-time',         T,           '5s'),
-        Field('active',           bool,        True),
-        Field('bgcolor',          str,         '0.5 0.5 0.5 1.0'),
+@field('version',          float,       1.2)
+@field('width',            int,         480)
+@field('height',           int,         270)
+@field('xres',             float,       2834.645669)
+@field('yres',             float,       2834.645669)
+@field('gamma-r',          float,       1.0)
+@field('gamma-g',          float,       1.0)
+@field('gamma-b',          float,       1.0)
+@field('view-box',         str, '-4.0 2.25 4.0 -2.25') # XXX wrong
+@field('antialias',        int,         1) # XXX enum?
+@field('fps',              float,       24.0)
+@field('begin-time',       T,           0)
+@field('end-time',         T,           '5s')
+@field('active',           bool,        True)
+@field('bgcolor',          str,         '0.5 0.5 0.5 1.0')
 
-        Field('background_first_color',  v.Color, (0.88, 0.88, 0.88)),
-        Field('background_rendering',    v.Integer, 0),
-        Field('background_second_color', v.Color, (0.65, 0.65, 0.65)),
-        Field('background_size',         v.Dimensions,     (15.0, 15.0)),
-        Field('grid_color',              v.Color, (0.623529, 0.623529, 0.623529)),
-        Field('grid_show',               v.Integer, 0),
-        Field('grid_size',               v.Dimensions, (0.25, 0.25)),
-        Field('grid_snap',               v.Integer, 0),
-        Field('guide_color',             v.Color, (0.435294, 0.435294, 1.09)),
-        Field('guide_show',              v.Integer, 1),
-        Field('guide_snap',              v.Integer, 0),
-        Field('jack_offset',             v.Real, 0.0),
-        Field('onion_skin',              v.Integer, 0),
-        Field('onion_skin_future',       v.Integer, 0),
-        Field('onion_skin_keyframes',    v.Integer, 1),
-        Field('onion_skin_past',         v.Integer, 1),
+@field('background_first_color',  v.Color, (0.88, 0.88, 0.88))
+@field('background_rendering',    v.Integer, 0)
+@field('background_second_color', v.Color, (0.65, 0.65, 0.65))
+@field('background_size',         v.Dimensions,     (15.0, 15.0))
+@field('grid_color',              v.Color, (0.623529, 0.623529, 0.623529))
+@field('grid_show',               v.Integer, 0)
+@field('grid_size',               v.Dimensions, (0.25, 0.25))
+@field('grid_snap',               v.Integer, 0)
+@field('guide_color',             v.Color, (0.435294, 0.435294, 1.09))
+@field('guide_show',              v.Integer, 1)
+@field('guide_snap',              v.Integer, 0)
+@field('jack_offset',             v.Real, 0.0)
+@field('onion_skin',              v.Integer, 0)
+@field('onion_skin_future',       v.Integer, 0)
+@field('onion_skin_keyframes',    v.Integer, 1)
+@field('onion_skin_past',         v.Integer, 1)
 
-        NamedChildField('name', doc = """
-        The name of this animation.
+@field(NamedChildField('name', _type=str, doc = """
+The name of this animation.
 
-        Not the filename, though it's often the same.
-        """),
+Not the filename, though it's often the same.
+""", default='Not yet named'))
 
-        NamedChildField('desc', doc = """
-        A description of this animation.
+@field(NamedChildField('desc', _type=str, doc = """
+A description of this animation.
 
-        So you know what it is when you find it again next year.
+So you know what it is when you find it again next year.
 
-        Type:
-            str or None
-        """),
-
-        Group.FIELDS['tag'],
-        )
+Type:
+str or None
+""", default='Animation'))
+@field(TagField())
 class Animation(Group):
     """
     A Synfig animation.
@@ -86,6 +85,26 @@ class Animation(Group):
         super().__init__(
                 tag = tag,
                 )
+
+    @property
+    def name(self):
+        return self._tag.find('name').string
+
+    def description(self):
+        """
+        A description of this animation.
+
+        So you know what it is when you find it again next year.
+
+        Type:
+            str or None
+        """
+        tag = self._tag.find('desc')
+
+        if tag is None:
+            return ''
+        else:
+            return tag.string
 
     @property
     def size(self):

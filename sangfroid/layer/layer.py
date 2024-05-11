@@ -1,46 +1,47 @@
 import copy
-import six
 import bs4
 import sangfroid.value as v
 from sangfroid.registry import Registry
-from sangfroid.layer.field import Field, TagField, ClassWithFields
+from sangfroid.layer.field import (
+        Field,
+        field,
+        HasFields,
+        TagField,
+        )
 from sangfroid.util import (
         normalise_synfig_layer_type_name,
         type_and_str_to_value,
         type_and_value_to_str,
         )
 
-@Field.put_in_layer(
-        Field('type',             str,         None),
-        Field('active',           bool,        True),
-        Field('exclude_from_rendering', bool,  False),
-        Field('version',          float,       None),
-        Field('desc',             str,         None,
-              doc = "A description of this layer."),
-        Field('z_depth',          v.Real,      0.0),
-        Field('amount',           v.Real,      1.0),
-        Field('blend_method',     v.Integer,     0), # XXX ??
-        Field('origin',           v.XY,        (0.0, 0.0)),
-        Field('transformation',   v.Transformation,
-                                  {
-                                      Field('offset', v.XY, (0.0, 0.0)),
-                                      Field('angle', v.Angle, 0.0),
-                                      Field('skew_angle', v.Angle, 0.0),
-                                      Field('scale', v.XY, (0.0, 0.0)),
-                                      }),
-        Field('canvas',           v.Canvas,    None),
-        Field('time_dilation',    v.Real,      1.0),
-        Field('time_offset',      v.Time,      0),
-        Field('children_lock',    v.Bool,      True),
-        Field('outline_grow',     v.Real,      0.0),
-        Field('z_range',          v.Bool,      False),
-        Field('z_range_position', v.Real,      0.0),
-        Field('z_range_depth',    v.Real,      0.0),
-        Field('z_range_blur',     v.Real,      0.0),
-        TagField(),
-        )
-@six.add_metaclass(ClassWithFields)
-class Layer:
+@field('type',             str,         None)
+@field('active',           bool,        True)
+@field('exclude_from_rendering', bool,  False)
+@field('version',          float,       None)
+@field('desc',             str,         None,
+      doc = "A description of this layer.")
+@field('z_depth',          v.Real,      0.0)
+@field('amount',           v.Real,      1.0)
+@field('blend_method',     v.Integer,     0) # XXX ??
+@field('origin',           v.XY,        (0.0, 0.0))
+@field('transformation',   v.Transformation,
+                          {
+                              Field('offset', v.XY, (0.0, 0.0)),
+                              Field('angle', v.Angle, 0.0),
+                              Field('skew_angle', v.Angle, 0.0),
+                              Field('scale', v.XY, (0.0, 0.0)),
+                              })
+@field('canvas',           v.Canvas,    None)
+@field('time_dilation',    v.Real,      1.0)
+@field('time_offset',      v.Time,      0)
+@field('children_lock',    v.Bool,      True)
+@field('outline_grow',     v.Real,      0.0)
+@field('z_range',          v.Bool,      False)
+@field('z_range_position', v.Real,      0.0)
+@field('z_range_depth',    v.Real,      0.0)
+@field('z_range_blur',     v.Real,      0.0)
+@field(TagField())
+class Layer(HasFields):
 
     SYMBOL = '?' # fallback
 
@@ -49,7 +50,6 @@ class Layer:
     def __init__(self, tag):
         self._tag = tag
 
-    """
     def __getattr__(self, f):
         if f not in self.FIELDS:
             raise AttributeError(f)
@@ -115,16 +115,14 @@ class Layer:
             new_value = old_value.__class__(val)
 
         old_value.tag.replace_with(new_value.tag)
-    """
 
-    """
     def __contains__(self, f):
         found = self._tag.find(
                 'param',
                 attrs={'name': f},
                 )
         return found is not None
-
+    
     @property
     def depth(self):
         cursor = self._tag.parent
@@ -176,19 +174,7 @@ class Layer:
                 kwargs[k] = v
 
             del kwargs['attrs']
-        """
-    """
-        for k,v in kwargs.items():
-            if k=='type':
-                if isinstance(v, type) and issubclass(v, Layer):
-                    v = v.__name__
 
-                v = normalise_synfig_layer_type_name(v)
-                match_in_attribs[k] = v
-
-            else blah
-            """
-    """
         for k,v in kwargs.items():
             if k=='type':
                 if not isinstance(v, str):
@@ -200,44 +186,31 @@ class Layer:
             if found_tag.name!='layer':
                 return False
 
+            print("9000 ----------------")
             found_layer = Layer.from_tag(found_tag)
+            print("9002", str(found_tag)[:80])
 
             if matching_special is None:
 
                 for k, want_value in kwargs.items():
                     where_to_look = found_layer.FIELDS.get(k, None)
+                    #print("9009", found_layer.FIELDS)
+                    print("9010", k, '==', where_to_look)
+
+                    if where_to_look is None:
+                        continue
 
                     if k in (
                             'type',
                             ):
                         want_value = want_value.lower()
+                    print("9013", where_to_look.read_from)
 
-                    if where_to_look.in_params:
-                        found_tag_value = found_layer._get_param(k)
-                    else:
-                        found_tag_value = found_tag.get(k, None)
+                    found_tag_value = where_to_look.read_from(found_layer)
+                    print("9020", k, '==', found_tag_value)
 
                     if found_tag_value==want_value:
                         return True
-
-                    """
-    """
-                        if found_tag_attr==v:
-                            return True
-
-                if match_in_params:
-                    for param in found_tag.find_all('param',
-                                              recursive=False):
-                        if param['name'] in match_in_params:
-                            t = [n for n in param.children
-                                 if isinstance(n, bs4.element.Tag)][0]
-
-                            value = v.Value.from_tag(t)
-
-                            if match_in_params[param['name']] == value:
-                                return True
-                                """
-    """
 
                 return False
 
@@ -311,20 +284,6 @@ class Layer:
             return None
 
         raise ValueError(f"{k}, {tag}")
-
-    @classmethod
-    def _prep_param(cls, f, v):
-        result = bs4.Tag('param')
-        result['name'] = f
-        result.append(v.tag)
-        return result
-        """
-
-class L:
-    def __dir__(self):
-        return []
-
-raise ValueError(dir(L))
 
 #####################
 # Specific layer types.
