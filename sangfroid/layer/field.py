@@ -166,6 +166,7 @@ def field(*args, **kwargs):
     def _inner(layer_class):
 
         name = kwargs.get('name', None)
+
         if name is not None:
             del kwargs['name']
 
@@ -184,6 +185,7 @@ def field(*args, **kwargs):
                 new_field = TagAttributeField(*args, **kwargs)
 
         name = name or new_field.name
+        name = name.replace('-', '_')
 
         setattr(layer_class, name, new_field)
 

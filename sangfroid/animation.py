@@ -18,9 +18,21 @@ import sangfroid.value as v
 @field('gamma-b',          float,       1.0)
 @field('view-box',         str, '-4.0 2.25 4.0 -2.25') # XXX wrong
 @field('antialias',        int,         1) # XXX enum?
-@field('fps',              float,       24.0)
-@field('begin-time',       T,           0)
-@field('end-time',         T,           '5s')
+@field('fps',              float,       24.0,
+    doc = """
+        The number of frames per second. Usually 24.
+
+        (Can this be non-integer?)""",
+       )
+@field('begin-time',       T,           0,
+       doc = """
+        The time at which this animation starts.
+
+        Almost always zero.""",
+       )
+@field('end-time',         T,           '5s',
+        doc = 'The time at which this animation ends.',
+       )
 @field('active',           bool,        True)
 @field('bgcolor',          str,         '0.5 0.5 0.5 1.0')
 
@@ -51,9 +63,6 @@ Not the filename, though it's often the same.
 A description of this animation.
 
 So you know what it is when you find it again next year.
-
-Type:
-str or None
 """, default='Animation'))
 @field(TagField())
 class Animation(Group):
@@ -151,18 +160,7 @@ class Animation(Group):
             self._tag.attrs['view-box'].split(' ')
             ])
 
-    @property
-    def fps(self):
-        """
-        The number of frames per second. Usually 24.
 
-        (Can this be non-integer?)
-
-        Type:
-            float
-        """
-        return float(self._tag.attrs['fps'])
- 
     @property
     def begin_time(self):
         """
@@ -174,18 +172,6 @@ class Animation(Group):
             T
         """
         return T(self._tag.attrs['begin-time'],
-                 reference_tag = self._tag,
-                 )
-
-    @property
-    def end_time(self):
-        """
-        The time at which this animation ends.
-
-        Type:
-            T
-        """
-        return T(self._tag.attrs['end-time'],
                  reference_tag = self._tag,
                  )
 
@@ -254,12 +240,3 @@ class Animation(Group):
                 content = self._soup,
                 filename = filename,
                 )
-
-    @classmethod
-    def _prep_param(cls, f, v):
-        # XXX This isn't quite right because something
-        # XXX will need to format "content"
-        result = bs4.Tag('meta')
-        result['name'] = f
-        result['content'] = v
-        return result
