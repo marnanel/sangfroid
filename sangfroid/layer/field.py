@@ -19,10 +19,10 @@ class Field:
             # yes, this is the right way round; think about it
             self.__doc__ += ' or None'
 
-    def read_from(self, obj):
+    def __get__(self, obj, obj_type=None):
         raise NotImplementedError()
 
-    def write_to(self, obj, value):
+    def __set__(self, obj, value):
         raise NotImplementedError()
 
     def __call__(self):
@@ -46,7 +46,7 @@ class Field:
 
 class TagAttributeField(Field):
 
-    def read_from(self, obj):
+    def __get__(self, obj, obj_type=None):
         value = self.tag_for_obj(obj).get(self.name, None)
 
         if value is None:
@@ -56,7 +56,7 @@ class TagAttributeField(Field):
         else:
             return self.type_(value)
 
-    def write_to(self, obj, value):
+    def __set__(self, obj, value):
         if issubclass(self.type_, bool):
             if value:
                 value = 'true'
@@ -68,7 +68,7 @@ class TagAttributeField(Field):
         self.tag_for_obj(obj)[self.name] = value
 
 class ParamField(Field):
-    def read_from(self, obj):
+    def __get__(self, obj, obj_type=None):
         holder = self.tag_for_obj(obj).find('param',
                                             attrs={
                                                 'name': self.name,
@@ -81,7 +81,7 @@ class ParamField(Field):
         result = self.type_(contents[0])
         return result
 
-    def write_to(self, obj, value):
+    def __set__(self, obj, value):
         raise NotImplementedError(
                 "9000"
                 )
@@ -95,10 +95,14 @@ class TagField(Field):
                 doc = """The BeautifulSoup tag behind this item.""",
                 )
  
-    def read_from(self, obj):
-        return self.tag_for_obj(obj)
+    def __get__(self, obj, obj_type=None):
+        print("9201", type(obj))
+        result = self.tag_for_obj(obj)
+        print("9209", result)
+        return
 
-    def write_to(self, obj, value):
+
+    def __set__(self, obj, value):
         raise KeyError("You can't put a different tag into an object.")
 
 class NamedChildField(Field):
@@ -113,7 +117,7 @@ class NamedChildField(Field):
     def get_subtag_for_obj(self, obj):
         return self.tag_for_obj(obj).find(self.name)
  
-    def read_from(self, obj):
+    def __get__(self, obj, obj_type=None):
 
         subtag = self.get_subtag_for_obj(obj)
 
@@ -124,28 +128,14 @@ class NamedChildField(Field):
 
         raise ValueError()
 
-    def write_to(self, obj, value):
+    def __set__(self, obj, value):
 
         subtag = self.get_subtag_for_obj(obj)
 
         subtag.string = value
 
 class _FieldsDict(dict):
-    def getter(fn):
-        _install_getter_or_setter('read_from', fn)
-
-    def setter(fn):
-        _install_getter_or_setter('write_to', fn)
-
-    def _install_getter_or_setter(method_name, fn):
-        fieldname = fn.__name__
-
-        if fieldname not in self:
-            raise KeyError(
-                    f"{fieldname} is not a field in "
-                    f"{self.__objclass__.__name__}.")
-
-        setattr(self[fieldname], method_name, fn)
+    pass
 
 class _MetaclassWithFields(type):
     """9000

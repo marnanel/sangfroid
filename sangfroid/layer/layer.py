@@ -50,6 +50,7 @@ class Layer(HasFields):
     def __init__(self, tag):
         self._tag = tag
 
+    """
     def __getattribute__(self, f):
         try:
             found = object.__getattribute__(self, f)
@@ -84,6 +85,7 @@ class Layer(HasFields):
         else:
             # overwrite it
             object.__setattr__(self, f, v)
+            """
 
     @property
     def parent(self):
