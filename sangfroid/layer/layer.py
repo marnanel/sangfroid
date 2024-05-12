@@ -14,7 +14,7 @@ from sangfroid.util import (
         type_and_value_to_str,
         )
 
-@field('type',             str,         None)
+@field('type',             str,         None, name='type_')
 @field('active',           bool,        True)
 @field('exclude_from_rendering', bool,  False)
 @field('version',          float,       None)
@@ -50,29 +50,41 @@ class Layer(HasFields):
     def __init__(self, tag):
         self._tag = tag
 
-    def __getattr__(self, f):
-        if f not in self.FIELDS:
-            raise AttributeError(f)
+    def __getattribute__(self, f):
+        try:
+            found = object.__getattribute__(self, f)
+        except AttributeError:
+            found = None
 
-        field = self.FIELDS[f]
-
-        result = field.read_from(
-                tag = self._tag,
-                )
+        if (
+                not f.startswith('_') and
+                isinstance(found, Field)
+                ):
+            result = found.read_from(
+                    obj = self,
+                    )
+        else:
+            result = found
 
         return result
 
     def __setattr__(self, f, v):
-        if f.startswith('_'):
-            object.__setattr__(self, f, v)
-        elif f not in self.FIELDS:
-            raise AttributeError(f)
-        else:
-            field = self.FIELDS[f]
-            field.write_to(
-                    tag = self._tag,
+
+        try:
+            existing = object.__getattribute__(self, f)
+        except AttributeError:
+            existing = None
+
+
+        if isinstance(existing, Field):
+            existing.write_to(
+                    obj = self,
                     value = v,
                     )
+        else:
+            # overwrite it
+            object.__setattr__(self, f, v)
+
     @property
     def parent(self):
         cursor = self._tag.parent
@@ -87,10 +99,15 @@ class Layer(HasFields):
         result += ('-'*self.depth)
         result += self.SYMBOL
         result += self.__class__.__name__.lower()
-        desc = self.desc
-        if desc is not None:
-            result += ' '
-            result += repr(desc)
+        try:
+            # Look desc up directly, rather than going through the field
+            # resolution process. If any errors occur there, it'll
+            # inevitably try to print the name of layers, which would
+            # cause infinite recursion.
+            result += ' ' + repr(self.tag['desc'])
+        except KeyError:
+            pass
+
         result += ']'
         return result
 
@@ -186,28 +203,31 @@ class Layer(HasFields):
             if found_tag.name!='layer':
                 return False
 
-            print("9000 ----------------")
             found_layer = Layer.from_tag(found_tag)
-            print("9002", str(found_tag)[:80])
 
             if matching_special is None:
 
                 for k, want_value in kwargs.items():
-                    where_to_look = found_layer.FIELDS.get(k, None)
-                    #print("9009", found_layer.FIELDS)
-                    print("9010", k, '==', where_to_look)
-
-                    if where_to_look is None:
-                        continue
-
                     if k in (
                             'type',
                             ):
+                        k += '_'
+
+                    try:
+                        where_to_look = object.__getattribute__(
+                                found_layer, k)
+                    except AttributeError:
+                        continue
+
+                    if not isinstance(where_to_look, Field):
+                        continue
+
+                    if k in (
+                            'type_',
+                            ):
                         want_value = want_value.lower()
-                    print("9013", where_to_look.read_from)
 
                     found_tag_value = where_to_look.read_from(found_layer)
-                    print("9020", k, '==', found_tag_value)
 
                     if found_tag_value==want_value:
                         return True

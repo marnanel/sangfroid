@@ -24,6 +24,10 @@ class Value:
         assert self._tag is not None
 
     @property
+    def tag(self):
+        return self._tag
+
+    @property
     def is_animated(self):
         """
         Whether the value is animated.

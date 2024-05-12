@@ -41,13 +41,13 @@ import sangfroid.value as v
 @field('onion_skin_keyframes',    v.Integer, 1)
 @field('onion_skin_past',         v.Integer, 1)
 
-@field(NamedChildField('name', _type=str, doc = """
+@field(NamedChildField('name', type_=str, doc = """
 The name of this animation.
 
 Not the filename, though it's often the same.
 """, default='Not yet named'))
 
-@field(NamedChildField('desc', _type=str, doc = """
+@field(NamedChildField('desc', type_=str, doc = """
 A description of this animation.
 
 So you know what it is when you find it again next year.

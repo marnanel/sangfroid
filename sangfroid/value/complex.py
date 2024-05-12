@@ -155,6 +155,14 @@ class Composite(Value):
                  if isinstance(field, bs4.element.Tag)
                  ])
 
+    def __getattr__(self, key):
+        result = self.get(key, default=None)
+
+        if result is None:
+            raise AttributeError(key)
+
+        return result
+
     def __getitem__(self, key):
         result = self.get(key=key, default=None)
         if result is None:
