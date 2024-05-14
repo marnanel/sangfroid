@@ -37,6 +37,7 @@ def main():
         if result:
             result += '\n'
 
+        result += '@Layer.handles_type()\n'
         result += f'class {layer["type"].title()}(Layer):\n'
         result += '\n'
 
