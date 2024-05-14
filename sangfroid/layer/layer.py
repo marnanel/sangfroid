@@ -1,11 +1,12 @@
 import copy
+import logging
 import bs4
 import sangfroid.value as v
 from sangfroid.registry import Registry
 from sangfroid.layer.field import (
         Field,
-        field,
-        HasFields,
+        TagAttrField,
+        ParamTagField,
         TagField,
         )
 from sangfroid.util import (
@@ -14,36 +15,42 @@ from sangfroid.util import (
         type_and_value_to_str,
         )
 
-@field('type',             str,         None, name='type_')
-@field('active',           bool,        True)
-@field('exclude_from_rendering', bool,  False)
-@field('version',          float,       None)
-@field('desc',             str,         None,
-      doc = "A description of this layer.")
-@field('z_depth',          v.Real,      0.0)
-@field('amount',           v.Real,      1.0)
-@field('blend_method',     v.Integer,     0) # XXX ??
-@field('origin',           v.XY,        (0.0, 0.0))
-@field('transformation',   v.Transformation,
-                          {
-                              Field('offset', v.XY, (0.0, 0.0)),
-                              Field('angle', v.Angle, 0.0),
-                              Field('skew_angle', v.Angle, 0.0),
-                              Field('scale', v.XY, (0.0, 0.0)),
-                              })
-@field('canvas',           v.Canvas,    None)
-@field('time_dilation',    v.Real,      1.0)
-@field('time_offset',      v.Time,      0)
-@field('children_lock',    v.Bool,      True)
-@field('outline_grow',     v.Real,      0.0)
-@field('z_range',          v.Bool,      False)
-@field('z_range_position', v.Real,      0.0)
-@field('z_range_depth',    v.Real,      0.0)
-@field('z_range_blur',     v.Real,      0.0)
-@field(TagField())
-class Layer(HasFields):
+logger = logging.getLogger('sangfroid')
+
+class Layer:
 
     SYMBOL = '?' # fallback
+
+    type_            = TagAttrField(str,         None, name='type')
+    active           = TagAttrField(bool,        True)
+    exclude_from_rendering = TagAttrField(bool,  False)
+    version          = TagAttrField(float,       None)
+    desc             = TagAttrField(str,         '',
+          doc = "A description of this layer.")
+    z_depth          = ParamTagField(v.Real,      0.0)
+    amount           = ParamTagField(v.Real,      1.0)
+    blend_method     = ParamTagField(v.Integer,     0) # XXX ??
+    origin           = ParamTagField(v.XY,        (0.0, 0.0))
+    """
+    transformation   = ParamTagField(v.Transformation,
+                              {
+                                  offset v.XY, (0.0, 0.0)),
+                                  angle v.Angle, 0.0),
+                                  skew_angle v.Angle, 0.0),
+                                  scale v.XY, (0.0, 0.0)),
+                                  })
+    """
+    canvas           = ParamTagField(v.Canvas,    None)
+    time_dilation    = ParamTagField(v.Real,      1.0)
+    time_offset      = ParamTagField(v.Time,      0)
+    children_lock    = ParamTagField(v.Bool,      True)
+    outline_grow     = ParamTagField(v.Real,      0.0)
+    z_range          = ParamTagField(v.Bool,      False)
+    z_range_position = ParamTagField(v.Real,      0.0)
+    z_range_depth    = ParamTagField(v.Real,      0.0)
+    z_range_blur     = ParamTagField(v.Real,      0.0)
+
+    tag              = TagField()
 
     ########################
 
@@ -201,46 +208,61 @@ class Layer(HasFields):
 
                 kwargs[k] = v.lower().replace('_', '')
 
+        logger.debug("begin find_all")
+
         def matcher(found_tag):
             if found_tag.name!='layer':
                 return False
+
+            logger.debug("considering tag: %s %s",
+                         found_tag.name, found_tag.attrs)
 
             found_layer = Layer.from_tag(found_tag)
 
             if matching_special is None:
 
-                for k, want_value in kwargs.items():
-                    if k in (
-                            'type',
-                            ):
-                        k += '_'
+                def munge(k,v):
+                    if k=='type':
+                        k = 'type_'
+                        v = v.lower()
 
+                    return (k,v)
+
+                targets = [
+                    munge(k,v)
+                    for k,v in kwargs.items()
+                    ]
+
+                logger.debug("want: %s", targets)
+
+                for k, want_value in targets:
                     try:
-                        where_to_look = object.__getattribute__(
-                                found_layer, k)
+                        found_value = getattr(found_layer, k)
+                        logger.debug("  -- %s field is %s; want %s", k,
+                                     repr(found_value),
+                                     repr(want_value),
+                                     )
                     except AttributeError:
+                        logger.debug("  -- it does not have a %s", k)
                         continue
 
-                    if not isinstance(where_to_look, Field):
-                        continue
+                    logger.debug("  want: %s  found: %s",
+                                 want_value, found_value)
 
-                    if k in (
-                            'type_',
-                            ):
-                        want_value = want_value.lower()
-
-                    found_tag_value = where_to_look.read_from(found_layer)
-
-                    if found_tag_value==want_value:
+                    if found_value==want_value:
+                        logger.debug("    -- a match!")
                         return True
 
+                logger.debug("  -- no matches.")
                 return False
 
             elif isinstance(matching_special, bool):
                 return matching_special
 
             else:
-                return matching_special(found_tag)
+                result = matching_special(found_tag)
+                logger.debug("  -- callback says: %s", result)
+                return result
 
             raise v.ValueError(found_tag)
 
@@ -250,6 +272,9 @@ class Layer(HasFields):
                                   recursive=recursive,
                                   )
                 ]
+        logger.debug("find_all found: %s",
+                     result,
+                     )
 
         return result
 

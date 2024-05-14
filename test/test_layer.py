@@ -107,7 +107,7 @@ def _find_type_names_of_children_of_layer(layer):
     """
     result = [
             [
-            b['type']
+            b.type_
             for b in a
             ] for a in layers
             ]
@@ -116,7 +116,7 @@ def _find_type_names_of_children_of_layer(layer):
 def _find_the_shadows(t):
     return 'shadow' in t.get('desc', '').lower()
 
-def test_layer_find_all():
+def test_layer_find_all_simple():
     sif = get_animation('bouncing.sif')
     shadows = sif.find_all(desc='Shadow')
     assert [x.desc for x in shadows] == ['Shadow', 'Shadow']
@@ -162,39 +162,39 @@ def test_layer_find():
 def test_layer_item_get():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
-    assert green_circle['radius'] == 0.5055338531
+    assert green_circle.radius == 0.5055338531
 
     try:
-        green_circle['wombat']
+        green_circle.wombat
         ok = False
-    except KeyError:
+    except AttributeError:
         ok = True
 
-    assert ok, 'subscript of unreal string should raise KeyError'
+    assert ok, 'use of unreal attribute should raise KeyError'
 
 def test_layer_item_set():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
-    assert green_circle['color'] == '#10FF00', (
+    assert green_circle.color == '#10FF00', (
             'we can read the colour'
             )
 
     red = sangfroid.value.Color('#770000')
-    green_circle['color'] = red
-    assert green_circle['color'] == '#770000', (
+    green_circle.color = red
+    assert green_circle.color == '#770000', (
             'colour has been set to red via Color'
             )
 
-    green_circle['color'] = '#FFFF00'
-    assert green_circle['color'] == '#FFFF00', (
+    green_circle.color = '#FFFF00'
+    assert green_circle.color == '#FFFF00', (
             'colour has been set to yellow via string'
             )
 
     with pytest.raises(ValueError):
-        green_circle['color'] = '2s'
+        green_circle.color = '2s'
 
     with pytest.raises(TypeError):
-        green_circle['color'] = sangfroid.T(s=2)
+        green_circle.color = sangfroid.T(s=2)
 
 def test_layer_item_contains():
     sif = get_animation('circles.sif')
@@ -227,16 +227,16 @@ def test_text_simple():
     sif = get_animation('pick-and-mix.sif')
 
     text = sif.find('text')
-    assert text['text']=='Hello wombat!'
-    assert isinstance(text['text'], sangfroid.value.String)
+    assert text.text=='Hello wombat!'
+    assert isinstance(text.text, sangfroid.value.String)
 
     assert text.text=='Hello wombat!'
     assert isinstance(text.text, str)
 
     text.text='Bananas'
 
-    assert text['text']=='Bananas'
-    assert isinstance(text['text'], sangfroid.value.String)
+    assert text.text=='Bananas'
+    assert isinstance(text.text, sangfroid.value.String)
 
     assert text.text=='Bananas'
     assert isinstance(text.text, str)

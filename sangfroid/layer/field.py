@@ -1,16 +1,20 @@
+import logging
 import bs4
 import sangfroid.value as v
 
+logger = logging.getLogger('sangfroid')
+
 class Field:
     def __init__(self,
-                 name,
                  type_,
                  default,
+                 name = None,
                  doc = None,
                  ):
         self.type_ = type_
         self.default = default
         self.name = name
+        self.owner = None
         self.default = default
 
         self.__doc__ = doc or ''
@@ -19,61 +23,90 @@ class Field:
             # yes, this is the right way round; think about it
             self.__doc__ += ' or None'
 
+    def __set_name__(self, owner, name):
+        self.owner = owner
+        if self.name is None:
+            self.name = name.replace('_', '-')
+
     def __get__(self, obj, obj_type=None):
         raise NotImplementedError()
 
     def __set__(self, obj, value):
         raise NotImplementedError()
 
-    def __call__(self):
-        pass
-
     def __str__(self):
 
-        result = f'[{self.__class__.__name__} {self.name} '
+        result = f'[{self.__class__.__name__}'
 
-        result += '%20s' % (self.type_,)
+        result += '%20s of %20s (%20s)' % (
+                self.name,
+                self.owner.__name__,
+                self.type_,)
 
         result += ']'
 
         return result
 
-    @classmethod
-    def tag_for_obj(cls, obj):
-        return object.__getattribute__(obj, '_tag')
-
     __repr__ = __str__
 
-class TagAttributeField(Field):
+class TagAttrField(Field):
+
+    def __init__(self,
+                 *args,
+                 type_override = None,
+                 **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.type_override = type_override or self.type_
+        assert self.type_override.__module__=='builtins', self.type_override
 
     def __get__(self, obj, obj_type=None):
-        value = self.tag_for_obj(obj).get(self.name, None)
+
+        if self.name not in obj._tag.attrs:
+            logger.debug("no %s field; returning default: %s",
+                         self.name,
+                         self.default,
+                         )
+            return self.default
+
+        value = obj._tag.get(self.name)
+        logger.debug("%s field is %s",
+                     self.name,
+                     value,
+                     )
 
         if value is None:
             return None
-        elif issubclass(self.type_, bool):
+        elif issubclass(self.type_override, bool):
             return str(value).lower()=='true'
         else:
-            return self.type_(value)
+            return self.type_override(value)
 
     def __set__(self, obj, value):
-        if issubclass(self.type_, bool):
+        if issubclass(self.type_override, bool):
             if value:
                 value = 'true'
             else:
                 value = 'false'
         else:
-            value = self.type_(value)
+            value = self.type_override(value)
 
-        self.tag_for_obj(obj)[self.name] = value
+        obj._tag[self.name] = value
 
-class ParamField(Field):
+class ParamTagField(Field):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        assert self.type_.__module__!='builtins', self.type_
+
     def __get__(self, obj, obj_type=None):
-        holder = self.tag_for_obj(obj).find('param',
-                                            attrs={
-                                                'name': self.name,
-                                                },
-                                            )
+        print("9100", self.name, obj)
+        holder = obj._tag.find('param',
+                               attrs={
+                                   'name': self.name,
+                                   },
+                               )
         contents = [t for t in holder.children
                     if isinstance(t, bs4.Tag)]
         assert len(contents)==1
@@ -96,26 +129,22 @@ class TagField(Field):
                 )
  
     def __get__(self, obj, obj_type=None):
-        print("9201", type(obj))
-        result = self.tag_for_obj(obj)
-        print("9209", result)
-        return
-
+        return obj._tag
 
     def __set__(self, obj, value):
         raise KeyError("You can't put a different tag into an object.")
 
 class NamedChildField(Field):
-    def __init__(self, name, type_, default, doc=None):
+    def __init__(self, type_, default, name=None, doc=None):
         super().__init__(
-                name = name,
                 type_ = type_,
                 default = default,
+                name = name,
                 doc = doc,
                 )
 
     def get_subtag_for_obj(self, obj):
-        return self.tag_for_obj(obj).find(self.name)
+        return obj._tag.find(self.name)
  
     def __get__(self, obj, obj_type=None):
 
@@ -133,16 +162,12 @@ class NamedChildField(Field):
         subtag = self.get_subtag_for_obj(obj)
 
         subtag.string = value
+"""
 
 class _FieldsDict(dict):
     pass
 
 class _MetaclassWithFields(type):
-    """9000
-    def __new__(cls, name, bases, dct):
-        result = super().__new__(cls, name, bases, dct)
-        return result
-        """
 
     def __dir__(self):
         result = super().__dir__()
@@ -182,3 +207,4 @@ def field(*args, **kwargs):
         return layer_class
 
     return _inner
+    """

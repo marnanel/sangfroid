@@ -10,6 +10,7 @@ GZIP_HEADER = b'\x1f\x8b'
 def test_animation_load_sif():
     sif = get_animation('circles.sif')
 
+    assert sif.tag is not None
     assert sif.name == 'Circles'
     assert sif.desc == 'I like circles. They are round.'
     assert sif.size == (480, 270)

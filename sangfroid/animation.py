@@ -1,6 +1,6 @@
 from sangfroid.keyframe import Keyframe
 from sangfroid.layer import (
-        Group, Field, field, NamedChildField, TagField,
+        Group, Field, TagAttrField, NamedChildField, TagField,
         )
 from sangfroid.format import Format, Blank
 from sangfroid.value.color import Color
@@ -8,63 +8,31 @@ from sangfroid.t import T
 import bs4
 import sangfroid.value as v
 
-@field('version',          float,       1.2)
-@field('width',            int,         480)
-@field('height',           int,         270)
-@field('xres',             float,       2834.645669)
-@field('yres',             float,       2834.645669)
-@field('gamma-r',          float,       1.0)
-@field('gamma-g',          float,       1.0)
-@field('gamma-b',          float,       1.0)
-@field('view-box',         str, '-4.0 2.25 4.0 -2.25') # XXX wrong
-@field('antialias',        int,         1) # XXX enum?
-@field('fps',              float,       24.0,
-    doc = """
-        The number of frames per second. Usually 24.
+class MetadataTagField(Field):
+    pass
 
-        (Can this be non-integer?)""",
-       )
-@field('begin-time',       T,           0,
-       doc = """
-        The time at which this animation starts.
+class TagTimeAttrField(TagAttrField):
+    def __init__(self,
+                 default,
+                 **kwargs,
+                 ):
+        super().__init__(
+                type_ = T,
+                default = default,
+                type_override = str,
+                **kwargs,
+                )
 
-        Almost always zero.""",
-       )
-@field('end-time',         T,           '5s',
-        doc = 'The time at which this animation ends.',
-       )
-@field('active',           bool,        True)
-@field('bgcolor',          str,         '0.5 0.5 0.5 1.0')
+    def __get__(self, obj, obj_type=None):
+        s = super().__get__(obj, obj_type)
 
-@field('background_first_color',  v.Color, (0.88, 0.88, 0.88))
-@field('background_rendering',    v.Integer, 0)
-@field('background_second_color', v.Color, (0.65, 0.65, 0.65))
-@field('background_size',         v.Dimensions,     (15.0, 15.0))
-@field('grid_color',              v.Color, (0.623529, 0.623529, 0.623529))
-@field('grid_show',               v.Integer, 0)
-@field('grid_size',               v.Dimensions, (0.25, 0.25))
-@field('grid_snap',               v.Integer, 0)
-@field('guide_color',             v.Color, (0.435294, 0.435294, 1.09))
-@field('guide_show',              v.Integer, 1)
-@field('guide_snap',              v.Integer, 0)
-@field('jack_offset',             v.Real, 0.0)
-@field('onion_skin',              v.Integer, 0)
-@field('onion_skin_future',       v.Integer, 0)
-@field('onion_skin_keyframes',    v.Integer, 1)
-@field('onion_skin_past',         v.Integer, 1)
+        if s is None:
+            return None
 
-@field(NamedChildField('name', type_=str, doc = """
-The name of this animation.
+        return T(s,
+                 reference_tag = obj._tag,
+                 )
 
-Not the filename, though it's often the same.
-""", default='Not yet named'))
-
-@field(NamedChildField('desc', type_=str, doc = """
-A description of this animation.
-
-So you know what it is when you find it again next year.
-""", default='Animation'))
-@field(TagField())
 class Animation(Group):
     """
     A Synfig animation.
@@ -73,6 +41,65 @@ class Animation(Group):
     called a "canvas". At first we called it "Sif", but that was
     no good, because it might be loaded from a `.sifz` or `.sfg` file.
     """
+
+    version = TagAttrField(float,       1.2)
+    width = TagAttrField(int,         480)
+    height = TagAttrField(int,         270)
+    xres = TagAttrField(float,       2834.645669)
+    yres = TagAttrField(float,       2834.645669)
+    gamma_r = TagAttrField(float,       1.0)
+    gamma_g = TagAttrField(float,       1.0)
+    gamma_b = TagAttrField(float,       1.0)
+    view_box = TagAttrField(str, '-4.0 2.25 4.0 -2.25') # XXX wrong
+    antialias = TagAttrField(int,         1) # XXX enum?
+    fps = TagAttrField(float,       24.0,
+        doc = """
+            The number of frames per second. Usually 24.
+
+            (Can this be non-integer?)""",
+           )
+    begin_time = TagTimeAttrField(0,
+           doc = """
+            The time at which this animation starts.
+
+            Almost always zero.""",
+           )
+    end_time = TagTimeAttrField('5s',
+            doc = 'The time at which this animation ends.',
+           )
+    active = TagAttrField(bool,        True)
+    bgcolor = TagAttrField(str,         '0.5 0.5 0.5 1.0')
+
+    background_first_color = MetadataTagField(v.Color, (0.88, 0.88, 0.88))
+    background_rendering = MetadataTagField(v.Integer, 0)
+    background_second_color = MetadataTagField(v.Color, (0.65, 0.65, 0.65))
+    background_size = MetadataTagField(v.Dimensions,     (15.0, 15.0))
+    grid_color = MetadataTagField(v.Color, (0.623529, 0.623529, 0.623529))
+    grid_show = MetadataTagField(v.Integer, 0)
+    grid_size = MetadataTagField(v.Dimensions, (0.25, 0.25))
+    grid_snap = MetadataTagField(v.Integer, 0)
+    guide_color = MetadataTagField(v.Color, (0.435294, 0.435294, 1.09))
+    guide_show = MetadataTagField(v.Integer, 1)
+    guide_snap = MetadataTagField(v.Integer, 0)
+    jack_offset = MetadataTagField(v.Real, 0.0)
+    onion_skin = MetadataTagField(v.Integer, 0)
+    onion_skin_future = MetadataTagField(v.Integer, 0)
+    onion_skin_keyframes = MetadataTagField(v.Integer, 1)
+    onion_skin_past = MetadataTagField(v.Integer, 1)
+
+    name = NamedChildField(str, doc = """
+    The name of this animation.
+
+    Not the filename, though it's often the same.
+    """, default='Not yet named')
+
+    desc = NamedChildField(str, doc = """
+    A description of this animation.
+
+    So you know what it is when you find it again next year.
+    """, default='Animation')
+
+    tag = TagField()
 
     def __init__(self, filename:str=None):
         """
@@ -187,7 +214,6 @@ class Animation(Group):
         Type:
             int
         """
-        print(T(-1, reference_tag=self._tag))
         return int(T(-1, reference_tag=self._tag).frames)+1
 
     @property
