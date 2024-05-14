@@ -1,7 +1,10 @@
 import os
+import logging
 import sangfroid
 import tempfile
 import bs4
+
+logger = logging.getLogger('sangfroid.test')
 
 def get_animation(name):
     filename = os.path.join(

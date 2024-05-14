@@ -162,6 +162,7 @@ def test_layer_find():
 def test_layer_item_get():
     sif = get_animation('circles.sif')
     green_circle = sif.find(desc='Green circle')
+    logger.debug("dir(%s) == %s", green_circle, dir(green_circle))
     assert green_circle.radius == 0.5055338531
 
     try:
