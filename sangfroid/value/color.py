@@ -99,3 +99,6 @@ class Color(Value):
             dimension_tag = bs4.element.Tag(name=dimension)
             dimension_tag.string = '%.06f' % (result[i],)
             self._tag.append(dimension_tag)
+
+    def as_python_expression(self):
+        return self.as_tuple()

@@ -1,0 +1,167 @@
+{
+    "Advanced_Outline": {
+        "symbol": "⬡"
+    },
+    "Bevel": {
+        "symbol": "🫴"
+    },
+    "Blur": {
+        "symbol": "🟠"
+    },
+    "Checker_Board": {
+        "symbol": "♞"
+    },
+    "Chromakey": {
+        "symbol": "🔑"
+    },
+    "Circle": {
+        "symbol": "🔵"
+    },
+    "Clamp": {
+        "symbol": "🗜️"
+    },
+    "Colorcorrect": {
+        "symbol": "👍"
+    },
+    "Conical_Gradient": {
+        "symbol": "X"
+    },
+    "Curve_Gradient": {
+        "symbol": "X"
+    },
+    "Curve_Warp": {
+        "symbol": "X"
+    },
+    "Duplicate": {
+        "symbol": "♊"
+    },
+    "Filter_Group": {
+        "symbol": "🫘"
+    },
+    "Freetime": {
+        "symbol": "🍦"
+    },
+    "Group": {
+        "symbol": "📂"
+    },
+    "Halftone2": {
+        "symbol": "▒"
+    },
+    "Halftone3": {
+        "symbol": "▓"
+    },
+    "Import": {
+        "symbol": "🖼️"
+    },
+    "Inside_Out": {
+        "symbol": "🙋🏽"
+    },
+    "Julia": {
+        "symbol": "🎨"
+    },
+    "Linear_Gradient": {
+        "symbol": "X"
+    },
+    "Lumakey": {
+        "symbol": "🗝️"
+    },
+    "Mandelbrot": {
+        "symbol": "🦋"
+    },
+    "Metaballs": {
+        "symbol": "X"
+    },
+    "Motion_Blur": {
+        "symbol": "🟠"
+    },
+    "Noise": {
+        "symbol": "🕫"
+    },
+    "Noise_Distort": {
+        "symbol": "🕬"
+    },
+    "Outline": {
+        "symbol": "⭔"
+    },
+    "Plant": {
+        "symbol": "🪴"
+    },
+    "Polygon": {
+        "symbol": "⭓"
+    },
+    "Radial_Blur": {
+        "symbol": "🟠"
+    },
+    "Radial_Gradient": {
+        "symbol": "X"
+    },
+    "Rectangle": {
+        "symbol": "🟦"
+    },
+    "Region": {
+        "symbol": "🟤"
+    },
+    "Rotate": {
+        "symbol": "?"
+    },
+    "Scale": {
+        "symbol": "⚖️"
+    },
+    "Shade": {
+        "symbol": "👓"
+    },
+    "Simple_Circle": {
+        "symbol": "X"
+    },
+    "Skeleton": {
+        "symbol": "💀"
+    },
+    "Skeleton_Deformation": {
+        "symbol": "🩻"
+    },
+    "Solid_Color": {
+        "symbol": "▊"
+    },
+    "Sound": {
+        "symbol": "🔊"
+    },
+    "Spherize": {
+        "symbol": "X"
+    },
+    "Spiral_Gradient": {
+        "symbol": "X"
+    },
+    "Star": {
+        "symbol": "⭐"
+    },
+    "Stretch": {
+        "symbol": "X"
+    },
+    "Stroboscope": {
+        "symbol": "🔦"
+    },
+    "Super_Sample": {
+        "symbol": "X"
+    },
+    "Switch": {
+        "symbol": "X"
+    },
+    "Text": {
+        "symbol": "𝕋"
+    },
+    "Timeloop": {
+        "symbol": "🕰️"
+    },
+    "Translate": {
+        "symbol": "⇄"
+    },
+    "Twirl": {
+        "symbol": "🍫"
+    },
+    "Warp": {
+        "symbol": "🚀"
+    },
+    "Xor_Pattern": {
+        "symbol": "X"
+    }
+}

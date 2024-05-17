@@ -1,25 +1,32 @@
 import bs4
+import json
+import sangfroid.value as sv
 
 # XXX
 #  Still to do:
-#    - Read default types out of pick-and-mix (will need
-#       s.v.Value subclasses)
-#       -- this will involve writing s.v.Value subclasses
-#           for the weirder ones
-#    - Add list of known layer types.
-#       -- it should include their existing symbols.
+#    - Document all this
 #    - Find out about enums by checking through Synfig source
+#          See especially
+#           synfig-core/src/synfig/paramdesc.cpp
+#          and
+#           synfig-core/src/synfig/paramdesc.h
 
 OVERRIDES = {
         ('duplicate', 'index'): 'DuplicatesIndexField(None)',
         ('halftone3', 'tone'): 'ParamArrayField(v.Tone)',
 }
 
+DEFAULT_SYMBOL = '?'
+
 def tag_children(t):
     result = [p for p in t.children if isinstance(p, bs4.Tag)]
     return result
 
 def main():
+    
+    with open('etc/layer-details.json', 'r') as f:
+        layer_details = json.load(f)
+
     with open('test/pick-and-mix.sif', 'r') as f:
         soup = bs4.BeautifulSoup(
                 f,
@@ -37,54 +44,81 @@ def main():
         if result:
             result += '\n'
 
+        classname = layer['type'].title()
+        details = layer_details.get(classname, None)
+        if details:
+            symbol = details.get('symbol', DEFAULT_SYMBOL)
+        else:
+            symbol = DEFAULT_SYMBOL
+
         result += '@Layer.handles_type()\n'
         result += f'class {layer["type"].title()}(Layer):\n'
         result += '\n'
 
-        result += f'    SYNFIG_VERSION = {layer["version"]}\n'
+        result += f'    SYNFIG_VERSION = "{layer["version"]}"\n'
+        result += f'    SYMBOL = {repr(symbol)}\n'
         result += '\n'
 
         params = {}
 
         for param in layer.find_all('param'):
 
-            param_name = param['name']
+            paramname = param['name']
             is_array = False
 
-            if '[' in param_name:
-                if '[0]' not in param_name:
+            if '[' in paramname:
+                if '[0]' not in paramname:
                     continue
-                param_name = param_name.split('[')[0]
+                paramname = paramname.split('[')[0]
                 is_array = True
 
-            override = (layer['type'], param_name)
+            override = (layer['type'], paramname)
             if override in OVERRIDES:
-                params[param_name] = OVERRIDES[override]
+                params[paramname] = OVERRIDES[override]
 
                 continue
 
             c = tag_children(param)
 
-            if c==[] and param_name=='index':
+            if c==[] and paramname=='index':
                 params['index'] = 'DuplicatesIndexField(None)'
-            elif len(c)==1:
-                typename = c[0].name.title()
+                continue
+            elif len(c)>1:
+                raise ValueError(f"{paramname} has a strange number of children: {c}")
 
-                if typename=='Vector':
-                    partnames = sorted([p.name for p in tag_children(c[0])])
-                    if partnames==['x', 'y']:
-                        typename = 'X_Y'
-                elif typename=='Composite':
-                    partnames = sorted([p.name for p in tag_children(c[0])])
-                    if partnames==['angle', 'offset', 'scale', 'skew_angle']:
-                        typename = 'Transformation'
+            value_tag = c[0]
 
+            typename = value_tag.name.title()
+
+            if typename=='Vector':
+                partnames = sorted([p.name for p in tag_children(value_tag)])
+                if partnames==['x', 'y']:
+                    typename = 'X_Y'
+            elif typename=='Composite':
+                partnames = sorted([p.name for p in tag_children(value_tag)])
+                if partnames==['angle', 'offset', 'scale', 'skew_angle']:
+                    typename = 'Transformation'
+
+            try:
+                cls = getattr(sv, typename)
+            except AttributeError as ae:
+                raise ValueError(
+                        f'the layer class {classname} '
+                        f'has a param named {paramname} '
+                        f'of type {typename}, but that doesn\'t '
+                        'appear to exist within synfig.value:\n'
+                        f'{ae}')
+                return
+
+            try:
+                value = cls.from_tag(value_tag).as_python_expression()
                 if is_array:
-                    params[param_name] = f'ParamArrayField(v.{typename})'
+                    params[paramname] = f'ParamArrayField(v.{typename}, {value})'
                 else:
-                    params[param_name] = f'ParamTagField(v.{typename}, XXX)'
-            else:
-                raise ValueError(f"{param_name} has a strange number of children: {c}")
+                    params[paramname] = f'ParamTagField(v.{typename}, {value})'
+            except NotImplementedError:
+                params[paramname] = 'None'
+                result += '    raise NotImplementedError()\n'
 
         for left, right in params.items():
             result += f'    {left:20} = {right}\n'
@@ -92,4 +126,7 @@ def main():
     print(result)
 
 if __name__=='__main__':
-    main()
+    try:
+        main()
+    except ValueError as ve:
+        print(f'Error: {ve}')

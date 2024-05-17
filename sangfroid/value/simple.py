@@ -80,6 +80,10 @@ class Angle(Simple):
     def _str_inner(self):
         return '%g°' % (self.value,)
 
+    def as_python_expression(self):
+        v = self.value
+        return str(v)
+
 @Value.handles_type()
 class Time(Simple):
     our_type = T
@@ -89,3 +93,11 @@ class Time(Simple):
                 v,
                 reference_tag = self._tag,
                 )
+
+    def as_python_expression(self):
+        v = self.value
+
+        if v==0:
+            return 0
+        else:
+            return repr(v)

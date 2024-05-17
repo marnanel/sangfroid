@@ -30,14 +30,14 @@ class Layer:
     z_depth          = ParamTagField(v.Real,      0.0)
     amount           = ParamTagField(v.Real,      1.0)
     blend_method     = ParamTagField(v.Integer,     0) # XXX ??
-    origin           = ParamTagField(v.XY,        (0.0, 0.0))
+    origin           = ParamTagField(v.X_Y,       (0.0, 0.0))
     """
     transformation   = ParamTagField(v.Transformation,
                               {
-                                  offset v.XY, (0.0, 0.0)),
+                                  offset v.X_Y, (0.0, 0.0)),
                                   angle v.Angle, 0.0),
                                   skew_angle v.Angle, 0.0),
-                                  scale v.XY, (0.0, 0.0)),
+                                  scale v.X_Y, (0.0, 0.0)),
                                   })
     """
     canvas           = ParamTagField(v.Canvas,    None)

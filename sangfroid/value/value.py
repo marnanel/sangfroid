@@ -204,6 +204,15 @@ class Value:
 
         return self.value == other
 
+    def as_python_expression(self):
+        """
+        A Python expression which could be passed to the constructor
+        of this class in order to recreate this value.
+
+        Used by `etc/pick-and-mix-to-layers.py`.
+        """
+        return str(self)
+
     ########################
 
     # Factories, and setup for factories

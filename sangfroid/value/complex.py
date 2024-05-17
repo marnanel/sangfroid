@@ -121,7 +121,7 @@ class Vector(Value):
         for v in self.values():
             yield v
 
-class XY(Vector):
+class X_Y(Vector):
     pass
 class Dimensions(Vector):
     pass
