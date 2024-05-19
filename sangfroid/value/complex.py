@@ -128,6 +128,9 @@ class Dimensions(Vector):
 
 @Value.handles_type()
 class Composite(Value):
+
+    REQUIRED_KEYS = None
+
     @property
     def value(self):
         def name_and_value(n):
@@ -149,11 +152,16 @@ class Composite(Value):
 
             return name, value
 
-        return dict(
+        result = dict(
                 [name_and_value(field)
                  for field in self._tag.children
                  if isinstance(field, bs4.element.Tag)
                  ])
+
+        if self.REQUIRED_KEYS is not None:
+            assert keys(result)==self.REQUIRED_KEYS
+
+        return result
 
     def __getattr__(self, key):
         result = self.get(key, default=None)
@@ -225,5 +233,23 @@ class Composite(Value):
 
         return True
 
+    def as_python_expression(self):
+        value = self.value
+
+        result = '{\n'
+        for f,v in value.items():
+            result += '     %40s: %s,\n' % (
+                    repr(f),
+                    v.as_python_expression(),
+                    )
+        result += (' '*36) + '}'
+
+        return result
+
 class Transformation(Composite):
-    pass
+    REQUIRED_KEYS = {
+            'offset',
+            'angle',
+            'skew_angle',
+            'scale',
+            }

@@ -1,6 +1,7 @@
 import bs4
 import json
 import sangfroid.value as sv
+import sangfroid
 
 # XXX
 #  Still to do:
@@ -88,16 +89,19 @@ def main():
 
             value_tag = c[0]
 
-            typename = value_tag.name.title()
+            if paramname=='blend_method':
+                typename = 'BlendMethod'
+            else:
+                typename = value_tag.name.title()
 
-            if typename=='Vector':
-                partnames = sorted([p.name for p in tag_children(value_tag)])
-                if partnames==['x', 'y']:
-                    typename = 'X_Y'
-            elif typename=='Composite':
-                partnames = sorted([p.name for p in tag_children(value_tag)])
-                if partnames==['angle', 'offset', 'scale', 'skew_angle']:
-                    typename = 'Transformation'
+                if typename=='Vector':
+                    partnames = sorted([p.name for p in tag_children(value_tag)])
+                    if partnames==['x', 'y']:
+                        typename = 'X_Y'
+                elif typename=='Composite':
+                    partnames = sorted([p.name for p in tag_children(value_tag)])
+                    if partnames==sorted(sangfroid.value.Transformation.REQUIRED_KEYS):
+                        typename = 'Transformation'
 
             try:
                 cls = getattr(sv, typename)

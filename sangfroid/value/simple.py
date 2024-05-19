@@ -100,4 +100,4 @@ class Time(Simple):
         if v==0:
             return 0
         else:
-            return repr(v)
+            return repr(str(v))

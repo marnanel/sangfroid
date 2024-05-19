@@ -14,3 +14,6 @@ class String(Value):
     @value.setter
     def value(self, v):
         self._tag.string = str(v)
+
+    def as_python_expression(self):
+        return repr(self.value)
