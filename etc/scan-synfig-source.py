@@ -6,6 +6,11 @@ import re
 
 BLEND_ENUM_RE = re.compile(r'BLEND_([A-Z_]+)=(\d+)')
 
+DO_NOT_EDIT = (
+        '#### GENERATED CODE #### DO NOT EDIT ####\n'
+        f'# Produced by {os.path.basename(__file__)}\n\n'
+        )
+
 def parse_args():
     parser = argparse.ArgumentParser(
             description='convert details in Synfig sources to Python')
@@ -14,6 +19,17 @@ def parse_args():
             help='location of sources')
     args = parser.parse_args()
     return args
+
+def write_to(filename, text):
+    filename = os.path.join('sangfroid', filename)
+    temp_filename = filename+'.1'
+
+    text = DO_NOT_EDIT+text
+
+    with open(temp_filename, 'w') as f:
+        f.write(text)
+    os.rename(temp_filename, filename)
+    print("Written:", filename)
 
 def main():
     args = parse_args()
@@ -30,10 +46,10 @@ def main():
         for line in f:
             m = BLEND_ENUM_RE.search(line)
             if m:
-                name = m[1].replace('_', ' ').title()
+                name = m[1]
                 val = int(m[2])
 
-                if name in ('End', 'By Layer'):
+                if name in ('END', 'BY_LAYER'):
                     continue
 
                 blend_methods[val] = name
@@ -42,7 +58,17 @@ def main():
         assert i in blend_methods
 
     blend_methods = [v for f,v in sorted(blend_methods.items())]
-    print(blend_methods)
+
+    result = ''
+    result +=  'class BlendMethod(Enum):\n'
+
+    for i,v in enumerate(blend_methods):
+        result += f'    {v} = {i}\n'
+
+    write_to(
+            filename='layer/blendmethod.py',
+            text=result,
+            )
 
 if __name__=='__main__':
     main()

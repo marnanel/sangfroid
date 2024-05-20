@@ -6,11 +6,6 @@ import sangfroid
 # XXX
 #  Still to do:
 #    - Document all this
-#    - Find out about enums by checking through Synfig source
-#          See especially
-#           synfig-core/src/synfig/paramdesc.cpp
-#          and
-#           synfig-core/src/synfig/paramdesc.h
 
 OVERRIDES = {
         ('duplicate', 'index'): 'DuplicatesIndexField(None)',
