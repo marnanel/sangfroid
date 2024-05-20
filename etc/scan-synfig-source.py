@@ -66,7 +66,7 @@ def main():
         result += f'    {v} = {i}\n'
 
     write_to(
-            filename='layer/blendmethod.py',
+            filename='value/blendmethod.py',
             text=result,
             )
 
