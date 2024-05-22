@@ -4,6 +4,8 @@ import sangfroid.value as v
 @Layer.handles_type()
 class Text(Layer):
     SYMBOL = '𝕋'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -23,6 +25,7 @@ class Text(Layer):
         "grid_fit": v.Bool,
         "invert": v.Bool,
     }
+    ### }}}
 
     @property
     def text(self):

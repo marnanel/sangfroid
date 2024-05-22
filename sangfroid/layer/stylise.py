@@ -4,6 +4,8 @@ import sangfroid.value as v
 @Layer.handles_type()
 class Shade(Layer):
     SYMBOL = '👓'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -14,10 +16,13 @@ class Shade(Layer):
         "type": v.Integer,
         "invert": v.Bool,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Bevel(Layer):
     SYMBOL = '🫴'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -32,5 +37,4 @@ class Bevel(Layer):
         "solid": v.Bool,
         "fake_origin": v.Vector,
     }
-
-
+    ### }}}

@@ -4,6 +4,7 @@ import sangfroid.value as v
 @Layer.handles_type()
 class Import(Layer):
     SYMBOL = 'I'
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -11,3 +12,4 @@ class Import(Layer):
         "size": v.Vector,
         "transformation": v.Composite,
     }
+    ### }}}

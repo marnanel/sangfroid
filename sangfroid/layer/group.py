@@ -5,6 +5,8 @@ import bs4
 @Layer.handles_type()
 class Group(Layer):
     SYMBOL = '📂'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -21,6 +23,7 @@ class Group(Layer):
         "z_range_depth": v.Real,
         "z_range_blur": v.Real,
     }
+    ### }}}
 
     def _get_children(self,
                  include_descendants = False,

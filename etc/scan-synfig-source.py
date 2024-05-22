@@ -1,15 +1,9 @@
 import argparse
 import os
 import re
-
-# synfig-core/src/synfig/paramdesc.cpp
+from sangfroid.template.replacer import Replacer
 
 BLEND_ENUM_RE = re.compile(r'BLEND_([A-Z_]+)=(\d+)')
-
-DO_NOT_EDIT = (
-        '#### GENERATED CODE #### DO NOT EDIT ####\n'
-        f'# Produced by {os.path.basename(__file__)}\n\n'
-        )
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -19,17 +13,6 @@ def parse_args():
             help='location of sources')
     args = parser.parse_args()
     return args
-
-def write_to(filename, text):
-    filename = os.path.join('sangfroid', filename)
-    temp_filename = filename+'.1'
-
-    text = DO_NOT_EDIT+text
-
-    with open(temp_filename, 'w') as f:
-        f.write(text)
-    os.rename(temp_filename, filename)
-    print("Written:", filename)
 
 def main():
     args = parse_args()
@@ -41,6 +24,7 @@ def main():
     core_dirname = os.path.join(args.src, 'synfig-core', 'src', 'synfig')
 
     blend_methods = {}
+    replacer = Replacer()
 
     with open(os.path.join(core_dirname, 'color', 'color.h'), 'r') as f:
         for line in f:
@@ -59,16 +43,14 @@ def main():
 
     blend_methods = [v for f,v in sorted(blend_methods.items())]
 
-    result = ''
-    result +=  'class BlendMethod(Enum):\n'
+    result = '\n'
 
     for i,v in enumerate(blend_methods):
-        result += f'    {v} = {i}\n'
+        result += f'{v} = {i}\n'
 
-    write_to(
-            filename='value/blendmethod.py',
-            text=result,
-            )
+    replacer.add('BlendMethod', result)
+    replacer.handle_all_files()
+    replacer.check_everything_was_seen()
 
 if __name__=='__main__':
     main()

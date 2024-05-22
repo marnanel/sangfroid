@@ -1,7 +1,8 @@
-#### GENERATED CODE #### DO NOT EDIT ####
-# Produced by scan-synfig-source.py
+from enum import Enum
 
 class BlendMethod(Enum):
+    ### {{{
+
     COMPOSITE = 0
     STRAIGHT = 1
     BRIGHTEN = 2
@@ -26,3 +27,5 @@ class BlendMethod(Enum):
     STRAIGHT_ONTO = 21
     ADD_COMPOSITE = 22
     ALPHA = 23
+    
+    ### }}}

@@ -4,6 +4,8 @@ import sangfroid.value as v
 @Layer.handles_type()
 class Star(Layer):
     SYMBOL = '⭐'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -21,20 +23,26 @@ class Star(Layer):
         "points": v.Integer,
         "regular_polygon": v.Bool,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Solid_Color(Layer):
     SYMBOL = '▊'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
         "blend_method": v.Integer,
         "color": v.Color,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Region(Layer):
     SYMBOL = '🟤'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -48,10 +56,13 @@ class Region(Layer):
         "winding_style": v.Integer,
         "bline": v.Bline,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Rectangle(Layer):
     SYMBOL = '🟦'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -66,10 +77,13 @@ class Rectangle(Layer):
         "bevel": v.Real,
         "bevCircle": v.Bool,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Polygon(Layer):
     SYMBOL = '⭓'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -83,10 +97,13 @@ class Polygon(Layer):
         "winding_style": v.Integer,
         "vector_list": v.Dynamic_List,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Outline(Layer):
     SYMBOL = '⭔'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -123,10 +140,13 @@ class Outline(Layer):
         "round_tip[1]": v.Bool,
         "homogeneous_width": v.Bool,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Circle(Layer):
     SYMBOL = '🔵'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -137,10 +157,13 @@ class Circle(Layer):
         "origin": v.Vector,
         "invert": v.Bool,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Checker_Board(Layer):
     SYMBOL = '🙾'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -150,10 +173,13 @@ class Checker_Board(Layer):
         "size": v.Vector,
         "antialias": v.Bool,
     }
+    ### }}}
 
 @Layer.handles_type()
 class Advanced_Outline(Layer):
     SYMBOL = '⬡'
+
+    ### {{{
     PARAMS = {
         "z_depth": v.Real,
         "amount": v.Real,
@@ -178,3 +204,4 @@ class Advanced_Outline(Layer):
         "dilist": v.Dilist,
         "dash_offset": v.Real,
     }
+    ### }}}

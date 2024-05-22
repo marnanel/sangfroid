@@ -101,7 +101,6 @@ class ParamTagField(Field):
         assert self.type_.__module__!='builtins', self.type_
 
     def __get__(self, obj, obj_type=None):
-        print("9100", self.name, obj)
         holder = obj._tag.find('param',
                                attrs={
                                    'name': self.name,

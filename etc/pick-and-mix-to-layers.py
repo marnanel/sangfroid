@@ -2,6 +2,8 @@ import bs4
 import json
 import sangfroid.value as sv
 import sangfroid
+from sangfroid.template.template import Replacer
+from sangfroid.value.blendmethod import BlendMethod
 
 # XXX
 #  Still to do:
@@ -29,7 +31,11 @@ def main():
                 features = 'xml',
                 )
 
-    result = ''
+    result = (
+            'from sangfroid.layer.layer import Layer\n'
+            'import sangfroid.layer.field as f\n'
+            'import sangfroid.value as v\n'
+            )
     types_done = set()
 
     for layer in soup.find_all('layer'):
@@ -37,8 +43,7 @@ def main():
             continue
         types_done.add(layer['type'])
 
-        if result:
-            result += '\n'
+        result += '\n'
 
         classname = layer['type'].title()
         details = layer_details.get(classname, None)
@@ -111,10 +116,12 @@ def main():
 
             try:
                 value = cls.from_tag(value_tag).as_python_expression()
-                if is_array:
-                    params[paramname] = f'ParamArrayField(v.{typename}, {value})'
+                if paramname=='blend_method':
+                    params[paramname] = f'f.BlendMethodField(v.{BlendMethod(int(value))})'
+                elif is_array:
+                    params[paramname] = f'f.ParamArrayField(v.{typename}, {value})'
                 else:
-                    params[paramname] = f'ParamTagField(v.{typename}, {value})'
+                    params[paramname] = f'f.ParamTagField(v.{typename}, {value})'
             except NotImplementedError:
                 params[paramname] = 'None'
                 result += '    raise NotImplementedError()\n'

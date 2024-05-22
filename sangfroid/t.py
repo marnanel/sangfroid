@@ -71,7 +71,6 @@ class T:
             reference_tag = None,
             ):
 
-        print("9000", value, reference_tag)
  
         if reference_tag is None:
             self._fps = None
