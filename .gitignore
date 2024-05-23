@@ -4,3 +4,4 @@ __pycache__
 /dist/
 /sangfroid.egg-info/
 venv
+/synfig

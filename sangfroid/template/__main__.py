@@ -1,8 +1,9 @@
 import bs4
 import json
+import argparse
 import sangfroid.value as sv
 import sangfroid
-from sangfroid.template.template import Replacer
+from sangfroid.template.replacer import Replacer
 from sangfroid.value.blendmethod import BlendMethod
 
 # XXX
@@ -16,26 +17,40 @@ OVERRIDES = {
 
 DEFAULT_SYMBOL = '?'
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+            description=(
+                'convert external things, such as Synfig '
+                'sources, to Python code'),
+            )
+    parser.add_argument(
+            '--synfig', type=str,
+            default=None,
+            help='location of Synfig repo')
+    args = parser.parse_args()
+    return args
+
 def tag_children(t):
     result = [p for p in t.children if isinstance(p, bs4.Tag)]
     return result
 
 def main():
-    
-    with open('etc/layer-details.json', 'r') as f:
-        layer_details = json.load(f)
 
+    args = parse_args()
+    if args.synfig:
+        raise ValueError("Still need to merge in the Synfig-checking code")
+    
+    scan_pick_and_mix()
+
+def scan_pick_and_mix():
     with open('test/pick-and-mix.sif', 'r') as f:
         soup = bs4.BeautifulSoup(
                 f,
                 features = 'xml',
                 )
 
-    result = (
-            'from sangfroid.layer.layer import Layer\n'
-            'import sangfroid.layer.field as f\n'
-            'import sangfroid.value as v\n'
-            )
+    replacer = Replacer()
+
     types_done = set()
 
     for layer in soup.find_all('layer'):
@@ -43,21 +58,11 @@ def main():
             continue
         types_done.add(layer['type'])
 
-        result += '\n'
+        result = ''
 
         classname = layer['type'].title()
-        details = layer_details.get(classname, None)
-        if details:
-            symbol = details.get('symbol', DEFAULT_SYMBOL)
-        else:
-            symbol = DEFAULT_SYMBOL
 
-        result += '@Layer.handles_type()\n'
-        result += f'class {layer["type"].title()}(Layer):\n'
-        result += '\n'
-
-        result += f'    SYNFIG_VERSION = "{layer["version"]}"\n'
-        result += f'    SYMBOL = {repr(symbol)}\n'
+        result += f'SYNFIG_VERSION = "{layer["version"]}"\n'
         result += '\n'
 
         params = {}
@@ -127,9 +132,12 @@ def main():
                 result += '    raise NotImplementedError()\n'
 
         for left, right in params.items():
-            result += f'    {left:20} = {right}\n'
+            result += f'{left:20} = {right}\n'
 
-    print(result)
+        replacer.add(classname, result)
+
+    replacer.handle_all_files()
+    replacer.check_everything_was_seen()
 
 if __name__=='__main__':
     try:

@@ -72,9 +72,13 @@ class Replacer:
                         ignore = False
 
                     else:
-                        result += ('\n'+(' '*current_indent)).join(
+                        indent_s = ' '*current_indent
+                        next_lines = [
+                                (indent_s+line).rstrip()
+                                for line in
                                 self.fields[current_block_name].split('\n')
-                                )
+                                ]
+                        result += '\n'.join(next_lines)
                         ignore = True
                         changed = True
                     continue
