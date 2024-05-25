@@ -84,16 +84,21 @@ class NotImplementedField(Field):
     You're welcome to load or save the layer, but attempting
     to access the value within Python will throw
     NotImplementedError.
+
+    Attributes:
+        typename (str): the name of the type which doesn't exist.
     """
-    def __init__(self, type_):
+    def __init__(self, typename):
         super().__init__(
-                type_ = type_,
+                type_ = str,
                 default = None,
                 )
+        self.typename = typename
 
     def _throw_not_implemented(self):
-        raise ValueError(
-                f"The type f{self.type_} hasn't been "
+        raise NotImplementedError(
+                f"The type {self.owner} requires a value "
+                f"of type f{self.type_}, but that hasn't been "
                 "implemented yet. Patches welcome.")
 
     def __get__(self, obj, obj_type=None):
