@@ -15,7 +15,9 @@ class Blur(Layer):
     size                 = f.ParamTagField(v.X_Y, (0.1000000015, 0.1000000015))
     type                 = f.ParamTagField(v.Integer, 1)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Radial_Blur(Layer):
     SYMBOL = '🟠'
 
@@ -29,7 +31,9 @@ class Radial_Blur(Layer):
     size                 = f.ParamTagField(v.Real, 0.2)
     fade_out             = f.ParamTagField(v.Bool, True)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Motion_Blur(Layer):
     SYMBOL = '🟠'
 
