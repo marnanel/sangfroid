@@ -37,4 +37,4 @@ class BlendMethod(Enum):
         return cls(v.value)
 
     def as_python_expression(self):
-        return 'sangfroid.value.'+str(self)
+        return 'v.'+str(self)
