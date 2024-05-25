@@ -38,7 +38,9 @@ class Registry:
         if name not in self.handlers:
             raise KeyError(
                     f"This tag is a {name}, which I don't know how "
-                    "to handle."
+                    "to handle.\n\n"
+                    "Here are the things I do know: "
+                    f"{' '.join(sorted(self.handlers.keys()))}"
                     )
         result = self.handlers[name]
 
