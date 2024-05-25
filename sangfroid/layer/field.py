@@ -107,7 +107,6 @@ class NotImplementedField(Field):
     def __set__(self, obj, value):
         self._throw_not_implemented()
 
-
 class TagAttrField(Field):
     """
     A Field found in the attributes of a tag.
