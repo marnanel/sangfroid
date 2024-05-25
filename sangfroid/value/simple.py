@@ -14,7 +14,10 @@ class Simple(Value):
 
         result = self._tag.get('value', None)
         if result is None:
-            raise ValueError(f"value tag had no value: {self._tag}")
+            raise ValueError(
+                    f"This tag should have had a 'value' attribute, "
+                    f"but it didn't:\n\n"
+                    f"{self._tag}")
 
         result = self._construct_value(result)
 
