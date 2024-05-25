@@ -14,8 +14,9 @@ class Scale(Layer):
         "center": v.Vector,
     }
 
+    ### }}}
 
-    ### }}}@Layer.handles_type()
+@Layer.handles_type()
 class Translate(Layer):
     SYMBOL = '⇄'
 
@@ -24,7 +25,9 @@ class Translate(Layer):
 
     origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Rotate(Layer):
     SYMBOL = '🗘'
 

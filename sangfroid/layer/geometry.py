@@ -54,7 +54,7 @@ class Region(Layer):
     feather              = f.ParamTagField(v.Real, 0.0)
     blurtype             = f.ParamTagField(v.Integer, 1)
     winding_style        = f.ParamTagField(v.Integer, 0)
-    bline                = None
+    bline                = f.NotImplementedField("Bline")
 
     ### }}}@Layer.handles_type()
 class Rectangle(Layer):
@@ -93,7 +93,7 @@ class Polygon(Layer):
     feather              = f.ParamTagField(v.Real, 0.0)
     blurtype             = f.ParamTagField(v.Integer, 1)
     winding_style        = f.ParamTagField(v.Integer, 0)
-    vector_list          = None
+    vector_list          = f.NotImplementedField("Dynamic_List")
 
     ### }}}@Layer.handles_type()
 class Outline(Layer):
@@ -112,7 +112,7 @@ class Outline(Layer):
     feather              = f.ParamTagField(v.Real, 0.0)
     blurtype             = f.ParamTagField(v.Integer, 1)
     winding_style        = f.ParamTagField(v.Integer, 0)
-    bline                = None
+    bline                = f.NotImplementedField("Bline")
     width                = f.ParamTagField(v.Real, 0.0166666667)
     expand               = f.ParamTagField(v.Real, 0.0)
     sharp_cusps          = f.ParamTagField(v.Bool, True)
@@ -168,7 +168,7 @@ class Advanced_Outline(Layer):
     feather              = f.ParamTagField(v.Real, 0.0)
     blurtype             = f.ParamTagField(v.Integer, 1)
     winding_style        = f.ParamTagField(v.Integer, 0)
-    bline                = None
+    bline                = f.NotImplementedField("Bline")
     width                = f.ParamTagField(v.Real, 0.0166666667)
     expand               = f.ParamTagField(v.Real, 0.0)
     start_tip            = f.ParamTagField(v.Integer, 1)
@@ -176,9 +176,9 @@ class Advanced_Outline(Layer):
     cusp_type            = f.ParamTagField(v.Integer, 0)
     smoothness           = f.ParamTagField(v.Real, 1.0)
     homogeneous          = f.ParamTagField(v.Bool, True)
-    wplist               = None
+    wplist               = f.NotImplementedField("Wplist")
     dash_enabled         = f.ParamTagField(v.Bool, True)
-    dilist               = None
+    dilist               = f.NotImplementedField("Dilist")
     dash_offset          = f.ParamTagField(v.Real, 0.0)
 
     ### }}}
