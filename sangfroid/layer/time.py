@@ -16,7 +16,9 @@ class Timeloop(Layer):
     only_for_positive_duration = f.ParamTagField(v.Bool, True)
     symmetrical          = f.ParamTagField(v.Bool, True)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Stroboscope(Layer):
     SYMBOL = '🔦'
 
@@ -26,7 +28,9 @@ class Stroboscope(Layer):
     z_depth              = f.ParamTagField(v.Real, 0.0)
     frequency            = f.ParamTagField(v.Real, 2.0)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Freetime(Layer):
     SYMBOL = '🍦'
     

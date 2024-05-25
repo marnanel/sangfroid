@@ -25,7 +25,9 @@ class Star(Layer):
     points               = f.ParamTagField(v.Integer, 5)
     regular_polygon      = f.ParamTagField(v.Bool, True)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Solid_Color(Layer):
     SYMBOL = '▊'
 
@@ -37,7 +39,9 @@ class Solid_Color(Layer):
     blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
     color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Region(Layer):
     SYMBOL = '🟤'
 
@@ -56,7 +60,9 @@ class Region(Layer):
     winding_style        = f.ParamTagField(v.Integer, 0)
     bline                = f.NotImplementedField("Bline")
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Rectangle(Layer):
     SYMBOL = '🟦'
 
@@ -76,7 +82,9 @@ class Rectangle(Layer):
     bevel                = f.ParamTagField(v.Real, 0.0)
     bevCircle            = f.ParamTagField(v.Bool, True)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Polygon(Layer):
     SYMBOL = '⭓'
 
@@ -95,7 +103,9 @@ class Polygon(Layer):
     winding_style        = f.ParamTagField(v.Integer, 0)
     vector_list          = f.NotImplementedField("Dynamic_List")
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Outline(Layer):
     SYMBOL = '⭔'
 
@@ -119,7 +129,9 @@ class Outline(Layer):
     round_tip            = f.ParamArrayField(v.Bool, True)
     homogeneous_width    = f.ParamTagField(v.Bool, True)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Circle(Layer):
     SYMBOL = '🔵'
 
@@ -135,7 +147,9 @@ class Circle(Layer):
     origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
     invert               = f.ParamTagField(v.Bool, True)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Checker_Board(Layer):
     SYMBOL = '🙾'
 
@@ -151,6 +165,7 @@ class Checker_Board(Layer):
     antialias            = f.ParamTagField(v.Bool, True)
 
     ### }}}
+
 @Layer.handles_type()
 class Advanced_Outline(Layer):
     SYMBOL = '⬡'

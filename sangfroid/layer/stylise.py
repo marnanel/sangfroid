@@ -18,7 +18,9 @@ class Shade(Layer):
     type                 = f.ParamTagField(v.Integer, 1)
     invert               = f.ParamTagField(v.Bool, True)
 
-    ### }}}@Layer.handles_type()
+    ### }}}
+
+@Layer.handles_type()
 class Bevel(Layer):
     SYMBOL = '🫴'
 
