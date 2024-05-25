@@ -1,4 +1,5 @@
 from enum import Enum
+from sangfroid.value.simple import Integer
 
 class BlendMethod(Enum):
     ### {{{
@@ -29,3 +30,11 @@ class BlendMethod(Enum):
     ALPHA = 23
     
     ### }}}
+
+    @classmethod
+    def from_tag(cls, t):
+        v = Integer.from_tag(t)
+        return cls(v.value)
+
+    def as_python_expression(self):
+        return 'sangfroid.value.'+str(self)

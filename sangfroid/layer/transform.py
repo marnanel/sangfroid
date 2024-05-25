@@ -1,5 +1,6 @@
 from sangfroid.layer import Layer
 import sangfroid.value as v
+import sangfroid.layer.field as f
 
 # XXX Do these differ?
 @Layer.handles_type('scale')
@@ -12,25 +13,25 @@ class Scale(Layer):
         "amount": v.Real,
         "center": v.Vector,
     }
-    ### }}}
 
-@Layer.handles_type()
+
+    ### }}}@Layer.handles_type()
 class Translate(Layer):
     SYMBOL = '⇄'
 
     ### {{{
-    PARAMS = {
-        "origin": v.Vector,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.1"
 
-@Layer.handles_type()
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+
+    ### }}}@Layer.handles_type()
 class Rotate(Layer):
     SYMBOL = '🗘'
 
     ### {{{
-    PARAMS = {
-        "origin": v.Vector,
-        "amount": v.Angle,
-    }
+    SYNFIG_VERSION = "0.1"
+
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    amount               = f.ParamTagField(v.Angle, 0.0)
+
     ### }}}

@@ -1,207 +1,184 @@
 from sangfroid.layer import Layer
 import sangfroid.value as v
+import sangfroid.layer.field as f
 
 @Layer.handles_type()
 class Star(Layer):
     SYMBOL = '⭐'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "invert": v.Bool,
-        "antialias": v.Bool,
-        "feather": v.Real,
-        "blurtype": v.Integer,
-        "winding_style": v.Integer,
-        "radius1": v.Real,
-        "radius2": v.Real,
-        "angle": v.Angle,
-        "points": v.Integer,
-        "regular_polygon": v.Bool,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.1"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    invert               = f.ParamTagField(v.Bool, True)
+    antialias            = f.ParamTagField(v.Bool, True)
+    feather              = f.ParamTagField(v.Real, 0.0)
+    blurtype             = f.ParamTagField(v.Integer, 1)
+    winding_style        = f.ParamTagField(v.Integer, 0)
+    radius1              = f.ParamTagField(v.Real, 1.0)
+    radius2              = f.ParamTagField(v.Real, 0.38)
+    angle                = f.ParamTagField(v.Angle, 90.0)
+    points               = f.ParamTagField(v.Integer, 5)
+    regular_polygon      = f.ParamTagField(v.Bool, True)
+
+    ### }}}@Layer.handles_type()
 class Solid_Color(Layer):
     SYMBOL = '▊'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.1"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+
+    ### }}}@Layer.handles_type()
 class Region(Layer):
     SYMBOL = '🟤'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "invert": v.Bool,
-        "antialias": v.Bool,
-        "feather": v.Real,
-        "blurtype": v.Integer,
-        "winding_style": v.Integer,
-        "bline": v.Bline,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.1"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    invert               = f.ParamTagField(v.Bool, True)
+    antialias            = f.ParamTagField(v.Bool, True)
+    feather              = f.ParamTagField(v.Real, 0.0)
+    blurtype             = f.ParamTagField(v.Integer, 1)
+    winding_style        = f.ParamTagField(v.Integer, 0)
+    bline                = None
+
+    ### }}}@Layer.handles_type()
 class Rectangle(Layer):
     SYMBOL = '🟦'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "point1": v.Vector,
-        "point2": v.Vector,
-        "expand": v.Real,
-        "invert": v.Bool,
-        "feather_x": v.Real,
-        "feather_y": v.Real,
-        "bevel": v.Real,
-        "bevCircle": v.Bool,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.2"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    point1               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    point2               = f.ParamTagField(v.X_Y, (1.0, 1.0))
+    expand               = f.ParamTagField(v.Real, 0.0)
+    invert               = f.ParamTagField(v.Bool, True)
+    feather_x            = f.ParamTagField(v.Real, 0.0)
+    feather_y            = f.ParamTagField(v.Real, 0.0)
+    bevel                = f.ParamTagField(v.Real, 0.0)
+    bevCircle            = f.ParamTagField(v.Bool, True)
+
+    ### }}}@Layer.handles_type()
 class Polygon(Layer):
     SYMBOL = '⭓'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "invert": v.Bool,
-        "antialias": v.Bool,
-        "feather": v.Real,
-        "blurtype": v.Integer,
-        "winding_style": v.Integer,
-        "vector_list": v.Dynamic_List,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.1"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    invert               = f.ParamTagField(v.Bool, True)
+    antialias            = f.ParamTagField(v.Bool, True)
+    feather              = f.ParamTagField(v.Real, 0.0)
+    blurtype             = f.ParamTagField(v.Integer, 1)
+    winding_style        = f.ParamTagField(v.Integer, 0)
+    vector_list          = None
+
+    ### }}}@Layer.handles_type()
 class Outline(Layer):
     SYMBOL = '⭔'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "invert": v.Bool,
-        "antialias": v.Bool,
-        "feather": v.Real,
-        "blurtype": v.Integer,
-        "winding_style": v.Integer,
-        "bline": v.Bline,
-        "width": v.Real,
-        "expand": v.Real,
-        "sharp_cusps": v.Bool,
-        "round_tip[0]": v.Bool,
-        "round_tip[1]": v.Bool,
-        "homogeneous_width": v.Bool,
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "invert": v.Bool,
-        "antialias": v.Bool,
-        "feather": v.Real,
-        "blurtype": v.Integer,
-        "winding_style": v.Integer,
-        "bline": v.Bline,
-        "width": v.Real,
-        "expand": v.Real,
-        "sharp_cusps": v.Bool,
-        "round_tip[0]": v.Bool,
-        "round_tip[1]": v.Bool,
-        "homogeneous_width": v.Bool,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.3"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (0.0, 0.0, 0.0, 1.0))
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    invert               = f.ParamTagField(v.Bool, True)
+    antialias            = f.ParamTagField(v.Bool, True)
+    feather              = f.ParamTagField(v.Real, 0.0)
+    blurtype             = f.ParamTagField(v.Integer, 1)
+    winding_style        = f.ParamTagField(v.Integer, 0)
+    bline                = None
+    width                = f.ParamTagField(v.Real, 0.0166666667)
+    expand               = f.ParamTagField(v.Real, 0.0)
+    sharp_cusps          = f.ParamTagField(v.Bool, True)
+    round_tip            = f.ParamArrayField(v.Bool, True)
+    homogeneous_width    = f.ParamTagField(v.Bool, True)
+
+    ### }}}@Layer.handles_type()
 class Circle(Layer):
     SYMBOL = '🔵'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "radius": v.Real,
-        "feather": v.Real,
-        "origin": v.Vector,
-        "invert": v.Bool,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.2"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    radius               = f.ParamTagField(v.Real, 1.0)
+    feather              = f.ParamTagField(v.Real, 0.0)
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    invert               = f.ParamTagField(v.Bool, True)
+
+    ### }}}@Layer.handles_type()
 class Checker_Board(Layer):
     SYMBOL = '🙾'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "size": v.Vector,
-        "antialias": v.Bool,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.2"
 
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    origin               = f.ParamTagField(v.X_Y, (0.125, 0.125))
+    size                 = f.ParamTagField(v.X_Y, (0.25, 0.25))
+    antialias            = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 @Layer.handles_type()
 class Advanced_Outline(Layer):
     SYMBOL = '⬡'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "invert": v.Bool,
-        "antialias": v.Bool,
-        "feather": v.Real,
-        "blurtype": v.Integer,
-        "winding_style": v.Integer,
-        "bline": v.Bline,
-        "width": v.Real,
-        "expand": v.Real,
-        "start_tip": v.Integer,
-        "end_tip": v.Integer,
-        "cusp_type": v.Integer,
-        "smoothness": v.Real,
-        "homogeneous": v.Bool,
-        "wplist": v.Wplist,
-        "dash_enabled": v.Bool,
-        "dilist": v.Dilist,
-        "dash_offset": v.Real,
-    }
+    SYNFIG_VERSION = "0.3"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (0.0, 0.0, 0.0, 1.0))
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    invert               = f.ParamTagField(v.Bool, True)
+    antialias            = f.ParamTagField(v.Bool, True)
+    feather              = f.ParamTagField(v.Real, 0.0)
+    blurtype             = f.ParamTagField(v.Integer, 1)
+    winding_style        = f.ParamTagField(v.Integer, 0)
+    bline                = None
+    width                = f.ParamTagField(v.Real, 0.0166666667)
+    expand               = f.ParamTagField(v.Real, 0.0)
+    start_tip            = f.ParamTagField(v.Integer, 1)
+    end_tip              = f.ParamTagField(v.Integer, 1)
+    cusp_type            = f.ParamTagField(v.Integer, 0)
+    smoothness           = f.ParamTagField(v.Real, 1.0)
+    homogeneous          = f.ParamTagField(v.Bool, True)
+    wplist               = None
+    dash_enabled         = f.ParamTagField(v.Bool, True)
+    dilist               = None
+    dash_offset          = f.ParamTagField(v.Real, 0.0)
+
     ### }}}

@@ -5,6 +5,35 @@ import sangfroid.value as v
 logger = logging.getLogger('sangfroid')
 
 class Field:
+    """
+    An attribute of a Layer, which represents a value within
+    a Synfig layer class.
+
+    For example, a circle has a radius, so Circle layers
+    have a Field attribute named "radius".
+
+    Field itself is an abstract superclass, because field
+    data can be fetched in various ways. Each way has its
+    own subclass, defined later in this file.
+
+    Attributes:
+        type_ (type): the permissible type of this value.
+            Note the underscore, to avoid a clash with the
+            reserved word. This value can live either within
+            builtins (such as float or int), or within
+            the `sangfroid.value` package..
+        default (type_): the default value. This is what
+            you get if you create a new Layer and
+            don't specify any other value.
+        name (str): the name of this layer, such as "radius".
+            Usually we figure this out automatically, but
+            you can specify it in the constructor because
+            sometimes the name we want to use is a
+            reserved word.
+        owner (any): the class this Field lives in.
+        doc (str): the docstring. (Should this live here?)
+
+    """
     def __init__(self,
                  type_,
                  default,
@@ -15,7 +44,6 @@ class Field:
         self.default = default
         self.name = name
         self.owner = None
-        self.default = default
 
         self.__doc__ = doc or ''
         self.__doc__ += f"\n\nType: {type_.__name__}"
@@ -50,6 +78,27 @@ class Field:
     __repr__ = __str__
 
 class TagAttrField(Field):
+    """
+    A Field found in the attributes of a tag.
+
+    For example, in
+    ```
+    <layer active="true" ...>
+    ```
+
+    the field `active` is a tag attribute field.
+
+    Usually, the `type_` of a tag attribute field must be `str`,
+    because it's encoded in an XML attribute. If you set the
+    attribute `type_override` to another type, the string
+    will be coerced to and from that type.
+
+    Attributes:
+        type_override (builtin type): the type you want to set and get,
+            even though the attribute itself is a string.
+            If you pass None to the constructor, this will
+            be set to the same value as `type_`.
+    """
 
     def __init__(self,
                  *args,
@@ -95,6 +144,13 @@ class TagAttrField(Field):
         obj._tag[self.name] = value
 
 class ParamTagField(Field):
+    """
+    A Field which lives in a `<param>` tag within its layer.
+
+    The `type_` field cannot be a builtin type. It should be
+    a class from the `sangfroid.value` package, because we'll
+    need to encode and decode it from XML.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -119,6 +175,11 @@ class ParamTagField(Field):
                 )
 
 class TagField(Field):
+    """
+    A Field representing the XML tag of the layer itself.
+
+    Read-only.
+    """
     def __init__(self):
         super().__init__(
                 name = 'tag',
@@ -134,6 +195,20 @@ class TagField(Field):
         raise KeyError("You can't put a different tag into an object.")
 
 class NamedChildField(Field):
+    """
+    A Field which lives in a child tag of the layer, where the
+    name of the child tag is the same as the field's name.
+
+    For example, if the name was "wombat", the XML might look
+    like this:
+
+    ```
+    <layer>
+      <wombat>
+        whatever the value is
+      </wombat>
+    </layer>
+    """
     def __init__(self, type_, default, name=None, doc=None):
         super().__init__(
                 type_ = type_,
@@ -154,56 +229,15 @@ class NamedChildField(Field):
         else:
             return subtag.string
 
-        raise ValueError()
-
     def __set__(self, obj, value):
 
         subtag = self.get_subtag_for_obj(obj)
 
         subtag.string = value
-"""
 
-class _FieldsDict(dict):
+class BlendMethodField(ParamTagField):
+    def __init__(self, foo):
+        super().__init__(v.Real, -1)
+
+class ParamArrayField(ParamTagField):
     pass
-
-class _MetaclassWithFields(type):
-
-    def __dir__(self):
-        result = super().__dir__()
-        return result
-
-class HasFields(metaclass=_MetaclassWithFields):
-    pass
-
-def field(*args, **kwargs):
-
-    def _inner(layer_class):
-
-        name = kwargs.get('name', None)
-
-        if name is not None:
-            del kwargs['name']
-
-        if (
-                len(args)==1 and
-                isinstance(args[0], Field)
-                ):
-            new_field = args[0]
-        else:
-            type_arg = args[1]
-            assert isinstance(type_arg, type)
-
-            if issubclass(type_arg, v.Value):
-                new_field = ParamField(*args, **kwargs)
-            else:
-                new_field = TagAttributeField(*args, **kwargs)
-
-        name = name or new_field.name
-        name = name.replace('-', '_')
-
-        setattr(layer_class, name, new_field)
-
-        return layer_class
-
-    return _inner
-    """

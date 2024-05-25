@@ -1,36 +1,30 @@
 from sangfroid.layer.layer import Layer
 import sangfroid.value as v
+import sangfroid.layer.field as f
 
 @Layer.handles_type()
 class Text(Layer):
     SYMBOL = '𝕋'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "text": v.String,
-        "color": v.Color,
-        "family": v.String,
-        "style": v.Integer,
-        "weight": v.Integer,
-        "direction": v.Integer,
-        "compress": v.Real,
-        "vcompress": v.Real,
-        "size": v.Vector,
-        "orient": v.Vector,
-        "origin": v.Vector,
-        "use_kerning": v.Bool,
-        "grid_fit": v.Bool,
-        "invert": v.Bool,
-    }
+    SYNFIG_VERSION = "0.5"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    text                 = f.ParamTagField(v.String, 'Hello wombat!')
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    family               = f.ParamTagField(v.String, 'Sans Serif')
+    style                = f.ParamTagField(v.Integer, 0)
+    weight               = f.ParamTagField(v.Integer, 400)
+    direction            = f.ParamTagField(v.Integer, 0)
+    compress             = f.ParamTagField(v.Real, 1.0)
+    vcompress            = f.ParamTagField(v.Real, 1.0)
+    size                 = f.ParamTagField(v.X_Y, (0.25, 0.25))
+    orient               = f.ParamTagField(v.X_Y, (0.5, 0.5))
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    use_kerning          = f.ParamTagField(v.Bool, True)
+    grid_fit             = f.ParamTagField(v.Bool, True)
+    invert               = f.ParamTagField(v.Bool, True)
+
     ### }}}
-
-    @property
-    def text(self):
-        return self['text'].value
-
-    @text.setter
-    def text(self, v):
-        self['text'].value = v

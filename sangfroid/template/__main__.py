@@ -121,15 +121,12 @@ def scan_pick_and_mix():
 
             try:
                 value = cls.from_tag(value_tag).as_python_expression()
-                if paramname=='blend_method':
-                    params[paramname] = f'f.BlendMethodField(v.{BlendMethod(int(value))})'
-                elif is_array:
+                if is_array:
                     params[paramname] = f'f.ParamArrayField(v.{typename}, {value})'
                 else:
                     params[paramname] = f'f.ParamTagField(v.{typename}, {value})'
             except NotImplementedError:
-                params[paramname] = 'None'
-                result += '    raise NotImplementedError()\n'
+                params[paramname] = f'f.NotImplementedField("{typename}")'
 
         for left, right in params.items():
             result += f'{left:20} = {right}\n'

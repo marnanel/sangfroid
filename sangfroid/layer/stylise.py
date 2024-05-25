@@ -1,40 +1,41 @@
 from sangfroid.layer import Layer
 import sangfroid.value as v
+import sangfroid.layer.field as f
 
 @Layer.handles_type()
 class Shade(Layer):
     SYMBOL = '👓'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "origin": v.Vector,
-        "size": v.Vector,
-        "type": v.Integer,
-        "invert": v.Bool,
-    }
-    ### }}}
+    SYNFIG_VERSION = "0.2"
 
-@Layer.handles_type()
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 0.75)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.BEHIND)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    origin               = f.ParamTagField(v.X_Y, (0.200000003, -0.200000003))
+    size                 = f.ParamTagField(v.X_Y, (0.1000000015, 0.1000000015))
+    type                 = f.ParamTagField(v.Integer, 1)
+    invert               = f.ParamTagField(v.Bool, True)
+
+    ### }}}@Layer.handles_type()
 class Bevel(Layer):
     SYMBOL = '🫴'
 
     ### {{{
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "type": v.Integer,
-        "color1": v.Color,
-        "color2": v.Color,
-        "angle": v.Angle,
-        "depth": v.Real,
-        "softness": v.Real,
-        "use_luma": v.Bool,
-        "solid": v.Bool,
-        "fake_origin": v.Vector,
-    }
+    SYNFIG_VERSION = "0.2"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 0.75)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.ONTO)
+    type                 = f.ParamTagField(v.Integer, 1)
+    color1               = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    color2               = f.ParamTagField(v.Color, (0.0, 0.0, 0.0, 1.0))
+    angle                = f.ParamTagField(v.Angle, 135.0)
+    depth                = f.ParamTagField(v.Real, 0.2)
+    softness             = f.ParamTagField(v.Real, 0.1)
+    use_luma             = f.ParamTagField(v.Bool, True)
+    solid                = f.ParamTagField(v.Bool, True)
+    fake_origin          = f.ParamTagField(v.X_Y, (0.0, 0.0))
+
     ### }}}
