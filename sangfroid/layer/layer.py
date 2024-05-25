@@ -25,30 +25,11 @@ class Layer:
     active           = TagAttrField(bool,        True)
     exclude_from_rendering = TagAttrField(bool,  False)
     version          = TagAttrField(float,       None)
-    desc             = TagAttrField(str,         '',
-          doc = "A description of this layer.")
-    z_depth          = ParamTagField(v.Real,      0.0)
-    amount           = ParamTagField(v.Real,      1.0)
-    blend_method     = ParamTagField(v.Integer,     0) # XXX ??
-    origin           = ParamTagField(v.X_Y,       (0.0, 0.0))
+
     """
-    transformation   = ParamTagField(v.Transformation,
-                              {
-                                  offset v.X_Y, (0.0, 0.0)),
-                                  angle v.Angle, 0.0),
-                                  skew_angle v.Angle, 0.0),
-                                  scale v.X_Y, (0.0, 0.0)),
-                                  })
+    A description of this layer.
     """
-    canvas           = ParamTagField(v.Canvas,    None)
-    time_dilation    = ParamTagField(v.Real,      1.0)
-    time_offset      = ParamTagField(v.Time,      0)
-    children_lock    = ParamTagField(v.Bool,      True)
-    outline_grow     = ParamTagField(v.Real,      0.0)
-    z_range          = ParamTagField(v.Bool,      False)
-    z_range_position = ParamTagField(v.Real,      0.0)
-    z_range_depth    = ParamTagField(v.Real,      0.0)
-    z_range_blur     = ParamTagField(v.Real,      0.0)
+    desc             = TagAttrField(str,         '')
 
     tag              = TagField()
 
@@ -56,43 +37,6 @@ class Layer:
 
     def __init__(self, tag):
         self._tag = tag
-
-    """
-    def __getattribute__(self, f):
-        try:
-            found = object.__getattribute__(self, f)
-        except AttributeError:
-            found = None
-
-        if (
-                not f.startswith('_') and
-                isinstance(found, Field)
-                ):
-            result = found.read_from(
-                    obj = self,
-                    )
-        else:
-            result = found
-
-        return result
-
-    def __setattr__(self, f, v):
-
-        try:
-            existing = object.__getattribute__(self, f)
-        except AttributeError:
-            existing = None
-
-
-        if isinstance(existing, Field):
-            existing.write_to(
-                    obj = self,
-                    value = v,
-                    )
-        else:
-            # overwrite it
-            object.__setattr__(self, f, v)
-            """
 
     @property
     def parent(self):
@@ -105,7 +49,7 @@ class Layer:
 
     def __repr__(self):
         result = '['
-        result += ('-'*self.depth)
+        result += ('-'*self.tag_depth)
         result += self.SYMBOL
         result += self.__class__.__name__.lower()
         try:
@@ -150,7 +94,7 @@ class Layer:
         return found is not None
     
     @property
-    def depth(self):
+    def tag_depth(self):
         cursor = self._tag.parent
         result = 0
         while cursor is not None:
