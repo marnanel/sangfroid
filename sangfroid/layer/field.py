@@ -77,6 +77,32 @@ class Field:
 
     __repr__ = __str__
 
+class NotImplementedField(Field):
+    """
+    A Field we haven't implemented yet.
+
+    You're welcome to load or save the layer, but attempting
+    to access the value within Python will throw
+    NotImplementedError.
+    """
+    def __init__(self, type_):
+        super().__init__(
+                type_ = type_,
+                default = None,
+                )
+
+    def _throw_not_implemented(self):
+        raise ValueError(
+                f"The type f{self.type_} hasn't been "
+                "implemented yet. Patches welcome.")
+
+    def __get__(self, obj, obj_type=None):
+        self._throw_not_implemented()
+
+    def __set__(self, obj, value):
+        self._throw_not_implemented()
+
+
 class TagAttrField(Field):
     """
     A Field found in the attributes of a tag.
