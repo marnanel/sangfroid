@@ -194,8 +194,13 @@ class ParamTagField(Field):
                                )
         contents = [t for t in holder.children
                     if isinstance(t, bs4.Tag)]
-        assert len(contents)==1
-        
+        if len(contents)!=1:
+            raise ValueError(
+                    "Param tags should have one child tag, which holds "
+                    "the value of the param. However, this tag:\n\n"
+                    f"{obj.tag}\n\n"
+                    f"contains {len(contents)}.")
+
         result = self.type_(contents[0])
         return result
 
