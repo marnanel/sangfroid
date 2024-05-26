@@ -186,7 +186,7 @@ class ParamTagField(Field):
         super().__init__(*args, **kwargs)
         assert self.type_.__module__!='builtins', self.type_
 
-    def __get__(self, obj, obj_type=None):
+    def _get_value(self, obj):
         holder = obj._tag.find('param',
                                attrs={
                                    'name': self.name,
@@ -201,13 +201,17 @@ class ParamTagField(Field):
                     f"{obj.tag}\n\n"
                     f"contains {len(contents)}.")
 
-        result = self.type_(contents[0])
+        result = v.Value.from_tag(contents[0])
+        return result
+
+    def __get__(self, obj, obj_type=None):
+        value_obj = self._get_value(obj)
+        result = self.type_(value_obj.value)
         return result
 
     def __set__(self, obj, value):
-        raise NotImplementedError(
-                "9000"
-                )
+        value_obj = self._get_value(obj)
+        value_obj.value = value
 
 class TagField(Field):
     """
