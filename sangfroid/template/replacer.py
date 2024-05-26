@@ -23,9 +23,9 @@ class Replacer:
         if not self.fields:
             return
 
-        for filename in glob.glob('sangfroid/**/*.py',
+        for filename in sorted(glob.glob('sangfroid/**/*.py',
                                   recursive=True,
-                                  ):
+                                  )):
             self.handle(filename)
 
     def handle(self, filename):
