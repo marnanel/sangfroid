@@ -11,8 +11,11 @@ from sangfroid.value.blendmethod import BlendMethod
 #    - Document all this
 
 OVERRIDES = {
-        ('duplicate', 'index'): 'DuplicatesIndexField(None)',
-        ('halftone3', 'tone'): 'ParamArrayField(v.Tone)',
+        ('duplicate', 'index'): 'f.DuplicatesIndexField(None)',
+
+        # XXX this default is wrong
+        ('halftone3', 'tone'): 'f.ParamArrayField(v.Tone, default=None)',
+        ('switch', 'canvas'): 'f.SwitchCanvasField()',
 }
 
 DEFAULT_SYMBOL = '?'
@@ -129,6 +132,10 @@ def scan_pick_and_mix():
                 params[paramname] = f'f.NotImplementedField("{typename}")'
 
         for left, right in params.items():
+            if left in (
+                    'type',
+                    ):
+                left += '_'
             result += f'{left:20} = {right}\n'
 
         replacer.add(classname, result)
