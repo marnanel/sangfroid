@@ -28,3 +28,7 @@ class Dilist(Tbd):
 @Value.handles_type()
 class Bline(Tbd):
     pass
+
+@Value.handles_type()
+class Tone(Tbd):
+    pass
