@@ -246,10 +246,4 @@ class Composite(Value):
 
         return result
 
-class Transformation(Composite):
-    REQUIRED_KEYS = {
-            'offset',
-            'angle',
-            'skew_angle',
-            'scale',
-            }
+

@@ -6,4 +6,5 @@ from sangfroid.value.gradient import *
 from sangfroid.value.simple import *
 from sangfroid.value.string import *
 from sangfroid.value.tbd import *
+from sangfroid.value.transformation import *
 from sangfroid.value.value import *
