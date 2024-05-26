@@ -2,9 +2,7 @@ from sangfroid.layer import Layer
 import sangfroid.value as v
 import sangfroid.layer.field as f
 
-# XXX Do these differ?
-@Layer.handles_type('scale')
-@Layer.handles_type('zoom')
+@Layer.handles_type()
 class Scale(Layer):
     SYMBOL = '⚖️' # yeah, a bit contrived
 
@@ -15,7 +13,23 @@ class Scale(Layer):
     }
 
 
+
+
+
+
+
     ### }}}
+
+@Layer.handles_type()
+class Zoom(Scale):
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    amount               = f.ParamTagField(v.Real, 0.0)
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+
+    ### }}}
+    pass # XXX do they differ?
 
 @Layer.handles_type()
 class Translate(Layer):
