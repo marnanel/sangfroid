@@ -1,5 +1,6 @@
 from sangfroid.layer.layer import Layer
 import sangfroid.value as v
+import sangfroid.layer.field as f
 
 """
 These are the layer types that we haven't got to yet.
@@ -8,486 +9,552 @@ These are the layer types that we haven't got to yet.
 @Layer.handles_type()
 class Xor_Pattern(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "origin": v.Vector,
-        "size": v.Vector,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    origin               = f.ParamTagField(v.X_Y, (0.125, 0.125))
+    size                 = f.ParamTagField(v.X_Y, (0.25, 0.25))
+
+    ### }}}
 
 @Layer.handles_type()
 class Switch(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "origin": v.Vector,
-        "transformation": v.Composite,
-        "canvas": v.Canvas,
-        "time_dilation": v.Real,
-        "time_offset": v.Time,
-        "children_lock": v.Bool,
-        "outline_grow": v.Real,
-        "layer_name": v.String,
-        "layer_depth": v.Integer,
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "origin": v.Vector,
-        "transformation": v.Composite,
-        "canvas": v.Canvas,
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "tl": v.Vector,
-        "br": v.Vector,
-        "c": v.Integer,
-        "gamma_adjust": v.Real,
-        "filename": v.String,
-        "time_offset": v.Time,
-        "time_dilation": v.Real,
-        "time_offset": v.Time,
-        "children_lock": v.Bool,
-        "outline_grow": v.Real,
-        "layer_name": v.String,
-        "layer_depth": v.Integer,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.0"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    transformation       = f.ParamTagField(v.Transformation, {
+                                         'offset': (0.0, 0.0),
+                                          'angle': 0.0,
+                                     'skew_angle': 0.0,
+                                          'scale': (1.0, 1.0),
+                                        })
+    canvas               = f.SwitchCanvasField()
+    tl                   = f.ParamTagField(v.X_Y, (-0.5333333611, 0.5333333611))
+    br                   = f.ParamTagField(v.X_Y, (0.5333333611, -0.5333333611))
+    c                    = f.ParamTagField(v.Integer, 1)
+    gamma_adjust         = f.ParamTagField(v.Real, 1.0)
+    filename             = f.ParamTagField(v.String, 'drop.png')
+    time_offset          = f.ParamTagField(v.Time, 0)
+    time_dilation        = f.ParamTagField(v.Real, 1.0)
+    children_lock        = f.ParamTagField(v.Bool, True)
+    outline_grow         = f.ParamTagField(v.Real, 0.0)
+    layer_name           = f.ParamTagField(v.String, 'drop.png')
+    layer_depth          = f.ParamTagField(v.Integer, -1)
+
+    ### }}}
 
 @Layer.handles_type()
 class Super_Sample(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "width": v.Integer,
-        "height": v.Integer,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    width                = f.ParamTagField(v.Integer, 2)
+    height               = f.ParamTagField(v.Integer, 2)
+
+    ### }}}
 
 @Layer.handles_type()
 class Sound(Layer):
     SYMBOL = '🔊'
-    PARAMS = {
-        "z_depth": v.Real,
-        "filename": v.String,
-        "delay": v.Time,
-        "volume": v.Real,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    filename             = f.ParamTagField(v.String, 'laser.wav')
+    delay                = f.ParamTagField(v.Time, 0)
+    volume               = f.ParamTagField(v.Real, 1.0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Skeleton(Layer):
     SYMBOL = '💀'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "name": v.String,
-        "bones": v.Static_List,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 0.5)
+    name                 = f.ParamTagField(v.String, 'skeleton')
+    bones                = f.NotImplementedField("Static_List")
+
+    ### }}}
 
 @Layer.handles_type()
 class Plant(Layer):
     SYMBOL = '🪴'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "bline": v.Bline,
-        "origin": v.Vector,
-        "gradient": v.Gradient,
-        "split_angle": v.Angle,
-        "gravity": v.Vector,
-        "velocity": v.Real,
-        "perp_velocity": v.Real,
-        "size": v.Real,
-        "size_as_alpha": v.Bool,
-        "reverse": v.Bool,
-        "step": v.Real,
-        "seed": v.Integer,
-        "splits": v.Integer,
-        "sprouts": v.Integer,
-        "random_factor": v.Real,
-        "drag": v.Real,
-        "use_width": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    bline                = f.NotImplementedField("Bline")
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    split_angle          = f.ParamTagField(v.Angle, 10.0)
+    gravity              = f.ParamTagField(v.X_Y, (0.0, -0.1000000015))
+    velocity             = f.ParamTagField(v.Real, 0.3)
+    perp_velocity        = f.ParamTagField(v.Real, 0.0)
+    size                 = f.ParamTagField(v.Real, 0.015)
+    size_as_alpha        = f.ParamTagField(v.Bool, True)
+    reverse              = f.ParamTagField(v.Bool, True)
+    step                 = f.ParamTagField(v.Real, 0.01)
+    seed                 = f.ParamTagField(v.Integer, 1700432811)
+    splits               = f.ParamTagField(v.Integer, 5)
+    sprouts              = f.ParamTagField(v.Integer, 10)
+    random_factor        = f.ParamTagField(v.Real, 0.2)
+    drag                 = f.ParamTagField(v.Real, 0.1)
+    use_width            = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Filter_Group(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "origin": v.Vector,
-        "transformation": v.Composite,
-        "canvas": v.Canvas,
-        "time_dilation": v.Real,
-        "time_offset": v.Time,
-        "children_lock": v.Bool,
-        "outline_grow": v.Real,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.STRAIGHT)
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    transformation       = f.ParamTagField(v.Transformation, {
+                                         'offset': (0.0, 0.0),
+                                          'angle': 0.0,
+                                     'skew_angle': 0.0,
+                                          'scale': (1.0, 1.0),
+                                        })
+    canvas               = f.ParamTagField(v.Canvas, [])
+    time_dilation        = f.ParamTagField(v.Real, 1.0)
+    time_offset          = f.ParamTagField(v.Time, 0)
+    children_lock        = f.ParamTagField(v.Bool, True)
+    outline_grow         = f.ParamTagField(v.Real, 0.0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Duplicate(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    index                = f.DuplicatesIndexField(None)
+
+    ### }}}
 
 @Layer.handles_type()
 class Spiral_Gradient(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "gradient": v.Gradient,
-        "center": v.Vector,
-        "radius": v.Real,
-        "angle": v.Angle,
-        "clockwise": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    radius               = f.ParamTagField(v.Real, 0.5)
+    angle                = f.ParamTagField(v.Angle, 0.0)
+    clockwise            = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Radial_Gradient(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "gradient": v.Gradient,
-        "center": v.Vector,
-        "radius": v.Real,
-        "loop": v.Bool,
-        "zigzag": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    radius               = f.ParamTagField(v.Real, 0.5)
+    loop                 = f.ParamTagField(v.Bool, True)
+    zigzag               = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Noise(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "gradient": v.Gradient,
-        "seed": v.Integer,
-        "size": v.Vector,
-        "smooth": v.Integer,
-        "detail": v.Integer,
-        "speed": v.Real,
-        "turbulent": v.Bool,
-        "do_alpha": v.Bool,
-        "super_sample": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.0"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    seed                 = f.ParamTagField(v.Integer, 1700432620)
+    size                 = f.ParamTagField(v.X_Y, (1.0, 1.0))
+    smooth               = f.ParamTagField(v.Integer, 2)
+    detail               = f.ParamTagField(v.Integer, 4)
+    speed                = f.ParamTagField(v.Real, 0.0)
+    turbulent            = f.ParamTagField(v.Bool, True)
+    do_alpha             = f.ParamTagField(v.Bool, True)
+    super_sample         = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Linear_Gradient(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "p1": v.Vector,
-        "p2": v.Vector,
-        "gradient": v.Gradient,
-        "loop": v.Bool,
-        "zigzag": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    p1                   = f.ParamTagField(v.X_Y, (1.0, 1.0))
+    p2                   = f.ParamTagField(v.X_Y, (-1.0, -1.0))
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    loop                 = f.ParamTagField(v.Bool, True)
+    zigzag               = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Curve_Gradient(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "origin": v.Vector,
-        "width": v.Real,
-        "bline": v.Bline,
-        "gradient": v.Gradient,
-        "loop": v.Bool,
-        "zigzag": v.Bool,
-        "perpendicular": v.Bool,
-        "fast": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.0"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    width                = f.ParamTagField(v.Real, 0.0166666667)
+    bline                = f.NotImplementedField("Bline")
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    loop                 = f.ParamTagField(v.Bool, True)
+    zigzag               = f.ParamTagField(v.Bool, True)
+    perpendicular        = f.ParamTagField(v.Bool, True)
+    fast                 = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Conical_Gradient(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "gradient": v.Gradient,
-        "center": v.Vector,
-        "angle": v.Angle,
-        "symmetric": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    angle                = f.ParamTagField(v.Angle, 0.0)
+    symmetric            = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Mandelbrot(Layer):
     SYMBOL = '🎨'
-    PARAMS = {
-        "iterations": v.Integer,
-        "bailout": v.Real,
-        "broken": v.Bool,
-        "distort_inside": v.Bool,
-        "shade_inside": v.Bool,
-        "solid_inside": v.Bool,
-        "invert_inside": v.Bool,
-        "gradient_inside": v.Gradient,
-        "gradient_offset_inside": v.Real,
-        "gradient_loop_inside": v.Bool,
-        "distort_outside": v.Bool,
-        "shade_outside": v.Bool,
-        "solid_outside": v.Bool,
-        "invert_outside": v.Bool,
-        "gradient_outside": v.Gradient,
-        "smooth_outside": v.Bool,
-        "gradient_offset_outside": v.Real,
-        "gradient_scale_outside": v.Real,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    iterations           = f.ParamTagField(v.Integer, 32)
+    bailout              = f.ParamTagField(v.Real, 2.0)
+    broken               = f.ParamTagField(v.Bool, True)
+    distort_inside       = f.ParamTagField(v.Bool, True)
+    shade_inside         = f.ParamTagField(v.Bool, True)
+    solid_inside         = f.ParamTagField(v.Bool, True)
+    invert_inside        = f.ParamTagField(v.Bool, True)
+    gradient_inside      = f.ParamTagField(v.Gradient, {0.0:(1.0, 0.0, 0.0, 1.0),1.0:(1.0, 1.0, 0.0, 1.0)})
+    gradient_offset_inside = f.ParamTagField(v.Real, 0.0)
+    gradient_loop_inside = f.ParamTagField(v.Bool, True)
+    distort_outside      = f.ParamTagField(v.Bool, True)
+    shade_outside        = f.ParamTagField(v.Bool, True)
+    solid_outside        = f.ParamTagField(v.Bool, True)
+    invert_outside       = f.ParamTagField(v.Bool, True)
+    gradient_outside     = f.ParamTagField(v.Gradient, {0.0:(0.0, 0.0, 0.0, 0.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    smooth_outside       = f.ParamTagField(v.Bool, True)
+    gradient_offset_outside = f.ParamTagField(v.Real, 0.0)
+    gradient_scale_outside = f.ParamTagField(v.Real, 1.0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Julia(Layer):
     SYMBOL = '🎨'
-    PARAMS = {
-        "icolor": v.Color,
-        "ocolor": v.Color,
-        "color_shift": v.Angle,
-        "iterations": v.Integer,
-        "seed": v.Vector,
-        "bailout": v.Real,
-        "distort_inside": v.Bool,
-        "shade_inside": v.Bool,
-        "solid_inside": v.Bool,
-        "invert_inside": v.Bool,
-        "color_inside": v.Bool,
-        "distort_outside": v.Bool,
-        "shade_outside": v.Bool,
-        "solid_outside": v.Bool,
-        "invert_outside": v.Bool,
-        "color_outside": v.Bool,
-        "color_cycle": v.Bool,
-        "smooth_outside": v.Bool,
-        "broken": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    icolor               = f.ParamTagField(v.Color, (0.0, 0.0, 0.0, 1.0))
+    ocolor               = f.ParamTagField(v.Color, (0.0, 0.0, 0.0, 1.0))
+    color_shift          = f.ParamTagField(v.Angle, 0.0)
+    iterations           = f.ParamTagField(v.Integer, 32)
+    seed                 = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    bailout              = f.ParamTagField(v.Real, 2.0)
+    distort_inside       = f.ParamTagField(v.Bool, True)
+    shade_inside         = f.ParamTagField(v.Bool, True)
+    solid_inside         = f.ParamTagField(v.Bool, True)
+    invert_inside        = f.ParamTagField(v.Bool, True)
+    color_inside         = f.ParamTagField(v.Bool, True)
+    distort_outside      = f.ParamTagField(v.Bool, True)
+    shade_outside        = f.ParamTagField(v.Bool, True)
+    solid_outside        = f.ParamTagField(v.Bool, True)
+    invert_outside       = f.ParamTagField(v.Bool, True)
+    color_outside        = f.ParamTagField(v.Bool, True)
+    color_cycle          = f.ParamTagField(v.Bool, True)
+    smooth_outside       = f.ParamTagField(v.Bool, True)
+    broken               = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Lumakey(Layer):
     SYMBOL = '🗝️'
-    PARAMS = {
-        "z_depth": v.Real,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Halftone3(Layer):
     SYMBOL = '▓'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "size": v.Vector,
-        "type": v.Integer,
-        "subtractive": v.Bool,
-        "color[0]": v.Color,
-        "tone[0].origin": v.Vector,
-        "tone[0].angle": v.Angle,
-        "color[1]": v.Color,
-        "tone[1].origin": v.Vector,
-        "tone[1].angle": v.Angle,
-        "color[2]": v.Color,
-        "tone[2].origin": v.Vector,
-        "tone[2].angle": v.Angle,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.0"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.STRAIGHT)
+    size                 = f.ParamTagField(v.X_Y, (0.25, 0.25))
+    type_                = f.ParamTagField(v.Integer, 0)
+    subtractive          = f.ParamTagField(v.Bool, True)
+    color                = f.ParamArrayField(v.Color, (0.0, 1.0, 1.0, 1.0))
+    tone                 = f.ParamArrayField(v.Tone, default=None)
+
+    ### }}}
 
 @Layer.handles_type()
 class Halftone2(Layer):
     SYMBOL = '▒'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "origin": v.Vector,
-        "angle": v.Angle,
-        "size": v.Vector,
-        "color_light": v.Color,
-        "color_dark": v.Color,
-        "type": v.Integer,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.0"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.STRAIGHT)
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    angle                = f.ParamTagField(v.Angle, 0.0)
+    size                 = f.ParamTagField(v.X_Y, (0.25, 0.25))
+    color_light          = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    color_dark           = f.ParamTagField(v.Color, (0.0, 0.0, 0.0, 1.0))
+    type_                = f.ParamTagField(v.Integer, 0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Colorcorrect(Layer):
     SYMBOL = '👍'
-    PARAMS = {
-        "hue_adjust": v.Angle,
-        "brightness": v.Real,
-        "contrast": v.Real,
-        "exposure": v.Real,
-        "gamma": v.Real,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    hue_adjust           = f.ParamTagField(v.Angle, 0.0)
+    brightness           = f.ParamTagField(v.Real, 0.0)
+    contrast             = f.ParamTagField(v.Real, 1.0)
+    exposure             = f.ParamTagField(v.Real, 0.0)
+    gamma                = f.ParamTagField(v.Real, 1.0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Clamp(Layer):
     SYMBOL = '🗜️'
-    PARAMS = {
-        "invert_negative": v.Bool,
-        "clamp_ceiling": v.Bool,
-        "ceiling": v.Real,
-        "floor": v.Real,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    invert_negative      = f.ParamTagField(v.Bool, True)
+    clamp_ceiling        = f.ParamTagField(v.Bool, True)
+    ceiling              = f.ParamTagField(v.Real, 1.0)
+    floor                = f.ParamTagField(v.Real, 0.0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Chromakey(Layer):
     SYMBOL = '🔑'
-    PARAMS = {
-        "z_depth": v.Real,
-        "key_color": v.Color,
-        "lower_bound": v.Real,
-        "upper_bound": v.Real,
-        "supersample_width": v.Integer,
-        "supersample_height": v.Integer,
-        "desaturate": v.Bool,
-        "invert": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    key_color            = f.ParamTagField(v.Color, (0.0, 1.0, 0.0, 1.0))
+    lower_bound          = f.ParamTagField(v.Real, 0.001)
+    upper_bound          = f.ParamTagField(v.Real, 0.001)
+    supersample_width    = f.ParamTagField(v.Integer, 2)
+    supersample_height   = f.ParamTagField(v.Integer, 2)
+    desaturate           = f.ParamTagField(v.Bool, True)
+    invert               = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Simple_Circle(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "color": v.Color,
-        "center": v.Vector,
-        "radius": v.Real,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    radius               = f.ParamTagField(v.Real, 0.5)
+
+    ### }}}
 
 @Layer.handles_type()
 class Metaballs(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "gradient": v.Gradient,
-        "centers": v.Dynamic_List,
-        "radii": v.Dynamic_List,
-        "weights": v.Dynamic_List,
-        "threshold": v.Real,
-        "threshold2": v.Real,
-        "positive": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.COMPOSITE)
+    gradient             = f.ParamTagField(v.Gradient, {0.0:(1.0, 1.0, 1.0, 1.0),1.0:(0.0, 0.0, 0.0, 1.0)})
+    centers              = f.NotImplementedField("Dynamic_List")
+    radii                = f.NotImplementedField("Dynamic_List")
+    weights              = f.NotImplementedField("Dynamic_List")
+    threshold            = f.ParamTagField(v.Real, 0.0)
+    threshold2           = f.ParamTagField(v.Real, 1.0)
+    positive             = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Warp(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "src_tl": v.Vector,
-        "src_br": v.Vector,
-        "dest_tl": v.Vector,
-        "dest_tr": v.Vector,
-        "dest_br": v.Vector,
-        "dest_bl": v.Vector,
-        "clip": v.Bool,
-        "interpolation": v.Integer,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    src_tl               = f.ParamTagField(v.X_Y, (-2.0, 2.0))
+    src_br               = f.ParamTagField(v.X_Y, (2.0, -2.0))
+    dest_tl              = f.ParamTagField(v.X_Y, (-1.7999999523, 2.0999999046))
+    dest_tr              = f.ParamTagField(v.X_Y, (1.7999999523, 2.0999999046))
+    dest_br              = f.ParamTagField(v.X_Y, (2.2000000477, -2.0))
+    dest_bl              = f.ParamTagField(v.X_Y, (-2.2000000477, -2.0))
+    clip                 = f.ParamTagField(v.Bool, True)
+    interpolation        = f.ParamTagField(v.Integer, 3)
+
+    ### }}}
 
 @Layer.handles_type()
 class Twirl(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "center": v.Vector,
-        "radius": v.Real,
-        "rotations": v.Angle,
-        "distort_inside": v.Bool,
-        "distort_outside": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    radius               = f.ParamTagField(v.Real, 1.0)
+    rotations            = f.ParamTagField(v.Angle, 0.0)
+    distort_inside       = f.ParamTagField(v.Bool, True)
+    distort_outside      = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Stretch(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "amount": v.Vector,
-        "center": v.Vector,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    amount               = f.ParamTagField(v.X_Y, (1.0, 1.0))
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+
+    ### }}}
 
 @Layer.handles_type()
 class Spherize(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "center": v.Vector,
-        "radius": v.Real,
-        "amount": v.Real,
-        "clip": v.Bool,
-        "type": v.Integer,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    radius               = f.ParamTagField(v.Real, 1.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    clip                 = f.ParamTagField(v.Bool, True)
+    type_                = f.ParamTagField(v.Integer, 0)
+
+    ### }}}
 
 @Layer.handles_type()
 class Skeleton_Deformation(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "bones": v.Static_List,
-        "point1": v.Vector,
-        "point2": v.Vector,
-        "x_subdivisions": v.Integer,
-        "y_subdivisions": v.Integer,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.2"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.STRAIGHT)
+    bones                = f.NotImplementedField("Static_List")
+    point1               = f.ParamTagField(v.X_Y, (-4.0, 4.0))
+    point2               = f.ParamTagField(v.X_Y, (4.0, -4.0))
+    x_subdivisions       = f.ParamTagField(v.Integer, 32)
+    y_subdivisions       = f.ParamTagField(v.Integer, 32)
+
+    ### }}}
 
 @Layer.handles_type()
 class Noise_Distort(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "z_depth": v.Real,
-        "amount": v.Real,
-        "blend_method": v.Integer,
-        "displacement": v.Vector,
-        "size": v.Vector,
-        "seed": v.Integer,
-        "smooth": v.Integer,
-        "detail": v.Integer,
-        "speed": v.Real,
-        "turbulent": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.0"
+
+    z_depth              = f.ParamTagField(v.Real, 0.0)
+    amount               = f.ParamTagField(v.Real, 1.0)
+    blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.STRAIGHT)
+    displacement         = f.ParamTagField(v.X_Y, (0.25, 0.25))
+    size                 = f.ParamTagField(v.X_Y, (1.0, 1.0))
+    seed                 = f.ParamTagField(v.Integer, 1700432512)
+    smooth               = f.ParamTagField(v.Integer, 2)
+    detail               = f.ParamTagField(v.Integer, 4)
+    speed                = f.ParamTagField(v.Real, 0.0)
+    turbulent            = f.ParamTagField(v.Bool, True)
+
+    ### }}}
 
 @Layer.handles_type()
 class Inside_Out(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "origin": v.Vector,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.1"
+
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+
+    ### }}}
 
 @Layer.handles_type()
 class Curve_Warp(Layer):
     SYMBOL = 'X'
-    PARAMS = {
-        "origin": v.Vector,
-        "perp_width": v.Real,
-        "start_point": v.Vector,
-        "end_point": v.Vector,
-        "bline": v.Bline,
-        "fast": v.Bool,
-    }
+    ### {{{
+    SYNFIG_VERSION = "0.0"
 
-def _name_and_value_of(tag):
-    if tag.name!='param':
-        raise v.ValueError(f"param is not a <param>: {tag}")
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    perp_width           = f.ParamTagField(v.Real, 1.0)
+    start_point          = f.ParamTagField(v.X_Y, (-2.5, -0.5))
+    end_point            = f.ParamTagField(v.X_Y, (2.5, -0.3000000119))
+    bline                = f.NotImplementedField("Bline")
+    fast                 = f.ParamTagField(v.Bool, True)
 
-    name = tag.get('name', None)
-    if name is None:
-        raise v.ValueError(f"param has no 'name' field: {tag}")
+    ### }}}
 
-    value_tags = [tag for tag in tag.children
-                  if isinstance(tag, bs4.element.Tag)
-                  ]
 
-    if len(value_tags)!=1:
-        raise v.ValueError(f"param should have one value: {tag}")
-
-    value_tag = value_tags[0]
-
-    value = v.Value.from_tag(value_tag)
-    return name, value
