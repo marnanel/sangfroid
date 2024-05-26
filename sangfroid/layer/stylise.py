@@ -15,7 +15,7 @@ class Shade(Layer):
     color                = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
     origin               = f.ParamTagField(v.X_Y, (0.200000003, -0.200000003))
     size                 = f.ParamTagField(v.X_Y, (0.1000000015, 0.1000000015))
-    type                 = f.ParamTagField(v.Integer, 1)
+    type_                = f.ParamTagField(v.Integer, 1)
     invert               = f.ParamTagField(v.Bool, True)
 
     ### }}}
@@ -30,7 +30,7 @@ class Bevel(Layer):
     z_depth              = f.ParamTagField(v.Real, 0.0)
     amount               = f.ParamTagField(v.Real, 0.75)
     blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.ONTO)
-    type                 = f.ParamTagField(v.Integer, 1)
+    type_                = f.ParamTagField(v.Integer, 1)
     color1               = f.ParamTagField(v.Color, (1.0, 1.0, 1.0, 1.0))
     color2               = f.ParamTagField(v.Color, (0.0, 0.0, 0.0, 1.0))
     angle                = f.ParamTagField(v.Angle, 135.0)

@@ -13,7 +13,7 @@ class Blur(Layer):
     amount               = f.ParamTagField(v.Real, 1.0)
     blend_method         = f.ParamTagField(v.BlendMethod, v.BlendMethod.STRAIGHT)
     size                 = f.ParamTagField(v.X_Y, (0.1000000015, 0.1000000015))
-    type                 = f.ParamTagField(v.Integer, 1)
+    type_                = f.ParamTagField(v.Integer, 1)
 
     ### }}}
 
