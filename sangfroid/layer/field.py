@@ -88,7 +88,7 @@ class NotImplementedField(Field):
     Attributes:
         typename (str): the name of the type which doesn't exist.
     """
-    def __init__(self, typename):
+    def __init__(self, typename = None):
         super().__init__(
                 type_ = str,
                 default = None,
@@ -96,10 +96,15 @@ class NotImplementedField(Field):
         self.typename = typename
 
     def _throw_not_implemented(self):
-        raise NotImplementedError(
-                f"The type {self.owner} requires a value "
-                f"of type f{self.type_}, but that hasn't been "
-                "implemented yet. Patches welcome.")
+        if self.typename is None:
+            raise NotImplementedError(
+                    f"The type {self.owner} has not been "
+                    "implemented yet. Patches welcome.")
+        else:
+            raise NotImplementedError(
+                    f"The type {self.owner} requires a value "
+                    f"of type f{self.type_}, but that hasn't been "
+                    "implemented yet. Patches welcome.")
 
     def __get__(self, obj, obj_type=None):
         self._throw_not_implemented()
@@ -279,4 +284,10 @@ class BlendMethodField(ParamTagField):
         super().__init__(v.Real, -1)
 
 class ParamArrayField(ParamTagField):
+    pass
+
+class SwitchCanvasField(NotImplementedField):
+    pass
+
+class DuplicatesIndexField(NotImplementedField):
     pass
