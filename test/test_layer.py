@@ -231,16 +231,10 @@ def test_text_simple():
     assert text.text=='Hello wombat!'
     assert isinstance(text.text, sangfroid.value.String)
 
-    assert text.text=='Hello wombat!'
-    assert isinstance(text.text, str)
-
     text.text='Bananas'
 
     assert text.text=='Bananas'
     assert isinstance(text.text, sangfroid.value.String)
-
-    assert text.text=='Bananas'
-    assert isinstance(text.text, str)
 
 def test_layer_active():
     sif = get_animation('circles.sif')
