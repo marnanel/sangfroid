@@ -66,3 +66,12 @@ class Gradient(Value):
                 '{' +
                 ','.join([f'{k}:{v}' for k,v in self.items()]) +
                 '}')
+
+    def as_python_expression(self):
+        return (
+                '{' +
+                ','.join([f'{k}:{v.as_python_expression()}'
+                          for k,v in self.items()]) +
+                '}')
+
+        return str(self)
