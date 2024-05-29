@@ -2,11 +2,24 @@ import bs4
 from sangfroid.value.value import Value
 from sangfroid.value.simple import Angle
 from sangfroid.value.complex import X_Y
+from copy import copy
 
 @Value.handles_type()
 class Composite(Value):
 
     REQUIRED_KEYS = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.REQUIRED_KEYS is None:
+            raise NotImplementedError()
+
+    @classmethod
+    def _get_empty_tag(cls):
+        result = bs4.element.Tag(name='composite')
+        result['type'] = cls.__name__.lower()
+        return result
 
     @property
     def value(self):
@@ -36,12 +49,13 @@ class Composite(Value):
                  ])
 
         if self.REQUIRED_KEYS is not None:
-            assert keys(result)==self.REQUIRED_KEYS.keys()
+            assert result.keys()==self.REQUIRED_KEYS.keys()
 
         return result
 
     @value.setter
     def value(self, new_value):
+
 
         if not hasattr(new_value, 'items'):
             raise TypeError("The new value must be a dict.")
@@ -64,7 +78,17 @@ class Composite(Value):
 
             # XXX TO HERE
             raise ValueError(new_value)
-        raise ValueError(new_value)
+
+            seen.add(field.name)
+
+        for remaining, v in new_value.items():
+            if remaining in seen:
+                continue
+
+            new_subtag = bs4.Tag(name=remaining)
+            new_subtag.append(copy(v.tag))
+            new_subtag.append("\n")
+            self.tag.append(new_subtag)
 
     def __getattr__(self, key):
         result = self.get(key, default=None)
@@ -148,6 +172,25 @@ class Composite(Value):
         result += (' '*36) + '}'
 
         return result
+
+    @classmethod
+    def _construct_from(cls, tag):
+        try:
+            subtype = tag['type']
+        except KeyError:
+            raise KeyError(
+                    'This <composite> layer has no type parameter. '
+                    'You probably wanted type="transformation".'
+                    )
+
+        if subtype.lower()=='transformation':
+            return Transformation(tag)
+        else:
+            raise KeyError(
+                    f'This <composite> layer has type="{subtype}", '
+                    'which isn\'t a type I know.\n'
+                    'You probably wanted type="transformation".'
+                    )
 
 class Transformation(Composite):
     REQUIRED_KEYS = {

@@ -14,7 +14,7 @@ class Value:
         if len(args)==1 and isinstance(args[0], bs4.element.Tag):
             self._tag = args[0]
         else:
-            self._tag = bs4.element.Tag(name=self.__class__.__name__.lower())
+            self._tag = self._get_empty_tag()
 
             if len(args)==1:
                 self.value = args[0]
@@ -22,6 +22,10 @@ class Value:
                 self.value = args
 
         assert self._tag is not None
+
+    @classmethod
+    def _get_empty_tag(cls):
+        return bs4.element.Tag(name=cls.__name__.lower())
 
     @property
     def tag(self):
@@ -68,8 +72,11 @@ class Value:
                 else:
                     first_value = timeline.values()[0]
 
-            self._tag.name=self.__class__.__name__.lower()
             self._tag.clear()
+
+            new_tag = self._get_empty_tag()
+            self._tag.replace_with(new_tag)
+            self._tag = new_tag
 
             if first_value is not None:
                 for c in first_value.value.tag.children:
@@ -233,9 +240,13 @@ class Value:
             type_name = tag.name
 
         result_type = cls.handles_type.from_name(name=type_name)
-        result = result_type(tag)
+        result = result_type._construct_from(tag)
 
         return result
+
+    @classmethod
+    def _construct_from(cls, tag):
+        return cls(tag)
 
 #######################
 
