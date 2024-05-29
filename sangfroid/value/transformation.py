@@ -1,5 +1,7 @@
 import bs4
 from sangfroid.value.value import Value
+from sangfroid.value.simple import Angle
+from sangfroid.value.complex import X_Y
 
 @Value.handles_type()
 class Composite(Value):
@@ -34,22 +36,34 @@ class Composite(Value):
                  ])
 
         if self.REQUIRED_KEYS is not None:
-            assert keys(result)==self.REQUIRED_KEYS
+            assert keys(result)==self.REQUIRED_KEYS.keys()
 
         return result
 
     @value.setter
     def value(self, new_value):
 
+        if not hasattr(new_value, 'items'):
+            raise TypeError("The new value must be a dict.")
+
         for k,v in new_value.items():
             if self.REQUIRED_KEYS is not None:
                 if k not in self.REQUIRED_KEYS:
                     raise KeyError(
                     f"{k} is not one of the keys we can accept. "
-                    f"We can accept: {' '.join(sorted(self.REQUIRED_KEYS))}")
+                    f"We can accept: "
+                    f"{' '.join(sorted(self.REQUIRED_KEYS.keys()))}")
 
-                # XXX TO HERE
+        seen = set()
+        for field in self._tag.children:
+            if not isinstance(field, bs4.element.Tag):
+                continue
 
+            if not field.name in new_value:
+                continue
+
+            # XXX TO HERE
+            raise ValueError(new_value)
         raise ValueError(new_value)
 
     def __getattr__(self, key):
@@ -137,8 +151,8 @@ class Composite(Value):
 
 class Transformation(Composite):
     REQUIRED_KEYS = {
-            'offset',
-            'angle',
-            'skew_angle',
-            'scale',
+            'offset': X_Y,
+            'angle': Angle,
+            'skew_angle': Angle,
+            'scale': X_Y,
             }
