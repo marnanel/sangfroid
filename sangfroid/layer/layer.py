@@ -53,11 +53,7 @@ class Layer:
         result += self.SYMBOL
         result += self.__class__.__name__.lower()
         try:
-            # Look desc up directly, rather than going through the field
-            # resolution process. If any errors occur there, it'll
-            # inevitably try to print the name of layers, which would
-            # cause infinite recursion.
-            result += ' ' + repr(self.tag['desc'])
+            result += ' ' + repr(self.desc)
         except KeyError:
             pass
 
