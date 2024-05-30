@@ -53,7 +53,10 @@ class Layer:
         result += self.SYMBOL
         result += self.__class__.__name__.lower()
         try:
-            result += ' ' + repr(self.desc)
+            desc = self.desc
+
+            if desc:
+                result += ' ' + repr(desc)
         except KeyError:
             pass
 
