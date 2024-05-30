@@ -10,7 +10,7 @@ def test_layer_children():
              for layer in sif.descendants]
 
     assert found==[
-            "scale",
+            "zoom",
             "translate",
             "rotate",
             "timeloop",
