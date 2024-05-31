@@ -151,6 +151,9 @@ class Composite(Value):
 
     def __eq__(self, other):
 
+        if not hasattr(other, 'items'):
+            return False
+
         if len(other)!=len(self):
             return False
 
