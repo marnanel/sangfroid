@@ -3,6 +3,7 @@ import sangfroid.value as v
 import sangfroid.layer.field as f
 import bs4
 
+@f.ShortcutField.include_from("transformation")
 @Layer.handles_type()
 class Group(Layer):
     SYMBOL = '📂'

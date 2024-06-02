@@ -177,6 +177,10 @@ class Composite(Value):
         return result
 
     @classmethod
+    def _subfields(cls):
+        return set(cls.REQUIRED_KEYS or ())
+
+    @classmethod
     def _construct_from(cls, tag):
         try:
             subtype = tag['type']

@@ -201,6 +201,19 @@ class Value:
     def __repr__(self):
         return '['+self.__class__.__name__+' '+str(self)+']'
 
+    @classmethod
+    def _subfields(cls):
+        """
+        Returns a set of names of keys
+        generally found within values of this class.
+
+        Used by sangfroid.layer.include_shortcuts().
+
+        Returns:
+            set
+        """
+        return set()
+
     @property
     def value(self):
         raise NotImplementedError()

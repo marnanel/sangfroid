@@ -279,6 +279,63 @@ class NamedChildField(Field):
 
         subtag.string = value
 
+"""
+A field which accesses a key in the value of another field.
+
+For example, `g.offset` might be short for
+`g.transformation['offset']`.
+
+Use the `include_from` decorator classmethod to introduce
+these fields from an existing field.
+"""
+class ShortcutField(Field):
+    def __init__(self, upstream, upstream_field):
+        self.upstream = upstream
+        self.upstream_field = upstream_field
+
+    def __get__(self, obj, obj_type=None):
+        v = self.upstream.__get__(obj, obj_type)
+        result = v[self.upstream_field]
+        return result
+
+    def __set__(self, obj, value):
+        self.upstream.__set__(obj,
+                              {
+                                  self.upstream_field: value,
+                                  })
+
+    """
+    Decorator. Imports all the keys of the named field as
+    ShortcutFields.
+
+    Args:
+        name (str): the name of the method to access
+
+    Raises:
+        AttributeError: if there is no field called `name`
+        KeyError: if the keys already exist within the class
+    """
+    @classmethod
+    def include_from(cls, name):
+        def inner(c):
+            try:
+                a = c.__getattribute__(c, name)
+            except AttributeError:
+                raise AttributeError(
+                        f"{c} has no attribute called {repr(name)}.\n"
+                        f"But it does have: {' '.join(dir(c))}.")
+
+            for subfield in a.type_._subfields():
+                try:
+                    print(c.__getattribute__(c, subfield))
+                    raise KeyError(subfield)
+                except AttributeError:
+                    pass
+                setattr(c, subfield,
+                        cls(a, subfield))
+            return c
+        return inner
+
 class BlendMethodField(ParamTagField):
     def __init__(self, foo):
         super().__init__(v.Real, -1)
