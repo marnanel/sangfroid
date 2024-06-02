@@ -55,8 +55,6 @@ class Composite(Value):
 
     @value.setter
     def value(self, new_value):
-
-
         if not hasattr(new_value, 'items'):
             raise TypeError("The new value must be a dict.")
 

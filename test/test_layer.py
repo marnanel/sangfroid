@@ -267,12 +267,12 @@ LAYER_ITEMS_EXPECTED = """
  - z_depth: Real, 0.0
  - amount: Real, 0.75
  - blend_method: Integer, 13
- - origin: Vector, (0.0, 0.0)
+ - origin: X_Y, (0.0, 0.0)
  - transformation:
-     - offset = Vector, (animated), animated
+     - offset = X_Y, (animated), animated
      - angle = Angle, 0°
      - skew_angle = Angle, 0°
-     - scale = Vector, (animated), animated
+     - scale = X_Y, (animated), animated
  - canvas: Canvas, [[-🔵circle 'Bouncy ball'], [-🫴bevel]]
  - color: Color, #ff0000
  - radius: Real, 1.0
@@ -286,7 +286,7 @@ LAYER_ITEMS_EXPECTED = """
  - softness: Real, 0.3276240462
  - use_luma: Bool, True
  - solid: Bool, True
- - fake_origin: Vector, (0.0, 0.0)
+ - fake_origin: X_Y, (0.0, 0.0)
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
  - children_lock: Bool, True
@@ -307,7 +307,7 @@ LAYER_ITEMS_EXPECTED = """
  - softness: Real, 0.3276240462
  - use_luma: Bool, True
  - solid: Bool, True
- - fake_origin: Vector, (0.0, 0.0)
+ - fake_origin: X_Y, (0.0, 0.0)
 [-🔵circle 'Bouncy ball']
  - z_depth: Real, 0.0
  - amount: Real, 1.0
@@ -315,24 +315,24 @@ LAYER_ITEMS_EXPECTED = """
  - color: Color, #ff0000
  - radius: Real, 1.0
  - feather: Real, 0.0
- - origin: Vector, (0.0, 0.0)
+ - origin: X_Y, (0.0, 0.0)
  - invert: Bool, True
 [📂group 'Shadow']
  - z_depth: Real, 0.0
  - amount: Real, 1.0
  - blend_method: Integer, 1
- - origin: Vector, (0.0, -1.6666666269)
+ - origin: X_Y, (0.0, -1.6666666269)
  - transformation:
-     - offset = Vector, (0.0, -1.6003249884)
+     - offset = X_Y, (0.0, -1.6003249884)
      - angle = Angle, 0°
      - skew_angle = Angle, 0°
-     - scale = Vector, (1.0, 0.3899480104)
+     - scale = X_Y, (1.0, 0.3899480104)
  - canvas: Canvas, [[--🔵circle 'Shadow circle'], [--🟠blur]]
  - color: Color, #00000072
  - radius: Real, 1.0
  - feather: Real, 0.0
  - invert: Bool, True
- - size: Vector, (0.25, 0.25)
+ - size: X_Y, (0.25, 0.25)
  - type: Integer, 1
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
@@ -346,18 +346,18 @@ LAYER_ITEMS_EXPECTED = """
  - z_depth: Real, 0.0
  - amount: Real, 1.0
  - blend_method: Integer, 1
- - origin: Vector, (0.0, -1.6666666269)
+ - origin: X_Y, (0.0, -1.6666666269)
  - transformation:
-     - offset = Vector, (0.0, -1.6003249884)
+     - offset = X_Y, (0.0, -1.6003249884)
      - angle = Angle, 0°
      - skew_angle = Angle, 0°
-     - scale = Vector, (1.0, 0.3899480104)
+     - scale = X_Y, (1.0, 0.3899480104)
  - canvas: Canvas, [[--🔵circle 'Shadow circle'], [--🟠blur]]
  - color: Color, #00000072
  - radius: Real, 1.0
  - feather: Real, 0.0
  - invert: Bool, True
- - size: Vector, (0.25, 0.25)
+ - size: X_Y, (0.25, 0.25)
  - type: Integer, 1
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
@@ -371,16 +371,16 @@ LAYER_ITEMS_EXPECTED = """
  - z_depth: Real, 0.0
  - amount: Real, 1.0
  - blend_method: Integer, 0
- - origin: Vector, (0.0, 0.0)
+ - origin: X_Y, (0.0, 0.0)
  - transformation:
-     - offset = Vector, (0.0, 0.0)
+     - offset = X_Y, (0.0, 0.0)
      - angle = Angle, 0°
      - skew_angle = Angle, 0°
-     - scale = Vector, (1.0, 1.0)
+     - scale = X_Y, (1.0, 1.0)
  - canvas: Canvas, [[-▊solid_color 'wall'], [-🟦rectangle 'floor']]
  - color: Color, #ffb356
- - point1: Vector, (-4.0130858421, -2.3096354008)
- - point2: Vector, (4.0234375, -0.9031249881)
+ - point1: X_Y, (-4.0130858421, -2.3096354008)
+ - point2: X_Y, (4.0234375, -0.9031249881)
  - expand: Real, 0.0
  - invert: Bool, True
  - feather_x: Real, 0.0
@@ -400,8 +400,8 @@ LAYER_ITEMS_EXPECTED = """
  - amount: Real, 1.0
  - blend_method: Integer, 0
  - color: Color, #ffb356
- - point1: Vector, (-4.0130858421, -2.3096354008)
- - point2: Vector, (4.0234375, -0.9031249881)
+ - point1: X_Y, (-4.0130858421, -2.3096354008)
+ - point2: X_Y, (4.0234375, -0.9031249881)
  - expand: Real, 0.0
  - invert: Bool, True
  - feather_x: Real, 0.0

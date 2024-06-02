@@ -9,6 +9,8 @@ class Vector(Value):
     # applied to us
     our_type = float
 
+    FIELDS = ['x', 'y']
+
     @property
     def value(self):
         return dict(
@@ -20,8 +22,18 @@ class Vector(Value):
 
     def _raise_type_error(self):
         raise TypeError(
-                "Vectors may be constructed as Vector(x,y), or "
-                "Vector(dict_of_members).")
+                "Vectors may be constructed as "
+                f"{self.__class__.__name__}"
+                f"({','.join(self.FIELDS)}), or "
+                f"{self.__class__.__name__}"
+                "(dict_of_members).")
+
+    def __getattr__(self, f):
+        s = self._tag.find(name=f)
+        if s is None:
+            raise AttributeError(f)
+        v = self.our_type(s.text)
+        return v
 
     @value.setter
     def value(self, v):
@@ -32,13 +44,11 @@ class Vector(Value):
             if len(v)==0:
                 members = {}
             elif len(v)==2:
-                members = dict(zip('xy', v))
+                members = dict(zip(self.FIELDS, v))
 
-                if not (
-                        isinstance(members['x'], (float, int)) and
-                        isinstance(members['y'], (float, int))
-                        ):
-                    self._raise_type_error()
+                for m in members.values():
+                    if not isinstance(m, (float, int)):
+                        self._raise_type_error()
 
             else:
                 self._raise_type_error()
@@ -121,7 +131,19 @@ class Vector(Value):
         for v in self.values():
             yield v
 
+    @classmethod
+    def _construct_from(cls, tag):
+       fields = set([
+                 f.name for f in tag.children
+                 if isinstance(f, bs4.element.Tag)
+                 ])
+
+       if fields=={'x', 'y'}:
+           c = X_Y
+       else:
+            c = cls
+
+       return c(tag)
+
 class X_Y(Vector):
-    pass
-class Dimensions(Vector):
     pass
