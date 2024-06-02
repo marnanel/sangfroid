@@ -207,7 +207,6 @@ def test_layer_item_contains():
 def test_layer_find_type():
 
     def names_of(n):
-        print(n)
         return set([x.desc for x in n])
 
     sif = get_animation('circles.sif')
@@ -244,7 +243,6 @@ def test_layer_active():
     assert black.tag['active']=='true'
 
     black.active = False
-    print("9020", repr(black.active))
     assert not black.active
     assert black.tag['active']=='false'
 
