@@ -5,9 +5,9 @@ import copy
 from sangfroid.registry import Registry
 from sangfroid.t import T
 
-ANIMATED = 'animated'
-
 class Value:
+
+    ANIMATED = 'animated'
 
     def __init__(self, *args):
 
@@ -24,8 +24,9 @@ class Value:
         assert self._tag is not None
 
     @classmethod
-    def _get_empty_tag(cls):
-        return bs4.element.Tag(name=cls.__name__.lower())
+    def _get_empty_tag(cls, name=None):
+        name = name or cls.__name__.lower()
+        return bs4.Tag(name=name)
 
     @property
     def tag(self):
@@ -39,7 +40,7 @@ class Value:
         Returns:
             bool
         """
-        return self._tag.name==ANIMATED
+        return self._tag.name==self.ANIMATED
 
     @is_animated.setter
     def is_animated(self, v):
@@ -58,7 +59,7 @@ class Value:
 
             our_type = self._tag.name
             self._tag.attrs = {}
-            self._tag.name = ANIMATED
+            self._tag.name = self.ANIMATED
             self._tag['type'] = our_type
 
             if adjust_contents:
@@ -114,7 +115,7 @@ class Value:
             list of Tag
         """
 
-        if self._tag.name!=ANIMATED:
+        if self._tag.name!=Value.ANIMATED:
             return []
 
         result = [wt for wt in self._tag
@@ -132,6 +133,8 @@ class Value:
             dict mapping T to Waypoint
         """
 
+        if 'x_y' in str(self._tag):
+            raise ValueError()
         waypoints = self._waypoint_tags()
 
         if not waypoints:
@@ -160,6 +163,8 @@ class Value:
             v (list of Waypoints): the waypoints.
         """
 
+        if 'x_y' in str([w.tag for w in v]):
+            raise ValueError()
         self._set_animated(True,
             adjust_contents = False,
                            )
@@ -169,6 +174,7 @@ class Value:
             if i!=0:
                 self._tag.append('\n')
             self._tag.append(w.tag)
+
 
     def __len__(self):
         return len(self._waypoints())
@@ -184,7 +190,7 @@ class Value:
             str
         """
         result = self._tag.name
-        if result==ANIMATED:
+        if result==Value.ANIMATED:
             result = self._tag['type']
 
         return result
@@ -243,7 +249,7 @@ class Value:
     def from_tag(cls, tag,
                  ):
 
-        if tag.name==ANIMATED:
+        if tag.name==cls.ANIMATED:
 
             type_name = tag['type']
             if type_name is None:
@@ -333,6 +339,8 @@ class Timeline:
         return self
 
     def __getitem__(self, time):
+        if 'x_y' in str(self.parent._tag):
+            raise ValueError()
         for t, wt in self.parent._waypoints().items():
             if t==time:
                 return wt
@@ -506,7 +514,7 @@ class Waypoint:
         elif len(v)!=1:
             raise ValueError(
                     f"Waypoint with multiple values: {w}")
-        elif v[0].name==ANIMATED:
+        elif v[0].name==Value.ANIMATED:
             raise ValueError("Values in waypoints cannot themselves "
                              "be animated")
         elif our_type is not None and v[0].name!=our_type:

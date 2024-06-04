@@ -9,6 +9,7 @@ class Vector(Value):
     # applied to us
     our_type = float
 
+    TAG_NAME = 'vector'
     FIELDS = ['x', 'y']
 
     @property
@@ -57,7 +58,7 @@ class Vector(Value):
         else:
             self._raise_type_error()
 
-        self._tag.name = self.__class__.__name__.lower()
+        self._tag.name = self.TAG_NAME
         self._tag.attrs = {}
 
         for k, v in members.items():
@@ -131,19 +132,47 @@ class Vector(Value):
         for v in self.values():
             yield v
 
+    def _get_empty_tag(cls):
+        return super()._get_empty_tag(cls.TAG_NAME)
+
     @classmethod
     def _construct_from(cls, tag):
-       fields = set([
-                 f.name for f in tag.children
-                 if isinstance(f, bs4.element.Tag)
-                 ])
 
-       if fields=={'x', 'y'}:
-           c = X_Y
-       else:
-            c = cls
+        def first_child_tag(t):
+            tags = [n for n in t.children if isinstance(n, bs4.Tag)]
+            if len(tags)==0:
+                return None
+            else:
+                return tags[0]
 
-       return c(tag)
+        c = None
+        start_tag = tag
+
+        if tag.name==cls.ANIMATED:
+            waypoint_tag = first_child_tag(tag)
+            if waypoint_tag is None:
+                # no way of telling; make the best guess
+                c = X_Y
+            else:
+                start_tag = first_child_tag(waypoint_tag)
+
+        if c is None:
+            fields = set([
+                f.name for f in start_tag.children
+                if isinstance(f, bs4.Tag)
+                ])
+
+            if fields=={'x', 'y'}:
+                c = X_Y
+            else:
+                raise TypeError(
+                        "This tag isn't a vector type I know:\n"
+                        f"  the fields are: {repr(fields)}.\n"
+                        f"{tag}"
+                        )
+
+        assert c is not None
+        return c(tag)
 
 class X_Y(Vector):
     pass

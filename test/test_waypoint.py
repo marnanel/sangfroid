@@ -215,6 +215,7 @@ def test_value_get_is_animated():
 
     scale.is_animated = True
     assert scale.is_animated
+
     assert str(scale.timeline[0].value)==original_point_0
 
 def test_value_set_is_animated():
