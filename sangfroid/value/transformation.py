@@ -1,7 +1,7 @@
 import bs4
 from sangfroid.value.value import Value
 from sangfroid.value.simple import Angle
-from sangfroid.value.complex import X_Y
+from sangfroid.value.vector import X_Y
 from copy import copy
 
 @Value.handles_type()
