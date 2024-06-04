@@ -39,8 +39,8 @@ class Registry:
             raise KeyError(
                     f"This tag is a {name}, which I don't know how "
                     "to handle.\n\n"
-                    "Here are the things I do know: "
-                    f"{' '.join(sorted(self.handlers.keys()))}"
+                    "Here are the things I do know:\n"
+                    f"  {' '.join(sorted(self.handlers.keys()))}"
                     )
         result = self.handlers[name]
 
