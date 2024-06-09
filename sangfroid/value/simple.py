@@ -48,11 +48,17 @@ class Simple(Value):
                                 f"{v.__class__.__name__}."
                                 )
 
+        result = self._value_to_str(result)
+
         self._tag.name = self.__class__.__name__.lower()
         self._tag.attrs = {
-                'value': str(result),
+                'value': result,
                 }
         self._tag.clear()
+
+    @classmethod
+    def _value_to_str(cls, v):
+        return str(v)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -107,6 +113,10 @@ class Bool(Simple):
                     "boolean string should have been 'true' or 'false', "
                     f"but it was {repr(v)}; treating as False.")
             return False
+
+    @classmethod
+    def _value_to_str(cls, v):
+        return str(v).lower()
 
 @Value.handles_type()
 class Angle(Simple):
