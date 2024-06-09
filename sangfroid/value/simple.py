@@ -13,7 +13,6 @@ class Simple(Value):
         if self.our_type is None:
             raise NotImplementedError()
 
-        print("9111", str(self._tag))
         result = self._tag.get('value', None)
         if result is None:
             raise ValueError(
@@ -22,7 +21,6 @@ class Simple(Value):
                     f"{self._tag}")
         assert isinstance(result, str), f"{result} {type(result)} {self._tag} {type(self._tag)}"
 
-        print("9111", self._tag, result, type(result))
         result = self._construct_value(result)
 
         return result
