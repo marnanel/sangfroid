@@ -25,8 +25,11 @@ class Value:
 
     @classmethod
     def _get_empty_tag(cls, name=None):
+        print("9111", name, type(name))
         name = name or cls.__name__.lower()
-        return bs4.Tag(name=name)
+        result = bs4.Tag(name=name)
+        print("9199", result, type(result))
+        return result
 
     @property
     def tag(self):
@@ -46,13 +49,14 @@ class Value:
     def is_animated(self, v):
         self._set_animated(v)
 
-    def _set_animated(self, v,
+    def _set_animated(self,
+                      whether,
                       adjust_contents = True,
                       ):
-        v = bool(v)
-        if v==self.is_animated:
+        whether = bool(whether)
+        if whether==self.is_animated:
             pass
-        elif v:
+        elif whether:
 
             if adjust_contents:
                 former_value = self.value
@@ -66,22 +70,27 @@ class Value:
                 self._tag.clear()
                 self.timeline[0] = former_value
         else:
+
             if adjust_contents:
                 timeline = self.timeline
-                if len(timeline)==0:
-                    first_value = None
-                else:
-                    first_value = timeline.values()[0]
+                first_value = timeline.values()[0]
+            else:
+                first_value = None
 
             self._tag.clear()
 
             new_tag = self._get_empty_tag()
+            print("9111", type(self._tag), type(new_tag))
             self._tag.replace_with(new_tag)
             self._tag = new_tag
 
             if first_value is not None:
-                for c in first_value.value.tag.children:
-                    self._tag.append(copy.deepcopy(c))
+                old_tag = self._tag
+
+                self._tag = copy.deepcopy(first_value)
+                if old_tag.parent is not None:
+                    print("9755", old_tag.parent, type(old_tag.parent))
+                    old_tag.replace_with(self._tag)
 
     @property
     def timeline(self):
@@ -157,24 +166,29 @@ class Value:
 
         They will be stored sorted, with newlines between them.
 
-        This necessarily involves setting ourselves to be animated.
+        This necessarily involves setting whether we're animated.
 
         Args:
             v (list of Waypoints): the waypoints.
         """
 
-        if 'x_y' in str([w.tag for w in v]):
-            raise ValueError()
-        self._set_animated(True,
-            adjust_contents = False,
-                           )
+        print("9800", v)
+        if not v:
+            self._set_animated(
+                    whether = False,
+                    )
+            return
+
+        self._set_animated(
+                whether = True,
+                adjust_contents = False,
+                )
         self._tag.clear()
 
         for i, w in enumerate(sorted(v)):
             if i!=0:
                 self._tag.append('\n')
             self._tag.append(w.tag)
-
 
     def __len__(self):
         return len(self._waypoints())
@@ -290,6 +304,18 @@ class Timeline:
         for t,w in sorted(self.parent._waypoints().items()):
             yield w
 
+    def _ensure_fps(self, t):
+        if isinstance(t, (int, float, str)):
+            return T(t, reference_tag = self.parent._tag)
+        elif isinstance(t, T):
+            if t._fps is None:
+                return T(t._frames, self.parent._tag)
+            else:
+                return t
+        else:
+            raise TypeError("I need T, or an int, float, str to create a T. "
+                    f"You gave me {type(t)}.")
+
     def keys(self):
         return list(self.parent._waypoints().keys())
 
@@ -351,6 +377,8 @@ class Timeline:
 
     def __setitem__(self, t, v):
 
+        t = self._ensure_fps(t)
+
         if isinstance(v, Waypoint):
             new_waypoint = v
         elif isinstance(v, self.parent.__class__):
@@ -371,6 +399,19 @@ class Timeline:
         waypoints = self.parent._waypoints()
 
         waypoints[t] = new_waypoint
+
+        self.parent._set_waypoints(waypoints.values())
+
+    def __delitem__(self, t):
+
+        if isinstance(t, (int, float, str)):
+            t = T(t, reference_tag = self.parent._tag)
+        elif isinstance(t, T):
+            t = self._ensure_fps(t)
+
+        waypoints = self.parent._waypoints()
+
+        waypoints.__delitem__(t)
 
         self.parent._set_waypoints(waypoints.values())
 
