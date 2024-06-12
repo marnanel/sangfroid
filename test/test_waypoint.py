@@ -123,7 +123,7 @@ def test_waypoint_value_spec():
     assert (
             [str(n) for n in invert.timeline.items()]==
             [
-                '(10f, [ 0f 🔶-🔶 - True])',
+                '(10f, [10f 🔶-🔶 - True])',
                 '(20f, [20f 🔶-🔶 - False])',
                 ]
             )

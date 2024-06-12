@@ -25,10 +25,8 @@ class Value:
 
     @classmethod
     def _get_empty_tag(cls, name=None):
-        print("9111", name, type(name))
         name = name or cls.__name__.lower()
         result = bs4.Tag(name=name)
-        print("9199", result, type(result))
         return result
 
     @property
@@ -80,16 +78,14 @@ class Value:
             self._tag.clear()
 
             new_tag = self._get_empty_tag()
-            print("9111", type(self._tag), type(new_tag))
             self._tag.replace_with(new_tag)
             self._tag = new_tag
 
             if first_value is not None:
                 old_tag = self._tag
 
-                self._tag = copy.deepcopy(first_value)
+                self._tag = copy.deepcopy(first_value.value._tag)
                 if old_tag.parent is not None:
-                    print("9755", old_tag.parent, type(old_tag.parent))
                     old_tag.replace_with(self._tag)
 
     @property
@@ -142,8 +138,6 @@ class Value:
             dict mapping T to Waypoint
         """
 
-        if 'x_y' in str(self._tag):
-            raise ValueError()
         waypoints = self._waypoint_tags()
 
         if not waypoints:
@@ -172,7 +166,6 @@ class Value:
             v (list of Waypoints): the waypoints.
         """
 
-        print("9800", v)
         if not v:
             self._set_animated(
                     whether = False,
@@ -381,6 +374,7 @@ class Timeline:
 
         if isinstance(v, Waypoint):
             new_waypoint = v
+            new_waypoint.time = t
         elif isinstance(v, self.parent.__class__):
             new_waypoint = Waypoint(
                     time = t,
@@ -394,7 +388,12 @@ class Timeline:
                     reference_tag = self.parent.tag,
                     )
 
-        self.parent.is_animated = True
+        if not self.parent.is_animated:
+            self.parent._tag.clear()
+            self.parent._set_animated(
+                    whether = True,
+                    adjust_contents = False,
+                    )
 
         waypoints = self.parent._waypoints()
 
