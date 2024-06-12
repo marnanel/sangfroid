@@ -70,7 +70,6 @@ class T:
             value=0.0,
             reference_tag = None,
             ):
-
  
         if reference_tag is None:
             self._fps = None
@@ -278,7 +277,7 @@ class T:
         if self._frames == 0:
             return 0
 
-        s = f'{self._frames} {self._fps}'
+        s = (self._frames, self._fps)
         return hash(s)
 
 # It doesn't matter that you can produce invalid decimals with this regex:

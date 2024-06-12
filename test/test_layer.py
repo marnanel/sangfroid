@@ -254,14 +254,13 @@ def test_layer_active():
     assert black.active
     assert black.tag['active']=='true'
 
-
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0
  - link_time: Time, 0f
  - local_time: Time, 0f
  - duration: Time, 2s
- - only_for_positive_duration: Bool, True
+ - only_for_positive_duration: Bool, False
  - symmetrical: Bool, True
 [📂group 'Ball']
  - z_depth: Real, 0.0
@@ -277,21 +276,21 @@ LAYER_ITEMS_EXPECTED = """
  - color: Color, #ff0000
  - radius: Real, 1.0
  - feather: Real, 0.0
- - invert: Bool, True
+ - invert: Bool, False
  - type: Integer, 1
  - color1: Color, #ffffff
  - color2: Color, #000000
  - angle: Angle, 89.0588°
  - depth: Real, 0.5819661441
  - softness: Real, 0.3276240462
- - use_luma: Bool, True
- - solid: Bool, True
+ - use_luma: Bool, False
+ - solid: Bool, False
  - fake_origin: X_Y, (0.0, 0.0)
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
- - children_lock: Bool, True
+ - children_lock: Bool, False
  - outline_grow: Real, 0.0
- - z_range: Bool, True
+ - z_range: Bool, False
  - z_range_position: Real, 0.0
  - z_range_depth: Real, 0.0
  - z_range_blur: Real, 0.0
@@ -305,8 +304,8 @@ LAYER_ITEMS_EXPECTED = """
  - angle: Angle, 89.0588°
  - depth: Real, 0.5819661441
  - softness: Real, 0.3276240462
- - use_luma: Bool, True
- - solid: Bool, True
+ - use_luma: Bool, False
+ - solid: Bool, False
  - fake_origin: X_Y, (0.0, 0.0)
 [-🔵circle 'Bouncy ball']
  - z_depth: Real, 0.0
@@ -316,7 +315,7 @@ LAYER_ITEMS_EXPECTED = """
  - radius: Real, 1.0
  - feather: Real, 0.0
  - origin: X_Y, (0.0, 0.0)
- - invert: Bool, True
+ - invert: Bool, False
 [📂group 'Shadow']
  - z_depth: Real, 0.0
  - amount: Real, 1.0
@@ -331,14 +330,14 @@ LAYER_ITEMS_EXPECTED = """
  - color: Color, #00000072
  - radius: Real, 1.0
  - feather: Real, 0.0
- - invert: Bool, True
+ - invert: Bool, False
  - size: X_Y, (0.25, 0.25)
  - type: Integer, 1
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
- - children_lock: Bool, True
+ - children_lock: Bool, False
  - outline_grow: Real, 0.0
- - z_range: Bool, True
+ - z_range: Bool, False
  - z_range_position: Real, 0.0
  - z_range_depth: Real, 0.0
  - z_range_blur: Real, 0.0
@@ -356,14 +355,14 @@ LAYER_ITEMS_EXPECTED = """
  - color: Color, #00000072
  - radius: Real, 1.0
  - feather: Real, 0.0
- - invert: Bool, True
+ - invert: Bool, False
  - size: X_Y, (0.25, 0.25)
  - type: Integer, 1
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
- - children_lock: Bool, True
+ - children_lock: Bool, False
  - outline_grow: Real, 0.0
- - z_range: Bool, True
+ - z_range: Bool, False
  - z_range_position: Real, 0.0
  - z_range_depth: Real, 0.0
  - z_range_blur: Real, 0.0
@@ -382,16 +381,16 @@ LAYER_ITEMS_EXPECTED = """
  - point1: X_Y, (-4.0130858421, -2.3096354008)
  - point2: X_Y, (4.0234375, -0.9031249881)
  - expand: Real, 0.0
- - invert: Bool, True
+ - invert: Bool, False
  - feather_x: Real, 0.0
  - feather_y: Real, 0.0
  - bevel: Real, 0.0
  - bevCircle: Bool, True
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
- - children_lock: Bool, True
+ - children_lock: Bool, False
  - outline_grow: Real, 0.0
- - z_range: Bool, True
+ - z_range: Bool, False
  - z_range_position: Real, 0.0
  - z_range_depth: Real, 0.0
  - z_range_blur: Real, 0.0
@@ -403,7 +402,7 @@ LAYER_ITEMS_EXPECTED = """
  - point1: X_Y, (-4.0130858421, -2.3096354008)
  - point2: X_Y, (4.0234375, -0.9031249881)
  - expand: Real, 0.0
- - invert: Bool, True
+ - invert: Bool, False
  - feather_x: Real, 0.0
  - feather_y: Real, 0.0
  - bevel: Real, 0.0
