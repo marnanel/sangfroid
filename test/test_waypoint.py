@@ -103,6 +103,7 @@ def test_waypoint_value_spec():
     w1 = Waypoint(time=T('20f'), value=value)
     assert int(w1.time)==20
     assert w1.value==True
+    assert str(w1)=='[20f 🔶-🔶 - True]'
 
     with pytest.raises(TypeError):
         w2 = Waypoint(time=T('40f'), value=False)
@@ -113,6 +114,7 @@ def test_waypoint_value_spec():
 
     assert not invert.is_animated
     invert.is_animated = True
+    del invert.timeline[0]
     invert.timeline[10] = w1
     invert.timeline[20] = False
 
@@ -121,10 +123,84 @@ def test_waypoint_value_spec():
     assert (
             [str(n) for n in invert.timeline.items()]==
             [
-                '(0f, [ 0f 🔶-🔶 - True])',
+                '(10f, [10f 🔶-🔶 - True])',
                 '(20f, [20f 🔶-🔶 - False])',
                 ]
             )
+
+def test_waypoint_del():
+    sif = get_animation('bouncing.sif')
+    assert len(sif)==121
+
+    ball = sif.find(desc='Bouncy ball')
+    color = ball['color']
+    assert not color.is_animated
+
+    color.timeline[0] = '#FF0000'
+    color.timeline[16] = '#00FF00'
+    color.timeline[32] = '#0000FF'
+    color.timeline[40] = '#FF00FF'
+    color.timeline[47] = '#FF0000'
+
+    def assert_timeline(values, reason):
+        assert (
+                [(t.frames,str(w.value)) for t,w in color.timeline.items()] ==
+                values
+                ), reason
+        if values:
+            assert color.is_animated
+        else:
+            assert not color.is_animated
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (16.0, '#00ff00'),
+            (32.0, '#0000ff'),
+            (40.0, '#ff00ff'),
+            (47.0, '#ff0000'),
+            ], "original is as expected")
+
+    with pytest.raises(KeyError):
+        del color.timeline[177]
+
+    del color.timeline[32]
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (16.0, '#00ff00'),
+            (40.0, '#ff00ff'),
+            (47.0, '#ff0000'),
+            ], "we can delete by int frames number")
+
+    with pytest.raises(KeyError):
+        # but not the same twice!
+        del color.timeline[32]
+
+    del color.timeline[40.0]
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (16.0, '#00ff00'),
+            (47.0, '#ff0000'),
+            ], "we can delete by float frames number")
+
+    del color.timeline[T(16)]
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (47.0, '#ff0000'),
+            ], "we can delete by T(int)") # colour by Tint, ha
+
+    del color.timeline['1s23f']
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            ], "we can delete by T(str)")
+
+    del color.timeline[T(0)]
+
+    assert_timeline([
+        ], "we can delete until there's nothing left")
 
 def test_waypoint_add():
     sif = get_animation('bouncing.sif')

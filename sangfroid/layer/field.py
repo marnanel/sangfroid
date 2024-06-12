@@ -54,7 +54,7 @@ class Field:
     def __set_name__(self, owner, name):
         self.owner = owner
         if self.name is None:
-            self.name = name.replace('_', '-')
+            self.name = name#.replace('_', '-')
 
     def __get__(self, obj, obj_type=None):
         raise NotImplementedError()
@@ -197,6 +197,10 @@ class ParamTagField(Field):
                                    'name': self.name,
                                    },
                                )
+
+        if holder is None:
+            raise AttributeError(self.name)
+
         contents = [t for t in holder.children
                     if isinstance(t, bs4.Tag)]
         if len(contents)!=1:
@@ -210,8 +214,8 @@ class ParamTagField(Field):
         return result
 
     def __get__(self, obj, obj_type=None):
-        value_obj = self._get_value(obj)
-        result = self.type_(value_obj.value)
+        result = self._get_value(obj)
+        assert isinstance(result, self.type_), f"{result} {type(result)} {self.type_}"
         return result
 
     def __set__(self, obj, value):

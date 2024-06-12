@@ -15,7 +15,7 @@ class Wombat(Layer):
 def test_notimplementedfield():
     tag = BeautifulSoup("""<layer type="wombat" active="true"
     exclude_from_rendering="false" version="0.1">
-    <param name="z-depth">
+    <param name="z_depth">
         <real value="1.0"/>
     </param>
     <bline name="bline">

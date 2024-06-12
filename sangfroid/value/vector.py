@@ -30,6 +30,9 @@ class Vector(Value):
                 "(dict_of_members).")
 
     def __getattr__(self, f):
+        if f.startswith('_'):
+            raise AttributeError(f)
+
         s = self._tag.find(name=f)
         if s is None:
             raise AttributeError(f)
