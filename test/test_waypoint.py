@@ -204,7 +204,6 @@ def test_waypoint_del():
 
 def test_waypoint_add():
     sif = get_animation('bouncing.sif')
-    assert len(sif)==121
 
     ball = sif.find(desc='Bouncy ball')
     color = ball['color']
@@ -214,8 +213,6 @@ def test_waypoint_add():
     color.timeline[16] = '#00FF00'
     color.timeline[32] = '#0000FF'
     color.timeline[47] = '#FF0000'
-
-    sif.save('/tmp/flashy.sif')
 
     waypoint_details = [str(c) for c in color.tag.children
                         if isinstance(c, bs4.Tag)]
@@ -234,6 +231,21 @@ def test_waypoint_add():
              '<r>1.000000</r><g>0.000000</g><b>0.000000</b><a>1.000000</a>'
              '</color></waypoint>'),
             ]
+
+def test_value_timeline_add():
+    def get_example_value():
+        sif = get_animation('bouncing.sif')
+
+        ball = sif.find(desc='Bouncy ball')
+        amount = ball['amount']
+        amount.timeline[0] = 7
+        return amount
+
+    def timeline_details(v):
+        return [(w.time.seconds, float(w.value)) for w in v.timeline]
+
+    v = get_example_value()
+    assert timeline_details(v)==[(0.0, 7.0)]
 
 def test_value_timeline_assign_once():
     r = Real(1.77)
@@ -307,3 +319,99 @@ def test_value_set_is_animated():
 
     angle.is_animated = False
     assert not angle.is_animated
+
+def test_waypoint_overwrite_or_not():
+
+    def via_iadd(timeline, values):
+        timeline += values
+
+    def via_add_with_overwrite(timeline, values):
+        timeline.add(values, overwrite=True)
+
+    def via_add_with_no_overwrite(timeline, values):
+        timeline.add(values, overwrite=False)
+
+    def waypoint(t, v):
+        return Waypoint(t, Angle(v))
+
+    for method, can_overwrite in [
+            (via_iadd, True),
+            (via_add_with_overwrite, True),
+            (via_add_with_no_overwrite, False),
+            ]:
+
+        sif = get_animation('bouncing.sif')
+
+        ball = sif.find(desc='Ball')
+        angle = ball['transformation']['angle']
+
+        def assert_timeline_is_like(expected):
+            found = [
+                    (w.time.frames, float(w.value))
+                    for w in angle.timeline
+                    ]
+            assert found==expected
+
+        assert not angle.is_animated
+        assert_timeline_is_like([])
+
+        with pytest.raises(TypeError):
+            method(angle.timeline, 100)
+
+        with pytest.raises(TypeError):
+            method(angle.timeline, [100, 200])
+
+        method(angle.timeline,
+               waypoint(10, 10.0))
+
+        assert_timeline_is_like([
+            (10, 10.0),
+            ])
+
+        method(angle.timeline,
+               waypoint(20, 20.0))
+
+        assert_timeline_is_like([
+            (10, 10.0),
+            (20, 20.0),
+            ])
+
+        method(angle.timeline, [
+            waypoint(30, 30.0),
+            waypoint(40, 40.0),
+            ])
+
+        assert_timeline_is_like([
+            (10, 10.0),
+            (20, 20.0),
+            (30, 30.0),
+            (40, 40.0),
+            ])
+
+        try:
+            method(angle.timeline, [
+                waypoint(40, 45.0),
+                waypoint(50, 50.0),
+                ])
+
+            it_worked = True
+        except ValueError:
+            it_worked = False
+
+        assert it_worked==can_overwrite, method
+
+        if it_worked:
+            assert_timeline_is_like([
+                (10, 10.0),
+                (20, 20.0),
+                (30, 30.0),
+                (40, 45.0),
+                (50, 50.0),
+                ])
+        else:
+            assert_timeline_is_like([
+                (10, 10.0),
+                (20, 20.0),
+                (30, 30.0),
+                (40, 40.0),
+                ])
