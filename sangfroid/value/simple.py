@@ -93,6 +93,9 @@ class Real(Numeric):
 class Integer(Numeric):
     our_type = int
 
+    def __int__(self):
+        return self.value
+
 @Value.handles_type()
 class Bool(Simple):
     our_type = bool
@@ -128,7 +131,7 @@ class Angle(Simple):
         return str(v)
 
     def __float__(self):
-        return float(self.value)
+        return self.value
 
 @Value.handles_type()
 class Time(Simple):
