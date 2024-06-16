@@ -213,9 +213,80 @@ def test_waypoint_add():
     color.timeline[0] = '#FF0000'
     color.timeline[16] = '#00FF00'
     color.timeline[32] = '#0000FF'
+    color.timeline[40] = '#FF00FF'
     color.timeline[47] = '#FF0000'
 
-    sif.save('/tmp/flashy.sif')
+    def assert_timeline(values, reason):
+        assert (
+                [(t.frames,str(w.value)) for t,w in color.timeline.items()] ==
+                values
+                ), reason
+        if values:
+            assert color.is_animated
+        else:
+            assert not color.is_animated
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (16.0, '#00ff00'),
+            (32.0, '#0000ff'),
+            (40.0, '#ff00ff'),
+            (47.0, '#ff0000'),
+            ], "original is as expected")
+
+    with pytest.raises(KeyError):
+        del color.timeline[177]
+
+    del color.timeline[32]
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (16.0, '#00ff00'),
+            (40.0, '#ff00ff'),
+            (47.0, '#ff0000'),
+            ], "we can delete by int frames number")
+
+    with pytest.raises(KeyError):
+        # but not the same twice!
+        del color.timeline[32]
+
+    del color.timeline[40.0]
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (16.0, '#00ff00'),
+            (47.0, '#ff0000'),
+            ], "we can delete by float frames number")
+
+    del color.timeline[T(16)]
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            (47.0, '#ff0000'),
+            ], "we can delete by T(int)") # colour by Tint, ha
+
+    del color.timeline['1s23f']
+
+    assert_timeline([
+            (0.0, '#ff0000'),
+            ], "we can delete by T(str)")
+
+    del color.timeline[T(0)]
+
+    assert_timeline([
+        ], "we can delete until there's nothing left")
+
+def test_waypoint_add():
+    sif = get_animation('bouncing.sif')
+
+    ball = sif.find(desc='Bouncy ball')
+    color = ball['color']
+    assert not color.is_animated
+
+    color.timeline[0] = '#FF0000'
+    color.timeline[16] = '#00FF00'
+    color.timeline[32] = '#0000FF'
+    color.timeline[47] = '#FF0000'
 
     waypoint_details = [str(c) for c in color.tag.children
                         if isinstance(c, bs4.Tag)]
@@ -234,6 +305,21 @@ def test_waypoint_add():
              '<r>1.000000</r><g>0.000000</g><b>0.000000</b><a>1.000000</a>'
              '</color></waypoint>'),
             ]
+
+def test_value_timeline_add():
+    def get_example_value():
+        sif = get_animation('bouncing.sif')
+
+        ball = sif.find(desc='Bouncy ball')
+        amount = ball['amount']
+        amount.timeline[0] = 7
+        return amount
+
+    def timeline_details(v):
+        return [(w.time.seconds, float(w.value)) for w in v.timeline]
+
+    v = get_example_value()
+    assert timeline_details(v)==[(0.0, 7.0)]
 
 def test_value_timeline_assign_once():
     r = Real(1.77)
@@ -307,3 +393,99 @@ def test_value_set_is_animated():
 
     angle.is_animated = False
     assert not angle.is_animated
+
+def test_waypoint_overwrite_or_not():
+
+    def via_iadd(timeline, values):
+        timeline += values
+
+    def via_add_with_overwrite(timeline, values):
+        timeline.add(values, overwrite=True)
+
+    def via_add_with_no_overwrite(timeline, values):
+        timeline.add(values, overwrite=False)
+
+    def waypoint(t, v):
+        return Waypoint(t, Angle(v))
+
+    for method, can_overwrite in [
+            (via_iadd, True),
+            (via_add_with_overwrite, True),
+            (via_add_with_no_overwrite, False),
+            ]:
+
+        sif = get_animation('bouncing.sif')
+
+        ball = sif.find(desc='Ball')
+        angle = ball['transformation']['angle']
+
+        def assert_timeline_is_like(expected):
+            found = [
+                    (w.time.frames, float(w.value))
+                    for w in angle.timeline
+                    ]
+            assert found==expected
+
+        assert not angle.is_animated
+        assert_timeline_is_like([])
+
+        with pytest.raises(TypeError):
+            method(angle.timeline, 100)
+
+        with pytest.raises(TypeError):
+            method(angle.timeline, [100, 200])
+
+        method(angle.timeline,
+               waypoint(10, 10.0))
+
+        assert_timeline_is_like([
+            (10, 10.0),
+            ])
+
+        method(angle.timeline,
+               waypoint(20, 20.0))
+
+        assert_timeline_is_like([
+            (10, 10.0),
+            (20, 20.0),
+            ])
+
+        method(angle.timeline, [
+            waypoint(30, 30.0),
+            waypoint(40, 40.0),
+            ])
+
+        assert_timeline_is_like([
+            (10, 10.0),
+            (20, 20.0),
+            (30, 30.0),
+            (40, 40.0),
+            ])
+
+        try:
+            method(angle.timeline, [
+                waypoint(40, 45.0),
+                waypoint(50, 50.0),
+                ])
+
+            it_worked = True
+        except ValueError:
+            it_worked = False
+
+        assert it_worked==can_overwrite, method
+
+        if it_worked:
+            assert_timeline_is_like([
+                (10, 10.0),
+                (20, 20.0),
+                (30, 30.0),
+                (40, 45.0),
+                (50, 50.0),
+                ])
+        else:
+            assert_timeline_is_like([
+                (10, 10.0),
+                (20, 20.0),
+                (30, 30.0),
+                (40, 40.0),
+                ])

@@ -319,21 +319,33 @@ class Timeline:
         return list(self.parent._waypoints().items())
 
     def __iadd__(self, waypoints):
+        self.add(waypoints,
+            overwrite = True,
+                 )
 
-        if isinstance(waypoints, dict):
-            waypoints = waypoints.values()
-        elif isinstance(waypoints, Waypoint):
+    def add(self, waypoints,
+            overwrite = False,
+            ):
+
+        def raise_argument_error():
+            raise TypeError(
+                    "The argument to add() "
+                    "must be either a Waypoint or a list of Waypoints.")
+
+        if isinstance(waypoints, Waypoint):
             waypoints = [waypoints]
         elif isinstance(waypoints, list):
             pass
         else:
-            raise TypeError(type(waypoints))
+            raise_argument_error()
 
         # check they're sensible
         for w in waypoints:
-            if not isinstance(w.tag, bs4.Tag):
+            if not isinstance(w, Waypoint):
+                raise_argument_error()
+            elif not isinstance(w.tag, bs4.Tag):
                 raise TypeError(
-                        f'{w} has a tag of type {type(bs4.Tag)}')
+                        f'{w} has a tag of type {type(w.tag)}')
 
         existing = self.parent._waypoints()
         clashes = [
@@ -342,9 +354,14 @@ class Timeline:
                 for new in waypoints
                 if old.time==new.time
                 ]
-        if clashes:
+
+        if overwrite:
+            for old, _ in clashes:
+                del existing[old]
+        elif clashes:
             raise ValueError("There are already Waypoints with those "
-                             f"times in this timeline: {clashes}")
+                             "times in this timeline:\n"
+                             f"{clashes}")
 
         self.parent.is_animated = True
 
