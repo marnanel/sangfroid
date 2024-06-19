@@ -37,13 +37,11 @@ Now, we'll combine it with [this animation](from-test/sing-like-a-girl.sif):
 
 ![The basic animation. All text is always visible, except for the ampersand, which we'll discuss below. The first line pivots away at the appropriate place. This and the ampersand are the only animated parts.](sing-before.gif)
 
-All text is always visible at present, except for the ampersand, which we'll discuss below. The first half pivots away at the appropriate place. This and the ampersand are the only animated parts.
-
 Here are the layers of that animation:
 
 ![The layers pane in Synfig Studio. Four groups (highlighted) have names beginning `"bywords"`. These correspond to the four lines in the subtitle file.](layers.png)
 
-The groups whose names beginning with `"bywords"` correspond to the four lines in the subtitle file. Bywords will matches the subtitle lines to these groups based on the text they contain. The names must begin with `"byword"s`, but the rest is arbitrary; the name may simply be `"bywords"`.
+Bywords will matches the subtitle lines to these groups based on the text they contain. The names must begin with `"bywords"`, but the rest is arbitrary; the name may simply be `"bywords"`.
 
 Now, suppose we type
 ```
@@ -99,6 +97,4 @@ After we've run Bywords once, we can look up where the invisible "and" is set to
 
 ![Synfig Studio, with the "and" layer selected. The time cursor is on the waypoint which brings in the word "and"...](and-layer-1.png)
 
-and add a new waypoint to the "&" layer manually, at the same position.
-
-![Now we have the "&" layer selected.](and-layer-2.png)
+![...and now we have the "&" layer selected. We add a new waypoint manually, at the same position.](and-layer-2.png)
