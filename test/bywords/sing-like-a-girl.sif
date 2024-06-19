@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<canvas version="1.2" width="480" height="270" xres="2834.645669" yres="2834.645669" gamma-r="1.000000" gamma-g="1.000000" gamma-b="1.000000" view-box="-4.000000 2.250000 4.000000 -2.250000" antialias="1" fps="24.000" begin-time="0f" end-time="5s" bgcolor="0.500000 0.500000 0.500000 1.000000">
+<canvas version="1.2" width="480" height="270" xres="2834.645669" yres="2834.645669" gamma-r="1.000000" gamma-g="1.000000" gamma-b="1.000000" view-box="-4.000000 2.250000 4.000000 -2.250000" antialias="1" fps="24.000" begin-time="0f" end-time="15s" bgcolor="0.500000 0.500000 0.500000 1.000000">
   <name>sing-like-a-girl.sif</name>
   <meta name="background_first_color" content="0.880000 0.880000 0.880000"/>
   <meta name="background_rendering" content="0"/>
@@ -17,7 +17,10 @@
   <meta name="onion_skin_future" content="0"/>
   <meta name="onion_skin_keyframes" content="1"/>
   <meta name="onion_skin_past" content="1"/>
-  <keyframe time="0f" active="true"/>
+  <keyframe time="0f" active="true">start</keyframe>
+  <keyframe time="6s 1f" active="true">start wipe</keyframe>
+  <keyframe time="6s 16f" active="true">end wipe</keyframe>
+  <keyframe time="12s 12f" active="true">end</keyframe>
   <layer type="radial_gradient" active="true" exclude_from_rendering="false" version="0.1">
     <param name="z_depth">
       <real value="0.0000000000"/>
@@ -60,7 +63,7 @@
       <bool value="false"/>
     </param>
   </layer>
-  <layer type="group" active="false" exclude_from_rendering="false" version="0.3" desc="page 2">
+  <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="page 2">
     <param name="z_depth">
       <real value="0.0000000000"/>
     </param>
@@ -99,8 +102,8 @@
       </composite>
     </param>
     <param name="canvas">
-      <canvas>
-        <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="bywords and not">
+      <canvas end-time="5s">
+        <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="bywords 4">
           <param name="z_depth">
             <real value="0.0000000000"/>
           </param>
@@ -475,7 +478,7 @@
                   <bool value="false"/>
                 </param>
               </layer>
-              <layer type="text" active="true" exclude_from_rendering="false" version="0.5" desc="and">
+              <layer type="text" active="false" exclude_from_rendering="false" version="0.5" desc="and">
                 <param name="z_depth">
                   <real value="0.0000000000"/>
                 </param>
@@ -522,7 +525,7 @@
                 </param>
                 <param name="orient">
                   <vector>
-                    <x>0.5000000000</x>
+                    <x>0.0000000000</x>
                     <y>0.5000000000</y>
                   </vector>
                 </param>
@@ -614,7 +617,17 @@
                   <real value="0.0000000000"/>
                 </param>
                 <param name="amount">
-                  <real value="1.0000000000"/>
+                  <animated type="real">
+                    <waypoint time="6.66666651s" before="constant" after="constant">
+                      <real value="0.0000000000"/>
+                    </waypoint>
+                    <waypoint time="7s" before="constant" after="constant">
+                      <real value="1.0000000000"/>
+                    </waypoint>
+                    <waypoint time="12.5s" before="clamped" after="clamped">
+                      <real value="1.0000000000"/>
+                    </waypoint>
+                  </animated>
                 </param>
                 <param name="blend_method">
                   <integer value="0" static="true"/>
@@ -656,14 +669,14 @@
                 </param>
                 <param name="orient">
                   <vector>
-                    <x>0.5000000000</x>
+                    <x>0.0000000000</x>
                     <y>0.5000000000</y>
                   </vector>
                 </param>
                 <param name="origin">
                   <vector>
-                    <x>-2.9434895515</x>
-                    <y>1.3005207777</y>
+                    <x>-3.7109909058</x>
+                    <y>1.2952605486</y>
                   </vector>
                 </param>
                 <param name="use_kerning">
@@ -814,7 +827,7 @@
       </composite>
     </param>
     <param name="canvas">
-      <canvas>
+      <canvas end-time="5s">
         <layer type="group" active="true" exclude_from_rendering="false" version="0.3" desc="bywords can i">
           <param name="z_depth">
             <real value="0.0000000000"/>
@@ -902,14 +915,14 @@
                 </param>
                 <param name="orient">
                   <vector>
-                    <x>0.5000000000</x>
+                    <x>0.0000000000</x>
                     <y>0.5000000000</y>
                   </vector>
                 </param>
                 <param name="origin">
                   <vector>
-                    <x>-0.0944010839</x>
-                    <y>-0.9880208373</y>
+                    <x>-2.9439694881</x>
+                    <y>-0.9833388925</y>
                   </vector>
                 </param>
                 <param name="use_kerning">
@@ -970,13 +983,13 @@
                 <param name="orient">
                   <vector>
                     <x>0.0000000000</x>
-                    <y>0.5000000000</y>
+                    <y>0.0000000000</y>
                   </vector>
                 </param>
                 <param name="origin">
                   <vector>
-                    <x>-3.8521485329</x>
-                    <y>0.4166015685</y>
+                    <x>-3.8605916500</x>
+                    <y>0.7394927740</y>
                   </vector>
                 </param>
                 <param name="use_kerning">
@@ -1103,14 +1116,14 @@
                 </param>
                 <param name="orient">
                   <vector>
-                    <x>0.5000000000</x>
+                    <x>0.0000000000</x>
                     <y>0.5000000000</y>
                   </vector>
                 </param>
                 <param name="origin">
                   <vector>
-                    <x>-0.2363931537</x>
-                    <y>1.5577473640</y>
+                    <x>-4.0450882912</x>
+                    <y>1.5375720263</y>
                   </vector>
                 </param>
                 <param name="use_kerning">
@@ -1193,6 +1206,30 @@
           </param>
           <param name="solid">
             <bool value="false"/>
+          </param>
+        </layer>
+        <layer type="rotate" active="true" exclude_from_rendering="false" version="0.1">
+          <param name="origin">
+            <vector>
+              <x>-3.9611411095</x>
+              <y>-2.2317271233</y>
+            </vector>
+          </param>
+          <param name="amount">
+            <animated type="angle">
+              <waypoint time="0s" before="clamped" after="clamped">
+                <angle value="0.000000"/>
+              </waypoint>
+              <waypoint time="6.04166651s" before="halt" after="halt">
+                <angle value="0.000000"/>
+              </waypoint>
+              <waypoint time="6.66666651s" before="halt" after="halt">
+                <angle value="90.000000"/>
+              </waypoint>
+              <waypoint time="12.5s" before="halt" after="halt">
+                <angle value="90.000000"/>
+              </waypoint>
+            </animated>
           </param>
         </layer>
       </canvas>
