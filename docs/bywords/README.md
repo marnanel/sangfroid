@@ -35,7 +35,9 @@ In practice, it's fine to keep the Bywords subtitle file separate from the one y
 
 Now, we'll combine it with [this animation](from-test/sing-like-a-girl.sif):
 
-![The basic animation. All text is always visible, except for the ampersand, which we'll discuss below. The first line pivots away at the appropriate place. This and the ampersand are the only animated parts.](sing-before.gif)
+![The basic animation.](sing-before.gif)
+
+All text is always visible, except for the ampersand, which we'll discuss below. The first line pivots away at the appropriate place. This, and the ampersand, are the only animated parts.
 
 Here are the layers of that animation:
 
@@ -95,6 +97,8 @@ It corresponds to the group `"bywords and not"`. This group *does* contain the w
 
 After we've run Bywords once, we can look up where the invisible "and" is set to appear:
 
-![Synfig Studio, with the "and" layer selected. The time cursor is on the waypoint which brings in the word "and"...](and-layer-1.png)
+![Synfig Studio, with the "and" layer selected. The time cursor is on the waypoint which brings in the word "and".](and-layer-1.png)
 
-![...and now we have the "&" layer selected. We add a new waypoint manually, at the same position.](and-layer-2.png)
+...and add a new waypoint manually, at the same position.
+
+![Now we have the "&" layer selected.](and-layer-2.png)
