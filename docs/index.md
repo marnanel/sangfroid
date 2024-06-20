@@ -35,4 +35,5 @@ Contents
    examples
    usage
    api
+   bywords
 ```
