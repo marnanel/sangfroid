@@ -21,15 +21,28 @@ class Layer:
 
     SYMBOL = '?' # fallback
 
-    type_            = TagAttrField(str,         None, name='type')
-    active           = TagAttrField(bool,        True)
-    exclude_from_rendering = TagAttrField(bool,  False)
+    type_            = TagAttrField(
+            str,         None,
+            name='type',
+            doc = """The name Synfig uses internally for this type of layer.
+
+            In Python, you must spell this as `type_`, because `type` is
+            a reserved word.""",
+            )
+    active           = TagAttrField(
+            bool,        True,
+            doc = "True if this layer is enabled.",
+            )
+    exclude_from_rendering = TagAttrField(
+            bool,  False,
+            doc = "True if this layer should not be rendered.",
+            )
     version          = TagAttrField(float,       None)
 
-    """
-    A description of this layer.
-    """
-    desc             = TagAttrField(str,         '')
+    desc             = TagAttrField(
+            str,         '',
+            doc = "A description of this layer.",
+            )
 
     tag              = TagField()
 
