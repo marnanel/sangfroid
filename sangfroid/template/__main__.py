@@ -9,6 +9,9 @@ from sangfroid.value.blendmethod import BlendMethod
 # XXX
 #  Still to do:
 #    - Document all this
+#    - Merge in the code which reads Synfig source
+#    - Load existing classes in order to check for __doc__
+#       and inheritance
 
 OVERRIDES = {
         ('duplicate', 'index'): 'f.DuplicatesIndexField(None)',
@@ -30,6 +33,10 @@ def parse_args():
             '--synfig', type=str,
             default=None,
             help='location of Synfig repo')
+    parser.add_argument(
+            '--verbose', '-v',
+            action='store_true',
+            help='show what\'s being done')
     args = parser.parse_args()
     return args
 
@@ -43,16 +50,18 @@ def main():
     if args.synfig:
         raise ValueError("Still need to merge in the Synfig-checking code")
     
-    scan_pick_and_mix()
+    scan_pick_and_mix(args)
 
-def scan_pick_and_mix():
+def scan_pick_and_mix(args):
     with open('test/pick-and-mix.sif', 'r') as f:
         soup = bs4.BeautifulSoup(
                 f,
                 features = 'xml',
                 )
 
-    replacer = Replacer()
+    replacer = Replacer(
+            verbose = args.verbose,
+            )
 
     types_done = set()
 
