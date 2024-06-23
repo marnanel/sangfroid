@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 import bs4
 import sangfroid.value as v
 
@@ -50,6 +51,21 @@ class Field:
         if default is not None:
             # yes, this is the right way round; think about it
             self.__doc__ += ' or None'
+
+        if issubclass(type_, Enum):
+            self.__doc__ += '\n\nPossible values (integer or constants):\n\n'
+
+            max_length = max([len(s) for s in type_.__members__],
+                             default=0)
+
+            self.__doc__ += '\n'.join([
+                '%4d %*s %s' % (
+                    i,
+                    max_length,
+                    s,
+                    '...', # doc, FIXME
+                    )
+                for i, s in enumerate(type_.__members__)])
 
     def __set_name__(self, owner, name):
         self.owner = owner
