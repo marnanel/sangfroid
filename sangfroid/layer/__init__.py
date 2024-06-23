@@ -10,7 +10,7 @@ these classes.
 from sangfroid.layer.layer import *
 
 from sangfroid.layer.blurs import *
-from sangfroid.layer.field import *
+from sangfroid.field import *
 from sangfroid.layer.geometry import *
 from sangfroid.layer.group import *
 from sangfroid.layer.other import *

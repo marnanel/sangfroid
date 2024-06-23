@@ -1,6 +1,6 @@
 from sangfroid.layer.layer import Layer
 import sangfroid.value as v
-import sangfroid.layer.field as f
+import sangfroid.field as f
 
 """
 These are the layer types that we haven't got to yet.

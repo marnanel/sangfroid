@@ -1,7 +1,7 @@
 from test import *
 import pytest
 from sangfroid.layer.layer import Layer
-import sangfroid.layer.field as f
+import sangfroid.field as f
 import sangfroid.value as v
 from bs4 import BeautifulSoup
 

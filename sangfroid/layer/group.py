@@ -1,6 +1,6 @@
 from sangfroid.layer import Layer
 import sangfroid.value as v
-import sangfroid.layer.field as f
+import sangfroid.field as f
 import bs4
 
 @f.ShortcutField.include_from("transformation")
