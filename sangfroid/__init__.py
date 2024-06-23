@@ -1,4 +1,12 @@
+"""
+handle Synfig animations
+
+Sangfroid allows you to load, change, and save Synfig animations
+using Python.
+"""
 import sangfroid.layer
+import sangfroid.value
+
 from sangfroid.keyframe import *
 from sangfroid.animation import *
 from sangfroid.t import *

@@ -14,7 +14,8 @@ def test_animation_load_sif():
     assert sif.name == 'Circles'
     assert sif.desc == 'I like circles. They are round.'
     assert sif.size == (480, 270)
-    assert sif.resolution==(2834.645669, 2835)
+    assert sif.xres == 2834.645669
+    assert sif.yres == 2835.0
     assert sif.background==sangfroid.value.Color('#808080')
     assert sif.begin_time==0
     assert sif.end_time==sangfroid.T('5s', reference_tag=sif.tag)
@@ -199,7 +200,8 @@ def blank_sif_assertions(sif, name):
     assert sif.name == 'New animation', name
     assert sif.desc == '', name
     assert sif.size == (480, 270), name
-    assert sif.resolution==(2834.645669, 2834.645669), name
+    assert sif.xres == 2834.645669
+    assert sif.yres == 2834.645669
     assert sif.background==sangfroid.value.Color('#808080'), name
     assert sif.begin_time==0, name
     assert sif.end_time==sangfroid.T('5s', reference_tag=sif.tag), name

@@ -43,10 +43,18 @@ class Animation(Group):
     """
 
     version = TagAttrField(float,       1.2)
-    width = TagAttrField(int,         480)
-    height = TagAttrField(int,         270)
-    xres = TagAttrField(float,       2834.645669)
-    yres = TagAttrField(float,       2834.645669)
+    width = TagAttrField(int,         480,
+                         doc = "The width of the canvas, in pixels.",
+                         )
+    height = TagAttrField(int,         270,
+                         doc = "The width of the canvas, in pixels.",
+                          )
+    xres = TagAttrField(float,       2834.645669,
+                        doc = "The horizontal resolution.",
+                        )
+    yres = TagAttrField(float,       2834.645669,
+                        doc = "The vertical resolution.",
+                        )
     gamma_r = TagAttrField(float,       1.0)
     gamma_g = TagAttrField(float,       1.0)
     gamma_b = TagAttrField(float,       1.0)
@@ -67,7 +75,6 @@ class Animation(Group):
     end_time = TagTimeAttrField('5s',
             doc = 'The time at which this animation ends.',
            )
-    active = TagAttrField(bool,        True)
     bgcolor = TagAttrField(str,         '0.5 0.5 0.5 1.0')
 
     background_first_color = MetadataTagField(v.Color, (0.88, 0.88, 0.88))
@@ -126,22 +133,6 @@ class Animation(Group):
     def name(self):
         return self._tag.find('name').string
 
-    def description(self):
-        """
-        A description of this animation.
-
-        So you know what it is when you find it again next year.
-
-        Type:
-            str or None
-        """
-        tag = self._tag.find('desc')
-
-        if tag is None:
-            return ''
-        else:
-            return tag.string
-
     @property
     def size(self):
         """
@@ -156,28 +147,12 @@ class Animation(Group):
                 )
 
     @property
-    def resolution(self):
-        """
-        The default resolution.
-
-        Type:
-            (float, float)
-        """
-        return (
-                float(self._tag.attrs['xres']),
-                float(self._tag.attrs['yres']),
-                )
-
-    @property
     def viewbox(self):
         """
         The coordinates of the edges of the screen.
 
         This is a tuple of four floats:
         `(left, bottom, right, top)`.
-
-        (Maybe it would be sensible to have e.g.
-        `Animation.top` etc?)
 
         Type:
             4-tuple of floats
@@ -266,3 +241,7 @@ class Animation(Group):
                 content = self._soup,
                 filename = filename,
                 )
+
+__all__ = [
+        'Animation',
+        ]

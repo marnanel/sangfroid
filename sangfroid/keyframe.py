@@ -59,3 +59,7 @@ class Keyframes:
         return result
 
     __repr__ = __str__
+
+__all__ = [
+        'Keyframe',
+        ]
