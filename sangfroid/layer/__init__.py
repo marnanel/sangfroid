@@ -1,3 +1,7 @@
+"""
+Many kinds of layer.
+"""
+
 from sangfroid.layer.layer import *
 
 from sangfroid.layer.blurs import *
