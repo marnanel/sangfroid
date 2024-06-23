@@ -307,3 +307,7 @@ def _name_and_value_of(tag):
 
     value = v.Value.from_tag(value_tag)
     return name, value
+
+__all__ = [
+        'Layer',
+        ]
