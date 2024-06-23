@@ -4,6 +4,7 @@ import argparse
 import sangfroid.value as sv
 import sangfroid
 from sangfroid.template.replacer import Replacer
+from sangfroid.template.read_existing import Read_Existing
 from sangfroid.value.blendmethod import BlendMethod
 
 # XXX
@@ -52,12 +53,35 @@ def main():
     
     scan_pick_and_mix(args)
 
+def is_inherited_param(cls, paramname):
+    try:
+        param = cls.__dict__[paramname]
+    except KeyError:
+        return False
+
+    for superclass in cls.__mro__:
+        if superclass==cls:
+            continue
+        try:
+            super_param = superclass.__dict__[paramname]
+
+            if super_param==param:
+                return True
+
+        except KeyError:
+            continue
+
+    return False
+
 def scan_pick_and_mix(args):
     with open('test/pick-and-mix.sif', 'r') as f:
         soup = bs4.BeautifulSoup(
                 f,
                 features = 'xml',
                 )
+
+    existing = Read_Existing()
+    existing.handle_all_files()
 
     replacer = Replacer(
             verbose = args.verbose,
@@ -73,6 +97,7 @@ def scan_pick_and_mix(args):
         result = ''
 
         classname = layer['type'].title()
+        existing_class = existing.result.get(classname, None)
 
         result += f'SYNFIG_VERSION = "{layer["version"]}"\n'
         result += '\n'
@@ -83,6 +108,12 @@ def scan_pick_and_mix(args):
 
             paramname = param['name']
             is_array = False
+
+            if (
+                    existing_class is not None and
+                    is_inherited_param(existing_class, paramname)
+                    ):
+                continue
 
             if '[' in paramname:
                 if '[0]' not in paramname:
@@ -131,14 +162,30 @@ def scan_pick_and_mix(args):
                         f'{ae}')
                 return
 
+            if existing_class is not None:
+                existing_param = existing_class.__dict__.get(paramname, None)
+            else:
+                existing_param = None
+
             try:
                 value = cls.from_tag(value_tag).as_python_expression()
                 if is_array:
-                    params[paramname] = f'f.ParamArrayField(v.{typename}, {value})'
+                    params[paramname] = f'f.ParamArrayField(v.{typename}, {value},'
                 else:
-                    params[paramname] = f'f.ParamTagField(v.{typename}, {value})'
+                    params[paramname] = f'f.ParamTagField(v.{typename}, {value},'
             except NotImplementedError:
-                params[paramname] = f'f.NotImplementedField("{typename}")'
+                params[paramname] = f'f.NotImplementedField("{typename}",'
+
+            other_params = []
+
+            if existing_param is not None and existing_param.doc:
+                other_params.append(
+                        f'doc={repr(existing_param.doc)}'
+                        )
+
+            params[paramname] += ''.join([f'\n{" "*30}{s},' for s in other_params])
+
+            params[paramname] += f'\n{" "*20})'
 
         for left, right in params.items():
             if left in (
