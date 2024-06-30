@@ -1,10 +1,8 @@
-# Sangfroid
-
 Sangfroid is a Python library to read [Synfig](https://synfig.org) documents, in the .sif, .sifz, and .sfg formats. It isn't ready for general use yet.
 
-Development happens [on gitlab](https://gitlab.com/marnanel/sangfroid), but there's also [a github mirror](https://github.com/marnanel/sangfroid).
+The current version is [0.1 *liverpool*](https://gitlab.com/marnanel/sangfroid/-/milestones/1). There may be improvements in development, which happens [on gitlab](https://gitlab.com/marnanel/sangfroid). There's also [a github mirror](https://github.com/marnanel/sangfroid), updated irregularly.
 
-Currently we're approaching our first pre-alpha release, *[0.1 liverpool](https://gitlab.com/marnanel/sangfroid/-/milestones/1)*.
+The [main place to find documentation](https://sangfroid.readthedocs.io/) is on RTD.
 
 # How to install
 

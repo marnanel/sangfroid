@@ -1,6 +1,6 @@
 [project]
 name = "sangfroid"
-version = "0.0.3"
+version = "0.1.0"
 authors = [
   { name="Marnanel Thurman", email="marnanel@thurman.org.uk" },
 ]
@@ -8,12 +8,13 @@ description = "Parses Synfig files"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
-	"Development Status :: 2 - Pre-Alpha",
-	"Programming Language :: Python :: 3",
-	"License :: OSI Approved :: MIT License",
-	"Intended Audience :: Developers",
-	"Operating System :: OS Independent",
-	"Topic :: Text Processing :: XML",
+        "Development Status :: 2 - Pre-Alpha",
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Intended Audience :: Developers",
+        "Operating System :: OS Independent",
+        "Topic :: Text Processing",
+        "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
 ]
 keywords = ["synfig", "synfigstudio", "animation"]
 dependencies = [
@@ -40,7 +41,6 @@ requires = [
 	"setuptools>=61.0",
 	"wheel",
 ]
-build_backend="setuptools.build_meta"
 
 [tool.setuptools]
 packages = [
