@@ -91,7 +91,7 @@ def test_t_examples():
                 sif.tag['fps'] = str(example[1])
                 tag = sif.tag
 
-            time = T(example[0], reference_tag=tag)
+            time = T(example[0], ref=tag)
 
             message = (
                     "\n"
@@ -124,9 +124,9 @@ def test_t_examples():
             assert time  < example[2]+1, f"less than constant: {message}"
             assert time  > example[2]-1, f"more than constant: {message}"
 
-            t_same   = T(f'{example[2]}f',   reference_tag=tag)
-            t_before = T(f'{example[2]-1}f', reference_tag=tag)
-            t_after  = T(f'{example[2]+1}f', reference_tag=tag)
+            t_same   = T(f'{example[2]}f',   ref=tag)
+            t_before = T(f'{example[2]-1}f', ref=tag)
+            t_after  = T(f'{example[2]+1}f', ref=tag)
 
             assert time == t_same,   f"equal to another T: {message}"
             assert time != t_before, f"not equal to another T: {message}"

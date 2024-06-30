@@ -299,7 +299,7 @@ class Timeline:
 
     def _ensure_fps(self, t):
         if isinstance(t, (int, float, str)):
-            return T(t, reference_tag = self.parent._tag)
+            return T(t, ref = self.parent._tag)
         elif isinstance(t, T):
             if t._fps is None:
                 return T(t._frames, self.parent._tag)
@@ -396,13 +396,13 @@ class Timeline:
             new_waypoint = Waypoint(
                     time = t,
                     value = v,
-                    reference_tag = self.parent.tag,
+                    ref = self.parent.tag,
                     )
         else:
             new_waypoint = Waypoint(
                     time = t,
                     value = self.parent.__class__(v),
-                    reference_tag = self.parent.tag,
+                    ref = self.parent.tag,
                     )
 
         if not self.parent.is_animated:
@@ -421,7 +421,7 @@ class Timeline:
     def __delitem__(self, t):
 
         if isinstance(t, (int, float, str)):
-            t = T(t, reference_tag = self.parent._tag)
+            t = T(t, ref = self.parent._tag)
         elif isinstance(t, T):
             t = self._ensure_fps(t)
 
@@ -472,7 +472,7 @@ INTERPOLATION_TYPE_SYNONYMS = dict(
 @functools.total_ordering
 class Waypoint:
     def __init__(self, time, value, before='clamped', after='clamped',
-                 reference_tag = None,
+                 ref = None,
                  ):
 
         if not isinstance(value, Value):
@@ -485,7 +485,7 @@ class Waypoint:
             self.time = time
         elif isinstance(time, (int, float, str)):
             self.time = T(time,
-                          reference_tag = reference_tag,
+                          ref = ref,
                           )
         else:
             raise TypeError(
@@ -556,7 +556,7 @@ class Waypoint:
                                 f"{tag}")
 
         try:
-            time = T(tag['time'], reference_tag=tag)
+            time = T(tag['time'], ref=tag)
         except ValueError:
             raise ValueError(
                     "If a value isn't attached to a document, "

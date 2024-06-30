@@ -30,7 +30,7 @@ class TagTimeAttrField(TagAttrField):
             return None
 
         return T(s,
-                 reference_tag = obj._tag,
+                 ref = obj._tag,
                  )
 
 class Animation(Group):
@@ -174,7 +174,7 @@ class Animation(Group):
             T
         """
         return T(self._tag.attrs['begin-time'],
-                 reference_tag = self._tag,
+                 ref = self._tag,
                  )
 
     def __len__(self):
@@ -189,7 +189,7 @@ class Animation(Group):
         Type:
             int
         """
-        return int(T(-1, reference_tag=self._tag).frames)+1
+        return int(T(-1, ref=self._tag).frames)+1
 
     @property
     def background(self):

@@ -8,7 +8,7 @@ def set_constant_waypoint(tl, time, value):
     s = sangfroid.value.String(value)
     t = sangfroid.T(
             f"{time}s",
-            reference_tag = tl.parent.tag,
+            ref = tl.parent.tag,
             )
     waypoint = sangfroid.value.Waypoint(
             time = t,

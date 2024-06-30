@@ -7,7 +7,7 @@ class Keyframe:
     @property
     def time(self):
         return T(self._tag['time'],
-                 reference_tag = self._tag,
+                 ref = self._tag,
                  )
 
     @property

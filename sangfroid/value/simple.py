@@ -143,7 +143,7 @@ class Time(Simple):
     def _construct_value(self, v):
         return self.our_type(
                 v,
-                reference_tag = self._tag,
+                ref = self._tag,
                 )
 
     def as_python_expression(self):

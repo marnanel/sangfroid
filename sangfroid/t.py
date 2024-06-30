@@ -24,12 +24,12 @@ class T:
 
         - `"Fs Ff"`, in which case the values are added together.
 
-    For the reference_tag parameter, you may supply the root Beautiful Soup
+    For the ref parameter, you may supply the root Beautiful Soup
     tag of an animation, or any of that tag's descendants. If this parameter
     is unspecified, or `None`, but we need to calculate something from it,
     we throw `ValueError`.
 
-    There are two reasons you might need to specify a reference_tag:
+    There are two reasons you might need to specify a ref:
 
         - If the specification is `int` or `float`, and it's negative;
           this is because we will need to look up the animation length.
@@ -42,8 +42,8 @@ class T:
 
     However, if the time is zero (that is, at the start of the animation),
     you may write it as `"0s"` or `"0s 0f"` even if you don't supply
-    the reference_tag.  This doesn't allow you to write `"0s 2f"` without
-    supplying the reference_tag, even though the FPS wouldn't make
+    the ref.  This doesn't allow you to write `"0s 2f"` without
+    supplying the ref, even though the FPS wouldn't make
     a difference, because edge cases give rise to bugs.
 
     Ts compare numerically to other Ts, but unless the frame
@@ -68,13 +68,13 @@ class T:
     def __init__(
             self,
             value=0.0,
-            reference_tag = None,
+            ref = None,
             ):
  
-        if reference_tag is None:
+        if ref is None:
             self._fps = None
         else:
-            root_tag = _canvas_root(reference_tag)
+            root_tag = _canvas_root(ref)
             if root_tag is None:
                 self._fps = None
             else:
@@ -92,7 +92,7 @@ class T:
                 if self._frames < 0:
                     if root_tag is None:
                         raise ValueError("Negative frame counts require "
-                                         "an anchored reference_tag.")
+                                         "an anchored ref.")
 
                     animation_duration = 1+(
                             self._parse_time_spec(
@@ -158,7 +158,7 @@ class T:
 
             if self._fps is None:
                 complain("Time specifications in seconds require "
-                         "an anchored reference_tag.")
+                         "an anchored ref.")
             result += seconds * self._fps
 
         if 'f' in parts:

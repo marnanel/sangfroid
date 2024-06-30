@@ -18,7 +18,7 @@ def test_animation_load_sif():
     assert sif.yres == 2835.0
     assert sif.background==sangfroid.value.Color('#808080')
     assert sif.begin_time==0
-    assert sif.end_time==sangfroid.T('5s', reference_tag=sif.tag)
+    assert sif.end_time==sangfroid.T('5s', ref=sif.tag)
 
 def test_animation_load_sifz():
     sif = get_animation('wombats.sifz')
@@ -204,7 +204,7 @@ def blank_sif_assertions(sif, name):
     assert sif.yres == 2834.645669
     assert sif.background==sangfroid.value.Color('#808080'), name
     assert sif.begin_time==0, name
-    assert sif.end_time==sangfroid.T('5s', reference_tag=sif.tag), name
+    assert sif.end_time==sangfroid.T('5s', ref=sif.tag), name
 
     keyframes = list(sif.keyframes)
     assert len(keyframes)==1, name
