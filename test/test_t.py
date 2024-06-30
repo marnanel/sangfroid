@@ -166,6 +166,22 @@ def test_t_examples():
                     f"Wrong kind of exception: {example}\n{e}"
                     )
 
+def test_t_ref_types():
+    sif = get_animation('bouncing.sif')
+
+    assert sif.fps == 24
+
+    assert T("1s", ref=sif.tag).frames == 24
+    assert T("1s", ref=sif).frames == 24
+
+    sif.fps = 50
+    assert T("1s", ref=sif.tag).frames == 50
+    assert T("1s", ref=sif).frames == 50
+
+    daft = 'This is a string, which should fail'
+    with pytest.raises(TypeError):
+        assert T("1s", ref=daft)
+
 def test_t_no_params():
     zero_t = T()
     assert zero_t.frames==0

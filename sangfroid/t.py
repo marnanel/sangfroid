@@ -1,6 +1,7 @@
 import math
 import functools
 import re
+import bs4
 
 @functools.total_ordering
 class T:
@@ -72,16 +73,23 @@ class T:
             ):
  
         if ref is None:
+            root_tag = None
+        elif isinstance(ref, bs4.Tag):
+            root_tag = _canvas_root(ref)
+        elif hasattr(ref, 'tag'):
+            root_tag = _canvas_root(getattr(ref, 'tag'))
+        else:
+            raise TypeError(
+                    "'ref' must be bs4.Tag, a Layer subclass, or None, "
+                    f"but not {type(ref)}.")
+
+        if root_tag is None:
             self._fps = None
         else:
-            root_tag = _canvas_root(ref)
-            if root_tag is None:
-                self._fps = None
-            else:
-                self._fps = float(root_tag['fps'])
-            
-                if self._fps<=0.0:
-                    raise ValueError(f"FPS must be positive: {self._fps}")
+            self._fps = float(root_tag['fps'])
+        
+            if self._fps<=0.0:
+                raise ValueError(f"FPS must be positive: {self._fps}")
 
         try:
             if isinstance(value, str):
