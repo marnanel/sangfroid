@@ -8,12 +8,13 @@ description = "Parses Synfig files"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
-	"Development Status :: 2 - Pre-Alpha",
-	"Programming Language :: Python :: 3",
-	"License :: OSI Approved :: MIT License",
-	"Intended Audience :: Developers",
-	"Operating System :: OS Independent",
-	"Topic :: Text Processing :: XML",
+        "Development Status :: 2 - Pre-Alpha",
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Intended Audience :: Developers",
+        "Operating System :: OS Independent",
+        "Topic :: Text Processing",
+        "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
 ]
 keywords = ["synfig", "synfigstudio", "animation"]
 dependencies = [
