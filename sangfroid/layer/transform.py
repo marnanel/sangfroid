@@ -1,6 +1,6 @@
 from sangfroid.layer import Layer
 import sangfroid.value as v
-import sangfroid.layer.field as f
+import sangfroid.field as f
 
 @Layer.handles_type()
 class Scale(Layer):
@@ -30,8 +30,10 @@ class Zoom(Scale):
     ### {{{
     SYNFIG_VERSION = "0.1"
 
-    amount               = f.ParamTagField(v.Real, 0.0)
-    center               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    amount               = f.ParamTagField(v.Real, 0.0,
+                        )
+    center               = f.ParamTagField(v.X_Y, (0.0, 0.0),
+                        )
 
     ### }}}
     pass # XXX do they differ?
@@ -43,7 +45,8 @@ class Translate(Layer):
     ### {{{
     SYNFIG_VERSION = "0.1"
 
-    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0),
+                        )
 
     ### }}}
 
@@ -54,7 +57,9 @@ class Rotate(Layer):
     ### {{{
     SYNFIG_VERSION = "0.1"
 
-    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0))
-    amount               = f.ParamTagField(v.Angle, 0.0)
+    origin               = f.ParamTagField(v.X_Y, (0.0, 0.0),
+                        )
+    amount               = f.ParamTagField(v.Angle, 0.0,
+                        )
 
     ### }}}

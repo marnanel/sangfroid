@@ -3,7 +3,7 @@ import logging
 import bs4
 import sangfroid.value as v
 from sangfroid.registry import Registry
-from sangfroid.layer.field import (
+from sangfroid.field import (
         Field,
         TagAttrField,
         ParamTagField,

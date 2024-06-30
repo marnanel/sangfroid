@@ -45,6 +45,7 @@ class Field:
         self.default = default
         self.name = name
         self.owner = None
+        self.doc = doc
 
         self.__doc__ = doc or ''
         self.__doc__ += f"\n\nType: {type_.__name__}"

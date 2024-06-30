@@ -87,11 +87,14 @@ class Replacer:
                 if m:
                     if current_block_name is None:
                         raise ValueError(f"{filename}:{i}: ended block without starting one")
-                    result += '\n'
+
+                    if ignore:
+                        result += '\n'
+                        ignore = False
+
                     line = (' '*current_indent) + line.strip() + '\n'
                     current_block_name = None
                     current_indent = None
-                    ignore = False
 
                 if not ignore:
                     result += line
