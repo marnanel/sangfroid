@@ -1,5 +1,9 @@
 # Examples
 
+See [Bywords](bywords.md) for a fully-worked example.
+
+# Tutorial
+
 Suppose you have this canvas, [colours.sif](examples/colours.sif):
 
 ![Basic colours.sif](_static/colours.png)
