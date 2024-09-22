@@ -66,7 +66,10 @@ class Vector(Value):
 
         for k, v in members.items():
             addendum = bs4.element.Tag(name=k)
-            addendum.string = str(v)
+            if isinstance(v, float):
+                addendum.string = '%.010f' % (v,)
+            else:
+                addendum.string = str(v)
             self._tag.append(addendum)
 
     def __getitem__(self, key):

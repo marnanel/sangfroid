@@ -89,6 +89,10 @@ class Real(Numeric):
         except TypeError:
             return False
 
+    @classmethod
+    def _value_to_str(cls, v):
+        return '%.010f' % (v,)
+
 @Value.handles_type()
 class Integer(Numeric):
     our_type = int

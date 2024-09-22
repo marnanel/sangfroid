@@ -71,7 +71,7 @@ class Field:
     def __set_name__(self, owner, name):
         self.owner = owner
         if self.name is None:
-            self.name = name#.replace('_', '-')
+            self.name = name
 
     def __get__(self, obj, obj_type=None):
         raise NotImplementedError()
@@ -369,3 +369,40 @@ class SwitchCanvasField(NotImplementedField):
 
 class DuplicatesIndexField(NotImplementedField):
     pass
+
+class TypeNameField(TagAttrField):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+                type_ = str,
+                name = 'type',
+                doc = (
+                    "The name Synfig uses internally for this type of layer.\n"
+                    "\n"
+                    "In Python, you must spell this as `type_`, because\n"
+                    "`type` is a reserved word."
+                    ),
+                default = None,
+            )
+
+    def __set_name__(self, owner, name):
+        super().__set_name__(owner, name)
+        self.default = owner.__name__.lower()
+
+    def __set__(self, obj, value):
+        raise ValueError("You can't change the name of a type.")
+
+class SynfigVersionField(TagAttrField):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+                type_ = float,
+                name = 'version',
+                doc = (
+                    "The earliest version of Synfig which will interpret\n"
+                    "the value of this field correctly."
+                    ),
+                default = None,
+            )
+
+    def __set_name__(self, owner, name):
+        super().__set_name__(owner, name)
+        self.default = owner.SYNFIG_VERSION

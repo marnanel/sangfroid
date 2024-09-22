@@ -11,17 +11,20 @@ class Value:
 
     def __init__(self, *args):
 
+        print("9200", args)
         if len(args)==1 and isinstance(args[0], bs4.element.Tag):
+            print("9210", repr(args))
             self._tag = args[0]
         else:
             self._tag = self._get_empty_tag()
-
+            print("9250", self._tag)
             if len(args)==1:
                 self.value = args[0]
             else:
                 self.value = args
 
         assert self._tag is not None
+        print("9299", self._tag)
 
     @classmethod
     def _get_empty_tag(cls, name=None):

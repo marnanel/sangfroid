@@ -8,6 +8,8 @@ from sangfroid.field import (
         TagAttrField,
         ParamTagField,
         TagField,
+        TypeNameField,
+        SynfigVersionField,
         )
 from sangfroid.util import (
         normalise_synfig_layer_type_name,
@@ -20,15 +22,11 @@ logger = logging.getLogger('sangfroid')
 class Layer:
 
     SYMBOL = '?' # fallback
+    SYNFIG_VERSION = 0.0 # fallback
 
-    type_            = TagAttrField(
-            str,         None,
-            name='type',
-            doc = """The name Synfig uses internally for this type of layer.
+    type_   = TypeNameField()
+    version          = SynfigVersionField()
 
-            In Python, you must spell this as `type_`, because `type` is
-            a reserved word.""",
-            )
     active           = TagAttrField(
             bool,        True,
             doc = "True if this layer is enabled.",
@@ -37,7 +35,6 @@ class Layer:
             bool,  False,
             doc = "True if this layer should not be rendered.",
             )
-    version          = TagAttrField(float,       None)
 
     desc             = TagAttrField(
             str,         '',
@@ -48,8 +45,13 @@ class Layer:
 
     ########################
 
-    def __init__(self, tag):
-        self._tag = tag
+    def __init__(self, tag=None):
+        if tag is None:
+            self._tag = self._construct_empty_tag()
+        elif isinstance(tag, bs4.Tag):
+            self._tag = tag
+        else:
+            raise TypeError(tag)
 
     @property
     def parent(self):
@@ -287,6 +289,35 @@ class Layer:
             return None
 
         raise ValueError(f"{k}, {tag}")
+
+    @classmethod
+    def _construct_empty_tag(cls):
+        result = bs4.Tag(name='layer')
+
+        for c in cls.mro():
+            for field in c.__dict__.values():
+                if isinstance(field, Field):
+                    field.__set_name__(cls, field.name)
+                    if isinstance(field, TagAttrField):
+                        value = field.default
+                        if isinstance(value, str):
+                            if value=='':
+                                continue
+                        if isinstance(value, bool):
+                            value = str(value).lower()
+                        else:
+                            value = str(value)
+
+                        result[field.name] = value
+                    elif isinstance(field, ParamTagField):
+                        param = bs4.Tag(name="param")
+                        param['name'] = field.name
+
+                        param_default = field.type_(field.default)
+                        param.append(param_default._tag)
+                        result.append(param)
+
+        return result
 
 def _name_and_value_of(tag):
     if tag.name!='param':

@@ -1,7 +1,6 @@
-from enum import Enum
 from sangfroid.value.simple import Integer
 
-class BlendMethod(Enum):
+class BlendMethod(Integer):
     ### {{{
 
     COMPOSITE = 0
@@ -30,6 +29,12 @@ class BlendMethod(Enum):
     ALPHA = 23
     
     ### }}}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self._tag['static'] = 'true'
+        self._tag.name = 'integer'
 
     @classmethod
     def from_tag(cls, t):

@@ -1,8 +1,8 @@
-from sangfroid.keyframe import Keyframe
 from sangfroid.layer import (
-        Group, Field, TagAttrField, NamedChildField, TagField,
+        Group, Field, TagAttrField, NamedChildField,
         )
 from sangfroid.format import Format, Blank
+from sangfroid.keyframe import Keyframe
 from sangfroid.value.color import Color
 from sangfroid.t import T
 import bs4
@@ -105,8 +105,6 @@ class Animation(Group):
 
     So you know what it is when you find it again next year.
     """, default='Animation')
-
-    tag = TagField()
 
     def __init__(self, filename:str=None):
         """

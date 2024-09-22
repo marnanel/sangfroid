@@ -254,6 +254,12 @@ def test_layer_active():
     assert black.active
     assert black.tag['active']=='true'
 
+def test_layer_new():
+    circle = sangfroid.layer.Circle()
+    print("9989", str(circle._tag))
+    xml_compare(circle._tag, BLANK_CIRCLE,
+                "Empty circle tag contains all it's supposed to")
+
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0
@@ -412,6 +418,43 @@ LAYER_ITEMS_EXPECTED = """
  - amount: Real, 1.0
  - blend_method: Integer, 0
  - color: Color, #ffffff
+""".lstrip()
+
+BLANK_CIRCLE="""
+<layer type="circle" active="true" exclude_from_rendering="false" version="0.2">
+  <param name="z_depth">
+    <real value="0.0000000000"/>
+  </param>
+  <param name="amount">
+    <real value="1.0000000000"/>
+  </param>
+  <param name="blend_method">
+    <integer value="0" static="true"/>
+  </param>
+  <param name="color">
+    <color>
+      <r>1.000000</r>
+      <g>1.000000</g>
+      <b>1.000000</b>
+      <a>1.000000</a>
+    </color>
+  </param>
+  <param name="radius">
+    <real value="1.0000000000"/>
+  </param>
+  <param name="feather">
+    <real value="0.0000000000"/>
+  </param>
+  <param name="origin">
+    <vector>
+      <x>0.0000000000</x>
+      <y>0.0000000000</y>
+    </vector>
+  </param>
+  <param name="invert">
+    <bool value="false"/>
+  </param>
+</layer>
 """.lstrip()
 
 CIRCLES = {

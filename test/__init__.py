@@ -17,26 +17,27 @@ def get_animation(name):
 def xml_compare(a, b,
                 asserting=None):
 
-    def normalise(n):
+    def munge(n):
         if isinstance(n, bs4.element.Tag):
-            return n
+            pass
         elif isinstance(n, str):
-            return bs4.BeautifulSoup(n, 'xml')
+           n = bs4.BeautifulSoup(n, 'xml')
         else:
             raise TypeError(type(n))
 
-    def munge(n):
-        result = normalise(n).prettify()
+        if isinstance(n, bs4.BeautifulSoup):
+            n = n.contents[0]
 
-        if result.startswith('<?xml'):
-            result = result.split('\n', 1)[1]
-
-        return result
+        return n
 
     a = munge(a)
     b = munge(b)
 
+    assert a.prettify()==b.prettify()
+
     if asserting is not None:
+        if a!=b:
+            asserting += f'\na == {a}\nb == {b}'
         assert a==b, asserting
     else:
         return a==b
