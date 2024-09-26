@@ -85,6 +85,17 @@ def test_group_insert():
             "[📂group 'Background']",
             ]
 
+    sif.insert(-2, sangfroid.layer.Circle())
+
+    assert [repr(c) for c in sif.children]==[
+            "[🕰️timeloop]",
+            "[📂group 'Ball']",
+            "[📂group 'Shadow']",
+            '[🔵circle]',
+            "[𝕋text 'Another one!']",
+            "[📂group 'Background']",
+            ]
+
 def test_group_len():
     # note that Animation is a subclass of Group
     sif = sangfroid.Animation()
@@ -95,10 +106,19 @@ def test_group_len():
     text = sangfroid.layer.Text('Hello world!')
 
     with pytest.raises(NotImplementedError):
+        # back to front
         text.append(sif)
 
     sif.append(text)
 
     assert len(sif)==1
     assert len(sif.items())==0
-    assert sif[0]==text
+    assert isinstance(sif[0], sangfroid.layer.Text)
+    assert sif[0].text=='Hello world!'
+
+    sif.append(sangfroid.layer.Circle())
+
+    assert len(sif)==2
+    assert len(sif.items())==0
+    assert isinstance(sif[0], sangfroid.layer.Text)
+    assert isinstance(sif[1], sangfroid.layer.Circle)
