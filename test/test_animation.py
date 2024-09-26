@@ -228,4 +228,26 @@ def test_animation_blank_save():
         sif2 = sangfroid.Animation(filename)
         blank_sif_assertions(sif2, name)
 
+def test_animation_append():
 
+    for test_cls, cls_message, expected in [
+            (sangfroid.layer.Group, 'ordinary layers',
+             ['param', 'layer']),
+            (sangfroid.Animation, 'top-level animations',
+             ['name', 'meta', 'keyframe', 'layer']),
+            ]:
+        outer = test_cls()
+
+        inner = sangfroid.layer.Group()
+        outer.append(inner)
+
+        sequence = []
+
+        for n in outer._tag.find_all(recursive=False):
+            if sequence and sequence[-1]==n.name:
+                continue
+            sequence.append(n.name)
+
+        assert sequence==expected, (
+                f'Layers are added after the metadata in {cls_message}'
+                )
