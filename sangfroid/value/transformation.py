@@ -66,25 +66,14 @@ class Composite(Value):
                     f"We can accept: "
                     f"{' '.join(sorted(self.REQUIRED_KEYS.keys()))}")
 
-        seen = set()
-        for field in self._tag.children:
-            if not isinstance(field, bs4.element.Tag):
-                continue
-
-            if not field.name in new_value:
-                continue
-
-            # XXX TO HERE
-            raise ValueError(new_value)
-
-            seen.add(field.name)
+        self.tag.clear()
 
         for remaining, v in new_value.items():
-            if remaining in seen:
-                continue
+
+            v_as_value = self.REQUIRED_KEYS[remaining](v)
 
             new_subtag = bs4.Tag(name=remaining)
-            new_subtag.append(copy(v.tag))
+            new_subtag.append(copy(v_as_value.tag))
             new_subtag.append("\n")
             self.tag.append(new_subtag)
 
