@@ -3,6 +3,7 @@ import logging
 import sangfroid
 import tempfile
 import bs4
+import xml.sax
 
 logger = logging.getLogger('sangfroid.test')
 
@@ -17,6 +18,35 @@ def get_animation(name):
 def xml_compare(a, b,
                 asserting=None):
 
+    class Comparer(xml.sax.ContentHandler):
+        """
+        this is baroque, but allows us to normalise
+        self-closing tags easily
+        """
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.__lines = []
+
+        def startElement(self, name, attrs):
+            s = f'<{name}' + (
+                    ' '.join([f"{k}={v}" for k,v in attrs.items()])
+                    ) + '>'
+            self.__lines.append(s)
+
+        def endElement(self, name):
+            s = f'</{name}>'
+            self.__lines.append(s)
+
+        def characters(self, content):
+            if content.strip()=='':
+                return
+            self.__lines.append(content)
+
+        @property
+        def lines(self):
+            return self.__lines
+
     def munge(n):
         if isinstance(n, bs4.element.Tag):
             pass
@@ -25,19 +55,21 @@ def xml_compare(a, b,
         else:
             raise TypeError(type(n))
 
-        if isinstance(n, bs4.BeautifulSoup):
-            n = n.contents[0]
-
-        return n
+        comparer = Comparer()
+        xml.sax.parseString(
+                string = str(n),
+                handler = comparer,
+                )
+        
+        return comparer.lines
 
     a = munge(a)
     b = munge(b)
 
-    assert a.prettify()==b.prettify()
-
     if asserting is not None:
         if a!=b:
-            asserting += f'\na == {a}\nb == {b}'
+            for aa,bb in zip(a,b):
+                asserting += f'\n{aa:40} {bb}'
         assert a==b, asserting
     else:
         return a==b
