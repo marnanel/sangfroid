@@ -186,9 +186,9 @@ def test_animation_saveas_different_format():
 
         os.unlink(tempname)
 
-def test_animation_len():
+def test_animation_framecount():
     sif = get_animation('bouncing.sif')
-    assert len(sif)==121
+    assert sif.framecount==121
 
 def test_animation_blank_simple():
 
@@ -227,3 +227,5 @@ def test_animation_blank_save():
     for name, filename in names.items():
         sif2 = sangfroid.Animation(filename)
         blank_sif_assertions(sif2, name)
+
+

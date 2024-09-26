@@ -175,7 +175,8 @@ class Animation(Group):
                  ref = self._tag,
                  )
 
-    def __len__(self):
+    @property
+    def framecount(self):
         """
         The number of frames in this animation.
 

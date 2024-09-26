@@ -130,7 +130,7 @@ def test_waypoint_value_spec():
 
 def test_waypoint_del():
     sif = get_animation('bouncing.sif')
-    assert len(sif)==121
+    assert sif.framecount==121
 
     ball = sif.find(desc='Bouncy ball')
     color = ball['color']

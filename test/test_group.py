@@ -1,5 +1,6 @@
 import sangfroid
 from test import *
+import pytest
 
 def test_canvas_children():
     sif = get_animation('circles.sif')
@@ -83,3 +84,21 @@ def test_group_insert():
             "[𝕋text 'Another one!']",
             "[📂group 'Background']",
             ]
+
+def test_group_len():
+    # note that Animation is a subclass of Group
+    sif = sangfroid.Animation()
+
+    assert len(sif)==0
+    assert len(sif.items())==0
+
+    text = sangfroid.layer.Text('Hello world!')
+
+    with pytest.raises(NotImplementedError):
+        text.append(sif)
+
+    sif.append(text)
+
+    assert len(sif)==1
+    assert len(sif.items())==0
+    assert sif[0]==text

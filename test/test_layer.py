@@ -95,6 +95,15 @@ def test_layer_items(dump = False):
     else:
         assert found == LAYER_ITEMS_EXPECTED
 
+def test_layer_items_doesnt_pick_up_subparams():
+    sif = sangfroid.Animation()
+
+    assert len(sif.items())==0
+
+    sif.append(sangfroid.layer.Text())
+
+    assert len(sif.items())==0
+
 def _find_type_names_of_children_of_layer(layer):
     """
     Given a layer, returns a list of strings, each being the name of a
@@ -276,8 +285,8 @@ LAYER_ITEMS_EXPECTED = """
  - symmetrical: Bool, True
 [📂group 'Ball']
  - z_depth: Real, 0.0
- - amount: Real, 0.75
- - blend_method: Integer, 13
+ - amount: Real, 1.0
+ - blend_method: Integer, 0
  - origin: X_Y, (0.0, 0.0)
  - transformation:
      - offset = X_Y, (animated), animated
@@ -285,19 +294,6 @@ LAYER_ITEMS_EXPECTED = """
      - skew_angle = Angle, 0°
      - scale = X_Y, (animated), animated
  - canvas: Canvas, [[-🔵circle 'Bouncy ball'], [-🫴bevel]]
- - color: Color, #ff0000
- - radius: Real, 1.0
- - feather: Real, 0.0
- - invert: Bool, False
- - type: Integer, 1
- - color1: Color, #ffffff
- - color2: Color, #000000
- - angle: Angle, 89.0588°
- - depth: Real, 0.5819661441
- - softness: Real, 0.3276240462
- - use_luma: Bool, False
- - solid: Bool, False
- - fake_origin: X_Y, (0.0, 0.0)
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
  - children_lock: Bool, False
@@ -331,20 +327,14 @@ LAYER_ITEMS_EXPECTED = """
 [📂group 'Shadow']
  - z_depth: Real, 0.0
  - amount: Real, 1.0
- - blend_method: Integer, 1
- - origin: X_Y, (0.0, -1.6666666269)
+ - blend_method: Integer, 0
+ - origin: X_Y, (-0.1150391698, -2.2065103054)
  - transformation:
-     - offset = X_Y, (0.0, -1.6003249884)
+     - offset = X_Y, (-0.1150391698, -2.2065103054)
      - angle = Angle, 0°
      - skew_angle = Angle, 0°
-     - scale = X_Y, (1.0, 0.3899480104)
- - canvas: Canvas, [[--🔵circle 'Shadow circle'], [--🟠blur]]
- - color: Color, #00000072
- - radius: Real, 1.0
- - feather: Real, 0.0
- - invert: Bool, False
- - size: X_Y, (0.25, 0.25)
- - type: Integer, 1
+     - scale = X_Y, (animated), animated
+ - canvas: Canvas, [[-📂group 'Shadow']]
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
  - children_lock: Bool, False
@@ -356,20 +346,14 @@ LAYER_ITEMS_EXPECTED = """
 [-📂group 'Shadow']
  - z_depth: Real, 0.0
  - amount: Real, 1.0
- - blend_method: Integer, 1
- - origin: X_Y, (0.0, -1.6666666269)
+ - blend_method: Integer, 0
+ - origin: X_Y, (0.0, 0.0)
  - transformation:
      - offset = X_Y, (0.0, -1.6003249884)
      - angle = Angle, 0°
      - skew_angle = Angle, 0°
      - scale = X_Y, (1.0, 0.3899480104)
  - canvas: Canvas, [[--🔵circle 'Shadow circle'], [--🟠blur]]
- - color: Color, #00000072
- - radius: Real, 1.0
- - feather: Real, 0.0
- - invert: Bool, False
- - size: X_Y, (0.25, 0.25)
- - type: Integer, 1
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
  - children_lock: Bool, False
@@ -389,15 +373,6 @@ LAYER_ITEMS_EXPECTED = """
      - skew_angle = Angle, 0°
      - scale = X_Y, (1.0, 1.0)
  - canvas: Canvas, [[-▊solid_color 'wall'], [-🟦rectangle 'floor']]
- - color: Color, #ffb356
- - point1: X_Y, (-4.0130858421, -2.3096354008)
- - point2: X_Y, (4.0234375, -0.9031249881)
- - expand: Real, 0.0
- - invert: Bool, False
- - feather_x: Real, 0.0
- - feather_y: Real, 0.0
- - bevel: Real, 0.0
- - bevCircle: Bool, True
  - time_dilation: Real, 1.0
  - time_offset: Time, 0f
  - children_lock: Bool, False

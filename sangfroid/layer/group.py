@@ -91,13 +91,21 @@ class Group(Layer):
         if not isinstance(layer, Layer):
             raise TypeError(type(layer))
 
+        self._tag.insert(0, "\n")
         self._tag.insert(0, layer._tag)
 
     def insert(self, index, layer):
         if not isinstance(layer, Layer):
             raise TypeError(type(layer))
 
-        before = list(self.children)[index]
+        before = self[index]
         # "before" from our perspective; *after* in the XML
 
         before._tag.insert_after(layer._tag)
+        before._tag.insert_after("\n")
+
+    def __getitem__(self, f):
+        if isinstance(f, int):
+            return list(self.children)[f]
+        else:
+            return super().__getitem__(f)

@@ -265,7 +265,9 @@ class Layer:
     def _as_dict(self):
         return dict([
             _name_and_value_of(param)
-            for param in self._tag.find_all('param')
+            for param in self._tag.find_all('param',
+                                            recursive=False,
+                                            )
             ])
 
     def items(self):
@@ -318,6 +320,16 @@ class Layer:
                         result.append(param)
 
         return result
+
+    def __len__(self):
+        return len(self._sublayer_tags())
+
+    def append(self, n):
+        raise NotImplementedError(
+                "Only Groups can contain other layers.")
+
+    def _sublayer_tags(self):
+        return self._tag.find_all('layer')
 
 def _name_and_value_of(tag):
     if tag.name!='param':
