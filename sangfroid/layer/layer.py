@@ -282,16 +282,6 @@ class Layer:
     def __iter__(self):
         return self._as_dict().__iter__()
 
-    def _get_param(self, k):
-        tag = self._tag.find('param',
-                            attribs={
-                                'name': k,
-                                })
-        if tag is None:
-            return None
-
-        raise ValueError(f"{k}, {tag}")
-
     @classmethod
     def _construct_empty_tag(cls):
         result = bs4.Tag(name='layer')
