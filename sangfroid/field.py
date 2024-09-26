@@ -310,19 +310,20 @@ Use the `include_from` decorator classmethod to introduce
 these fields from an existing field.
 """
 class ShortcutField(Field):
-    def __init__(self, upstream, upstream_field):
+    def __init__(self, upstream, upstream_field,
+                 ):
         self.upstream = upstream
-        self.upstream_field = upstream_field
+        self.name = upstream_field
 
     def __get__(self, obj, obj_type=None):
         v = self.upstream.__get__(obj, obj_type)
-        result = v[self.upstream_field]
+        result = v[self.name]
         return result
 
     def __set__(self, obj, value):
         self.upstream.__set__(obj,
                               {
-                                  self.upstream_field: value,
+                                  self.name: value,
                                   })
 
     """
