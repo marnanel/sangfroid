@@ -54,7 +54,9 @@ def test_vector_as_dict():
 def test_vector_constructor():
     assert str(Vector(1.0, 2.0))=='(1.0, 2.0)'
     assert str(Vector({'x': 1.0, 'y': 2.0}))=='(1.0, 2.0)'
-    assert str(Vector({'a': 1.0, 'b': 2.0}))=="{'a': '1.0', 'b': '2.0'}"
+    assert str(Vector({'a': 1.0, 'b': 2.0}))==(
+            "{'a': '1.0000000000', 'b': '2.0000000000'}"
+            )
 
     with pytest.raises(TypeError):
         Vector(1.0, 'banana')

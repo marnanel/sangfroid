@@ -88,4 +88,4 @@ def test_value_str_animated():
 
 def test_value_tag_name():
     r = Real(1.77)
-    assert str(r.tag)=='<real value="1.77"></real>'
+    assert str(r.tag)=='<real value="1.7700000000"></real>'
