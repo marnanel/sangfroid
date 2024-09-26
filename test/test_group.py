@@ -38,3 +38,48 @@ def test_canvas_descendants():
     found = [str(layer) for layer in sif.descendants]
 
     assert found==EXPECTED
+
+def test_group_append():
+    sif = get_animation('bouncing.sif')
+
+    assert [repr(c) for c in sif.children]==[
+            "[🕰️timeloop]",
+            "[📂group 'Ball']",
+            "[📂group 'Shadow']",
+            "[📂group 'Background']",
+            ]
+
+    sif.append(sangfroid.layer.Text("Another one!"))
+
+    assert [repr(c) for c in sif.children]==[
+            "[🕰️timeloop]",
+            "[📂group 'Ball']",
+            "[📂group 'Shadow']",
+            "[📂group 'Background']",
+            "[𝕋text 'Another one!']",
+            ]
+
+def test_group_insert():
+    sif = get_animation('bouncing.sif')
+
+    sif.insert(1, sangfroid.layer.Text("Another one!"))
+
+    assert [repr(c) for c in sif.children]==[
+            "[🕰️timeloop]",
+            "[𝕋text 'Another one!']",
+            "[📂group 'Ball']",
+            "[📂group 'Shadow']",
+            "[📂group 'Background']",
+            ]
+
+    sif = get_animation('bouncing.sif')
+
+    sif.insert(-1, sangfroid.layer.Text("Another one!"))
+
+    assert [repr(c) for c in sif.children]==[
+            "[🕰️timeloop]",
+            "[📂group 'Ball']",
+            "[📂group 'Shadow']",
+            "[𝕋text 'Another one!']",
+            "[📂group 'Background']",
+            ]

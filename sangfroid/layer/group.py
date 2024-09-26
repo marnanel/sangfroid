@@ -86,3 +86,18 @@ class Group(Layer):
         yield from self._get_children(
                 include_descendants = True,
                 )
+
+    def append(self, layer):
+        if not isinstance(layer, Layer):
+            raise TypeError(type(layer))
+
+        self._tag.insert(0, layer._tag)
+
+    def insert(self, index, layer):
+        if not isinstance(layer, Layer):
+            raise TypeError(type(layer))
+
+        before = list(self.children)[index]
+        # "before" from our perspective; *after* in the XML
+
+        before._tag.insert_after(layer._tag)
