@@ -1,6 +1,7 @@
 import re
 import sangfroid
 import pytest
+import os
 from test import *
 
 def test_layer_children():
@@ -271,9 +272,40 @@ def test_layer_active():
 
 def test_layer_new():
     circle = sangfroid.layer.Circle()
-    print("9989", str(circle._tag))
     xml_compare(circle._tag, BLANK_CIRCLE,
                 "Empty circle tag contains all it's supposed to")
+
+def test_layer_subclasses_instantiate():
+
+    cannot_instantiate = {}
+
+    for subclass in sangfroid.layer.Layer.__subclasses__():
+        name = subclass.__name__
+
+        if name.startswith('test.'):
+            continue
+        elif '.tbd.' in name:
+            continue
+
+        try:
+            subclass()
+        except Exception as e:
+            if int(os.environ.get('TEST_SUBCLASS_RAISES', 0))==1:
+                raise
+            else:
+                cannot_instantiate[name]=str(e)
+
+    def the_broken_ones():
+        return '\n'.join([f'%20s - %s\n' % n
+                          for n in cannot_instantiate.items()])
+
+    assert len(cannot_instantiate)==0, (
+        "All kinds of Layer can be instantiated"
+        f"\n\n{the_broken_ones()}\n"
+        "Set TEST_SUBCLASS_RAISES to 1 to raise an exception for\n"
+        "each subclass as it breaks, or 0 (the default) for a\n"
+        "summary of all of them."
+        )
 
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
