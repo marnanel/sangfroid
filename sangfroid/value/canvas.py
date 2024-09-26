@@ -20,3 +20,16 @@ class Canvas(Value):
         result = [Layer.from_tag(layer) for layer in layers]
 
         return result
+
+    @value.setter
+    def value(self, v):
+
+        from sangfroid.layer.layer import Layer
+
+        self._tag.clear()
+
+        for layer in v:
+            if not isinstance(layer, Layer):
+                raise TypeError(type(layer))
+            self._tag.append(layer)
+            self._tag.append("\n")
