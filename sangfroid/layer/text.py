@@ -57,3 +57,9 @@ class Text(Layer):
 
         if new_text is not None:
             self.text = new_text
+
+    def __repr__(self):
+        result = super().__repr__()[:-1]
+        result += ' ' + repr(self.text.value) + ']'
+
+        return result
