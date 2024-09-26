@@ -45,3 +45,15 @@ class Text(Layer):
                         )
 
     ### }}}
+
+    def __init__(self, tag=None):
+        new_text = None
+
+        if isinstance(tag, str):
+            new_text = tag
+            tag = None
+
+        super().__init__(tag)
+
+        if new_text is not None:
+            self.text = new_text
