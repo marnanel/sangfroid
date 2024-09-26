@@ -280,11 +280,11 @@ def test_layer_subclasses_instantiate():
     cannot_instantiate = {}
 
     for subclass in sangfroid.layer.Layer.__subclasses__():
-        name = subclass.__name__
+        in_module = subclass.__module__
 
-        if name.startswith('test.'):
+        if in_module.startswith('test.'):
             continue
-        elif '.tbd.' in name:
+        elif in_module.endswith('.tbd'):
             continue
 
         try:
@@ -293,7 +293,7 @@ def test_layer_subclasses_instantiate():
             if int(os.environ.get('TEST_SUBCLASS_RAISES', 0))==1:
                 raise
             else:
-                cannot_instantiate[name]=str(e)
+                cannot_instantiate[subclass.__name__]=str(e)
 
     def the_broken_ones():
         return '\n'.join([f'%20s - %s\n' % n
