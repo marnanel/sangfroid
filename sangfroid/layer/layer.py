@@ -315,7 +315,12 @@ class Layer:
                         param = bs4.Tag(name="param")
                         param['name'] = field.name
 
-                        param_default = field.type_(field.default)
+                        type_ = field.type_
+
+                        if issubclass(type_, v.Time):
+                            type_ = _TimeButString
+
+                        param_default = type_(field.default)
                         param.append(param_default._tag)
                         result.append(param)
 
@@ -350,6 +355,22 @@ def _name_and_value_of(tag):
 
     value = v.Value.from_tag(value_tag)
     return name, value
+
+class _TimeButString(v.Time):
+    """
+    Same as sangfroid.value.Time, except the type of its value is str.
+
+    This is an ugly hack. Layer._construct_empty_tag() instantiates
+    a Value subclass ephemerally, in order to get its tag. If we do
+    this with Time, the default value will be run through T(), and
+    since the tag being constructed is empty, T() will have no way
+    to get the FPS, and so no way to interpret default times which
+    are specified in seconds.
+
+    Thus, we have this subclass of v.Time with a type of str,
+    so that T() doesn't see the value on the way through.
+    """
+    our_type = str
 
 __all__ = [
         'Layer',
