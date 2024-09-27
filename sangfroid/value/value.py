@@ -24,7 +24,7 @@ class Value:
 
     @classmethod
     def _get_empty_tag(cls, name=None):
-        name = name or cls.__name__.lower()
+        name = name or cls.get_name_for_tag()
         result = bs4.Tag(name=name)
         return result
 
@@ -244,6 +244,10 @@ class Value:
         Used by `etc/pick-and-mix-to-layers.py`.
         """
         return str(self)
+
+    @classmethod
+    def get_name_for_tag(cls):
+        return cls.__name__.lower()
 
     ########################
 

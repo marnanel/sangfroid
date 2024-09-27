@@ -365,6 +365,10 @@ class _TimeButString(v.Time):
     """
     our_type = str
 
+    @classmethod
+    def get_name_for_tag(cls):
+        return 'time'
+
 __all__ = [
         'Layer',
         ]

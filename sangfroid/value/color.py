@@ -91,7 +91,7 @@ class Color(Value):
         assert isinstance(result, tuple), result
         assert [type(n) for n in result]==[float]*4, result
 
-        self._tag.name = __class__.__name__.lower()
+        self._tag.name = self.get_name_for_tag()
         self._tag.attrs = {}
         self._tag.clear()
 

@@ -48,7 +48,7 @@ class Simple(Value):
 
         result = self._value_to_str(result)
 
-        self._tag.name = self.__class__.__name__.lower()
+        self._tag.name = self.get_name_for_tag()
         self._tag.attrs = {
                 'value': result,
                 }

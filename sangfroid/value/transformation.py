@@ -18,7 +18,7 @@ class Composite(Value):
     @classmethod
     def _get_empty_tag(cls):
         result = bs4.element.Tag(name='composite')
-        result['type'] = cls.__name__.lower()
+        result['type'] = cls.get_name_for_tag()
         return result
 
     @property
