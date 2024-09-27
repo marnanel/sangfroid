@@ -55,14 +55,28 @@ class Group(Layer):
 
     ### }}}
 
+    @property
+    def canvas_tag(self):
+        param = self._tag.find('param',
+                              attrs={
+                                  'name': 'canvas',
+                                  },
+                              )
+
+        if param is None:
+            raise ValueError(
+                    "Group layer has no canvas parameter!"
+                    "\n\n"
+                    f"{self._tag}"
+                    )
+
+        return param.find('canvas')
+
     def _get_children(self,
                  include_descendants = False,
                  ):
 
-        if self._tag.name=='layer':
-            canvas = self._tag.find('canvas')
-        else:
-            canvas = self._tag
+        canvas = self._canvas_tag
 
         for child in reversed(canvas.contents):
             if not isinstance(child, bs4.element.Tag):
@@ -91,8 +105,23 @@ class Group(Layer):
         if not isinstance(layer, Layer):
             raise TypeError(type(layer))
 
-        self._tag.insert(0, "\n")
-        self._tag.insert(0, layer._tag)
+        after = None
+        # "after" from our perspective; *before* in the XML
+
+        canvas = self.canvas_tag
+        for child in canvas.contents:
+            if not isinstance(child, bs4.element.Tag):
+                continue
+            if child.name=='layer':
+                after = child
+                break
+
+        if after is None:
+            canvas.append("\n")
+            canvas.append(layer._tag)
+        else:
+            after.insert_after("\n")
+            after.insert_after(layer._tag)
 
     def insert(self, index, layer):
         if not isinstance(layer, Layer):

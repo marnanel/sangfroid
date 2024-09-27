@@ -128,6 +128,10 @@ class Animation(Group):
                 )
 
     @property
+    def canvas_tag(self):
+        return self._tag
+
+    @property
     def name(self):
         return self._tag.find('name').string
 

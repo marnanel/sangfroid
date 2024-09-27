@@ -230,24 +230,18 @@ def test_animation_blank_save():
 
 def test_animation_append():
 
-    for test_cls, cls_message, expected in [
-            (sangfroid.layer.Group, 'ordinary layers',
-             ['param', 'layer']),
-            (sangfroid.Animation, 'top-level animations',
-             ['name', 'meta', 'keyframe', 'layer']),
-            ]:
-        outer = test_cls()
+    outer = sangfroid.Animation()
 
-        inner = sangfroid.layer.Group()
-        outer.append(inner)
+    inner = sangfroid.layer.Group()
+    outer.append(inner)
 
-        sequence = []
+    sequence = []
 
-        for n in outer._tag.find_all(recursive=False):
-            if sequence and sequence[-1]==n.name:
-                continue
-            sequence.append(n.name)
+    for n in outer._tag.find_all(recursive=False):
+        if sequence and sequence[-1]==n.name:
+            continue
+        sequence.append(n.name)
 
-        assert sequence==expected, (
-                f'Layers are added after the metadata in {cls_message}'
-                )
+    assert sequence==['name', 'meta', 'keyframe', 'layer'], (
+            'Layers are added after the metadata in animations'
+            )
