@@ -285,6 +285,7 @@ class Layer:
     @classmethod
     def _construct_empty_tag(cls):
         result = bs4.Tag(name='layer')
+        result.append("\n")
 
         for c in cls.mro():
             for field in c.__dict__.values():
@@ -301,6 +302,7 @@ class Layer:
                             value = str(value)
 
                         result[field.name] = value
+
                     elif isinstance(field, ParamTagField):
                         param = bs4.Tag(name="param")
                         param['name'] = field.name
@@ -313,6 +315,7 @@ class Layer:
                         param_default = type_(field.default)
                         param.append(param_default._tag)
                         result.append(param)
+                        result.append("\n")
 
         return result
 
