@@ -117,10 +117,8 @@ class Group(Layer):
                 break
 
         if after is None:
-            canvas.append("\n")
             canvas.append(layer._tag)
         else:
-            after.insert_before("\n")
             after.insert_before(layer._tag)
 
     def insert(self, index, layer):
@@ -130,6 +128,7 @@ class Group(Layer):
         before = self[index]
         # "before" from our perspective; *after* in the XML
 
+        before._tag.insert_after("\n")
         before._tag.insert_after(layer._tag)
         before._tag.insert_after("\n")
 
