@@ -76,7 +76,7 @@ class Group(Layer):
                  include_descendants = False,
                  ):
 
-        canvas = self._canvas_tag
+        canvas = self.canvas_tag
 
         for child in reversed(canvas.contents):
             if not isinstance(child, bs4.element.Tag):
@@ -120,8 +120,8 @@ class Group(Layer):
             canvas.append("\n")
             canvas.append(layer._tag)
         else:
-            after.insert_after("\n")
-            after.insert_after(layer._tag)
+            after.insert_before("\n")
+            after.insert_before(layer._tag)
 
     def insert(self, index, layer):
         if not isinstance(layer, Layer):
