@@ -21,6 +21,13 @@ from sangfroid.util import (
 logger = logging.getLogger('sangfroid')
 
 class Layer:
+    """
+    Any layer in a Synfig file.
+
+    This is the abstract superclass of all other kinds of layer.
+    For example, Group, Text, and Animation are all subclasses
+    of this class.
+    """
 
     SYMBOL = '?' # fallback
     SYNFIG_VERSION = 0.0 # fallback
@@ -125,6 +132,41 @@ class Layer:
                  recursive=True,
                  **kwargs,
                  ):
+        """
+        Finds sub-layers with particular properties.
+
+        This can only usefully be called on Groups. On other
+        layers, it does nothing.
+
+        Args:
+            arg: you may specify at most one positional argument.
+                If it's True, all children will match.
+                If it's False, no children will match.
+                If it's a string, it will match on the "type" field.
+                If it's the Layer class or one of its subclasses,
+                    it will match layers of that type.
+                If it's a callable, it will be called for each
+                    child; if it returns True, the child will be
+                    returned, and otherwise it won't.
+            recursive (bool): if this is False, we only search
+                the layer's immediate children; if it's True,
+                which is the default, we search all the layer's
+                descendants.
+
+            attrs (dict): what to search for. We match against the
+                field with the given name. The values should be
+                strings, except that "type" can also be the class
+                Layer or one of its subclasses.
+
+            kwargs: as with "attrs"; you may not specify the same
+                key in both.
+
+        The format of the arguments is based on Beautiful Soup's
+        Tag.find_all() method.
+
+        Returns:
+            list of Layers.
+        """
 
         matching_special = None
 
@@ -241,10 +283,27 @@ class Layer:
 
     @property
     def children(self):
+        """
+        The sub-layers of this layer.
+
+        This is a generator. If this layer is not a Group,
+        it yields no objects.
+        """
         return
         yield
 
     def find(self, *args, **kwargs):
+        """
+        Like find_all(), except that it only returns the first item.
+        
+        If no items are found, it returns None.
+
+        Args:
+            as for find_all()>
+
+        Returns:
+            Layer or None
+        """
         items = self.find_all(*args, **kwargs)
         if items:
             return items[0]
@@ -255,10 +314,19 @@ class Layer:
 
     ########################
 
+    """
+    Which Layer subclass handles which type of <layer> tag.
+    """
     handles_type = Registry()
 
     @classmethod
     def from_tag(cls, tag):
+        """
+        Constructs a layer from an XML tag.
+
+        Args:
+            tag (bs4.Tag): the tag to construct the layer from.
+        """
         tag_type = tag.get('type', None)
         if tag_type is None:
             raise v.ValueError(
@@ -327,7 +395,20 @@ class Layer:
     def __len__(self):
         return len(self._sublayer_tags())
 
-    def append(self, n):
+    def append(self, layer):
+        """
+        Adds a Layer to the end of a Group.
+
+        Synfig stores layers backwards, so this will result in the layer
+        appearing in the file before all other layers of its group.
+
+        Args:
+            layer: the layer to add
+
+        Raises:
+            NotImplementedError: if you're trying to add a layer
+                to a layer which isn't a Group.
+        """
         raise NotImplementedError(
                 "Only Groups can contain other layers.")
 
