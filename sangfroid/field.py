@@ -407,3 +407,36 @@ class SynfigVersionField(TagAttrField):
     def __set_name__(self, owner, name):
         super().__set_name__(owner, name)
         self.default = owner.SYNFIG_VERSION
+
+class DescField(TagAttrField):
+    """
+    A Field for the description of a layer.
+
+    This is unlike most TagAttrFields because it can be None or ''
+    with different meanings. If it's None, the layer has no desc
+    attribute set. If it's '', the layer has desc=''.
+
+    This is not used on the outermost Animation layer: "desc" there
+    is a TagField.
+    """
+
+    def __init__(self):
+        super().__init__(
+                type_ = str,
+                default = None,
+                name = 'desc',
+                doc = "A description of this field. Can be None.",
+                )
+
+    def __get__(self, obj, obj_type=None):
+
+        if self.name not in obj._tag.attrs:
+            return None
+        else:
+            return super().__get__(obj, obj_type)
+
+    def __set__(self, obj, value):
+        if value is None:
+            del obj._tag[self.name]
+        else:
+            super().__set__(obj, value)

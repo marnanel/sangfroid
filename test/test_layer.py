@@ -307,6 +307,31 @@ def test_layer_subclasses_instantiate():
         "summary of all of them."
         )
 
+def test_layer_desc():
+
+    STANDARD_GROUP_ATTR_TAGS = {
+            'active': 'true',
+            'exclude_from_rendering': 'false',
+            'type': 'group',
+            'version': sangfroid.layer.Group.SYNFIG_VERSION,
+            }
+
+    g = sangfroid.layer.Group()
+    assert g._tag.attrs == STANDARD_GROUP_ATTR_TAGS
+
+    g.desc = 'This is a group'
+    assert g._tag.attrs == STANDARD_GROUP_ATTR_TAGS | {
+            'desc': 'This is a group',
+            }
+
+    g.desc = ''
+    assert g._tag.attrs == STANDARD_GROUP_ATTR_TAGS | {
+            'desc': '',
+            }
+
+    g.desc = None
+    assert g._tag.attrs == STANDARD_GROUP_ATTR_TAGS
+
 LAYER_ITEMS_EXPECTED = """
 [🕰️timeloop]
  - z_depth: Real, 0.0

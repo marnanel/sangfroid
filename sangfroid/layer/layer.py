@@ -10,6 +10,7 @@ from sangfroid.field import (
         TagField,
         TypeNameField,
         SynfigVersionField,
+        DescField,
         )
 from sangfroid.util import (
         normalise_synfig_layer_type_name,
@@ -42,6 +43,8 @@ class Layer:
             )
 
     tag              = TagField()
+
+    desc = DescField()
 
     ########################
 
@@ -293,10 +296,12 @@ class Layer:
                     field.__set_name__(cls, field.name)
                     if isinstance(field, TagAttrField):
                         value = field.default
-                        if isinstance(value, str):
+                        if value is None:
+                            continue
+                        elif isinstance(value, str):
                             if value=='':
                                 continue
-                        if isinstance(value, bool):
+                        elif isinstance(value, bool):
                             value = str(value).lower()
                         else:
                             value = str(value)
