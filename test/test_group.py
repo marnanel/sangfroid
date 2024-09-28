@@ -122,3 +122,21 @@ def test_group_len():
     assert len(sif.items())==0
     assert isinstance(sif[0], sangfroid.layer.Text)
     assert isinstance(sif[1], sangfroid.layer.Circle)
+
+def test_group_iteration():
+
+    g = sangfroid.layer.Group()
+
+    for i in range(4):
+        g.append(
+                sangfroid.layer.Text(f"Text layer {i}")
+                )
+
+    found = [layer.text for layer in g]
+
+    assert found==[
+            'Text layer 0',
+            'Text layer 1',
+            'Text layer 2',
+            'Text layer 3',
+            ]

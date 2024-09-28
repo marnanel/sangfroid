@@ -280,7 +280,7 @@ class Layer:
         return self._as_dict().values()
 
     def __iter__(self):
-        return self._as_dict().__iter__()
+        return self.children.__iter__()
 
     @classmethod
     def _construct_empty_tag(cls):
